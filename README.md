@@ -1,0 +1,1 @@
+# Asset Administration Shell Registry
