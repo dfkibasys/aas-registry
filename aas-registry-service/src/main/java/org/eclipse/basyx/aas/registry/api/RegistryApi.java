@@ -27,6 +27,7 @@ import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-11-03T09:35:10.988Z[GMT]")
 @Validated
+//@RequestMapping("api/v1/")
 public interface RegistryApi {
 
     @Operation(summary = "Deletes an Asset Administration Shell Descriptor, i.e. de-registers an AAS", description = "", tags={ "Registry and Discovery Interface" })
