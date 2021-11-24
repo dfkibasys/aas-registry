@@ -6,5 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AssetAdministrationShellDescriptorRepository extends ElasticsearchRepository<AssetAdministrationShellDescriptorEnvelop, String> {
+	
+	
 }
 

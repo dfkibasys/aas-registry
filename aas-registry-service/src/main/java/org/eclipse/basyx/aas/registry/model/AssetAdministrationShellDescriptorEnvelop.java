@@ -2,21 +2,27 @@ package org.eclipse.basyx.aas.registry.model;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.Serializable;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 @Getter
 @Setter
 @Document(indexName = "shell-descriptors")
-public class AssetAdministrationShellDescriptorEnvelop {
+public class AssetAdministrationShellDescriptorEnvelop implements Serializable {
 
-    @Id
-    private String id;
+	private static final long serialVersionUID = 1L;
+	
+	private AssetAdministrationShellDescriptor assetAdministrationShellDescriptor;
+	
+	@Id
+	private String id;
 
-    private AssetAdministrationShellDescriptor assetAdministrationShellDescriptor;
-
-    public AssetAdministrationShellDescriptorEnvelop(AssetAdministrationShellDescriptor assetAdministrationShellDescriptor) {
-        this.assetAdministrationShellDescriptor = assetAdministrationShellDescriptor;
-        this.id = assetAdministrationShellDescriptor.getIdentification().getId();
-    }
+	public AssetAdministrationShellDescriptorEnvelop(
+			AssetAdministrationShellDescriptor assetAdministrationShellDescriptor) {
+		this.assetAdministrationShellDescriptor = assetAdministrationShellDescriptor;
+		this.id = assetAdministrationShellDescriptor.getIdentification();
+	}
 }

@@ -1,4 +1,4 @@
-# swagger-java-client
+                 # swagger-java-client
 
 DotAAS Part 2 | HTTP/REST | Registry and Discovery
 - API version: Final-Draft
