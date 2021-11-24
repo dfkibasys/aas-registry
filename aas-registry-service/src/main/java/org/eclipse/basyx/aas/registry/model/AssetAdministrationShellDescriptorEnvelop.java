@@ -12,11 +12,19 @@ public class AssetAdministrationShellDescriptorEnvelop {
 
     @Id
     private String id;
-
+    
     private AssetAdministrationShellDescriptor assetAdministrationShellDescriptor;
 
+    private AssetAdministrationShellDescriptorEnvelop() {
+    	
+    }
+    
     public AssetAdministrationShellDescriptorEnvelop(AssetAdministrationShellDescriptor assetAdministrationShellDescriptor) {
         this.assetAdministrationShellDescriptor = assetAdministrationShellDescriptor;
-        this.id = assetAdministrationShellDescriptor.getIdentification().getId();
-    }
+        Identifier identifier = assetAdministrationShellDescriptor.getIdentification();
+        if (identifier != null) {
+        	this.id = identifier.getId();
+        }        
+    }    
+    
 }

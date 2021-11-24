@@ -1,0 +1,42 @@
+[
+	{
+		"identification": {
+			"id": "1",
+			"idType": "IDSHORT"
+		}
+	},
+	{
+		"identification": {
+			"id": "2",
+			"idType": "IDSHORT"
+		},
+		"submodelDescriptors": [
+			{
+				"identification": {
+					"id": "2.1",
+					"idType": "IDSHORT"
+				}
+			},
+			{
+				"identification": {
+					"id": "2.2",
+					"idType": "IDSHORT"
+				}
+			}
+		]
+	},
+	{
+		"identification": {
+			"id": "new",
+			"idType": "IDSHORT"
+		},
+		"submodelDescriptors": [
+			{
+				"identification": {
+					"id": "new.1",
+					"idType": "IDSHORT"
+				}
+			}
+		]
+	}
+]

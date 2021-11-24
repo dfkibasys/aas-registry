@@ -1,0 +1,18 @@
+{
+	"id": "2.1",
+	"type": "SUBMODEL_UNREGISTERED",
+	"assetAdministrationShellDescriptor": {
+		"identification": {
+			"id": "2",
+			"idType": "IDSHORT"
+		},
+		"submodelDescriptors": [
+			{
+				"identification": {
+					"id": "2.2",
+					"idType": "IDSHORT"
+				}
+			}
+		]
+	}
+}

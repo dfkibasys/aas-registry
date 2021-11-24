@@ -1,0 +1,14 @@
+[
+	{
+		"identification": {
+			"id": "1",
+			"idType": "IDSHORT"
+		}
+	},
+	{
+		"identification": {
+			"id": "2",
+			"idType": "IDSHORT"
+		}
+	}
+]

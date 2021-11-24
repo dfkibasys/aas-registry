@@ -48,72 +48,72 @@ public class JSON {
     private LocalDateTypeAdapter localDateTypeAdapter = new LocalDateTypeAdapter();
 
     public static GsonBuilder createGson() {
-        GsonFireBuilder fireBuilder = new GsonFireBuilder()
-          .registerTypeSelector(Descriptor.class, new TypeSelector<Descriptor>() {
-            @Override
-            public Class<? extends Descriptor> getClassForElement(JsonElement readElement) {
-                Map<String, Class<? extends Descriptor>> classByDiscriminatorValue = new HashMap<>();
-                    classByDiscriminatorValue.put("AssetAdministrationShellDescriptor".toUpperCase(), AssetAdministrationShellDescriptor.class);
-                    classByDiscriminatorValue.put("SubmodelDescriptor".toUpperCase(), SubmodelDescriptor.class);
-                    classByDiscriminatorValue.put("Descriptor".toUpperCase(), Descriptor.class);
-                return getClassByDiscriminator(
-                            classByDiscriminatorValue,
-                            getDiscriminatorValue(readElement, ""));
-            }
-          })
-          .registerPostProcessor(Descriptor.class, new PostProcessor<Descriptor>() {
-              @Override
-              public void postDeserialize(Descriptor result, JsonElement src, Gson gson) {
-
-              }
-
-              @Override
-              public void postSerialize(JsonElement result, Descriptor src, Gson gson) {
-                  Map<Class<? extends Descriptor>, String> discriminatorValueByClass = new HashMap<>();
-                      discriminatorValueByClass.put(AssetAdministrationShellDescriptor.class, "AssetAdministrationShellDescriptor");
-                      discriminatorValueByClass.put(SubmodelDescriptor.class, "SubmodelDescriptor");
-                      discriminatorValueByClass.put(Descriptor.class, "Descriptor");
-                  if(result instanceof JsonObject)
-                  {
-                      if(!((JsonObject) result).has(""))
-                      {
-                          ((JsonObject) result).addProperty("", discriminatorValueByClass.get(src.getClass()));
-                      }
-                  }
-              }
-          })
-          .registerTypeSelector(HasSemantics.class, new TypeSelector<HasSemantics>() {
-            @Override
-            public Class<? extends HasSemantics> getClassForElement(JsonElement readElement) {
-                Map<String, Class<? extends HasSemantics>> classByDiscriminatorValue = new HashMap<>();
-                    classByDiscriminatorValue.put("IdentifierKeyValuePair".toUpperCase(), IdentifierKeyValuePair.class);
-                    classByDiscriminatorValue.put("HasSemantics".toUpperCase(), HasSemantics.class);
-                return getClassByDiscriminator(
-                            classByDiscriminatorValue,
-                            getDiscriminatorValue(readElement, ""));
-            }
-          })
-          .registerPostProcessor(HasSemantics.class, new PostProcessor<HasSemantics>() {
-              @Override
-              public void postDeserialize(HasSemantics result, JsonElement src, Gson gson) {
-
-              }
-
-              @Override
-              public void postSerialize(JsonElement result, HasSemantics src, Gson gson) {
-                  Map<Class<? extends HasSemantics>, String> discriminatorValueByClass = new HashMap<>();
-                      discriminatorValueByClass.put(IdentifierKeyValuePair.class, "IdentifierKeyValuePair");
-                      discriminatorValueByClass.put(HasSemantics.class, "HasSemantics");
-                  if(result instanceof JsonObject)
-                  {
-                      if(!((JsonObject) result).has(""))
-                      {
-                          ((JsonObject) result).addProperty("", discriminatorValueByClass.get(src.getClass()));
-                      }
-                  }
-              }
-          })
-        ;
+        GsonFireBuilder fireBuilder = new GsonFireBuilder();
+//          .registerTypeSelector(Descriptor.class, new TypeSelector<Descriptor>() {
+//            @Override
+//            public Class<? extends Descriptor> getClassForElement(JsonElement readElement) {
+//                Map<String, Class<? extends Descriptor>> classByDiscriminatorValue = new HashMap<>();
+//                    classByDiscriminatorValue.put("AssetAdministrationShellDescriptor".toUpperCase(), AssetAdministrationShellDescriptor.class);
+//                    classByDiscriminatorValue.put("SubmodelDescriptor".toUpperCase(), SubmodelDescriptor.class);
+//                    classByDiscriminatorValue.put("Descriptor".toUpperCase(), Descriptor.class);
+//                return getClassByDiscriminator(
+//                            classByDiscriminatorValue,
+//                            getDiscriminatorValue(readElement, ""));
+//            }
+//          })
+//          .registerPostProcessor(Descriptor.class, new PostProcessor<Descriptor>() {
+//              @Override
+//              public void postDeserialize(Descriptor result, JsonElement src, Gson gson) {
+//
+//              }
+//
+//              @Override
+//              public void postSerialize(JsonElement result, Descriptor src, Gson gson) {
+//                  Map<Class<? extends Descriptor>, String> discriminatorValueByClass = new HashMap<>();
+//                      discriminatorValueByClass.put(AssetAdministrationShellDescriptor.class, "AssetAdministrationShellDescriptor");
+//                      discriminatorValueByClass.put(SubmodelDescriptor.class, "SubmodelDescriptor");
+//                      discriminatorValueByClass.put(Descriptor.class, "Descriptor");
+//                  if(result instanceof JsonObject)
+//                  {
+//                      if(!((JsonObject) result).has(""))
+//                      {
+//                          ((JsonObject) result).addProperty("", discriminatorValueByClass.get(src.getClass()));
+//                      }
+//                  }
+//              }
+//          })
+//          .registerTypeSelector(HasSemantics.class, new TypeSelector<HasSemantics>() {
+//            @Override
+//            public Class<? extends HasSemantics> getClassForElement(JsonElement readElement) {
+//                Map<String, Class<? extends HasSemantics>> classByDiscriminatorValue = new HashMap<>();
+//                    classByDiscriminatorValue.put("IdentifierKeyValuePair".toUpperCase(), IdentifierKeyValuePair.class);
+//                    classByDiscriminatorValue.put("HasSemantics".toUpperCase(), HasSemantics.class);
+//                return getClassByDiscriminator(
+//                            classByDiscriminatorValue,
+//                            getDiscriminatorValue(readElement, ""));
+//            }
+//          })
+//          .registerPostProcessor(HasSemantics.class, new PostProcessor<HasSemantics>() {
+//              @Override
+//              public void postDeserialize(HasSemantics result, JsonElement src, Gson gson) {
+//
+//              }
+//
+//              @Override
+//              public void postSerialize(JsonElement result, HasSemantics src, Gson gson) {
+//                  Map<Class<? extends HasSemantics>, String> discriminatorValueByClass = new HashMap<>();
+//                      discriminatorValueByClass.put(IdentifierKeyValuePair.class, "IdentifierKeyValuePair");
+//                      discriminatorValueByClass.put(HasSemantics.class, "HasSemantics");
+//                  if(result instanceof JsonObject)
+//                  {
+//                      if(!((JsonObject) result).has(""))
+//                      {
+//                          ((JsonObject) result).addProperty("", discriminatorValueByClass.get(src.getClass()));
+//                      }
+//                  }
+//              }
+//          })
+//        ;
         return fireBuilder.createGsonBuilder();
     }
 
