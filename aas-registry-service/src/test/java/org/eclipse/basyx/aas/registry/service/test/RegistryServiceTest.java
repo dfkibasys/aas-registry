@@ -1,6 +1,7 @@
 package org.eclipse.basyx.aas.registry.service.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -220,8 +221,7 @@ public class RegistryServiceTest {
 	@Test
 	public void whenUnregisterAssetAdministrationShellDescriptorByIdAndNullId_thenReturnFalseAndNoChanges() {
 		List<AssetAdministrationShellDescriptor> initialState = registry.getAllAssetAdministrationShellDescriptors();
-		boolean success = registry.unregisterAssetAdministrationShellDescriptorById(null);
-		assertThat(success).isFalse();
+		assertThrows(NullPointerException.class, ()-> registry.unregisterAssetAdministrationShellDescriptorById(null));
 		List<AssetAdministrationShellDescriptor> currentState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(currentState).asList().containsExactlyInAnyOrderElementsOf(initialState);
 		verifyNoEventSend();

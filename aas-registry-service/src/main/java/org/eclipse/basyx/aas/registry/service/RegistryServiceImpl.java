@@ -80,8 +80,8 @@ public class RegistryServiceImpl implements RegistryService {
 	}
 
 	@Override
-	public boolean unregisterAssetAdministrationShellDescriptorById(@Nullable String aasIdentifier) {
-		if (aasIdentifier != null && aasDescriptorRepository.existsById(aasIdentifier)) {
+	public boolean unregisterAssetAdministrationShellDescriptorById(@NotNull @NonNull String aasIdentifier) {
+		if (aasDescriptorRepository.existsById(aasIdentifier)) {
 			aasDescriptorRepository.deleteById(aasIdentifier);
 			RegistryEvent evt = RegistryEvent.builder().id(aasIdentifier).type(RegistryEvent.EventType.AAS_UNREGISTERED)
 					.build();
