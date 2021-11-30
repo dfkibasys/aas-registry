@@ -51,13 +51,6 @@ test:
     - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
   dependencies:
      - build
-  artifacts:
-    when: always
-    expire_in: 1 week
-    reports:
-      junit:
-        - ${CI_PROJECT_DIR}/${MAVEN_PROJECT}/target/surefire-reports/TEST-*.xml
-        - ${CI_PROJECT_DIR}/${MAVEN_PROJECT}/target/failsafe-reports/TEST-*.xml
   
 deploy:
   stage: deploy
