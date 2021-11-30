@@ -45,17 +45,19 @@
 						<configuration>
 							<language>java</language>
 							<library>resttemplate</library>
-							
 							<inputSpec>${project.basedir}/../${openapi.file.path}</inputSpec>
- 							<output>${project.basedir}/${generated.folder}</output>
-
+							<output>${project.basedir}/${generated.folder}</output>
 							<apiPackage>org.eclipse.basyx.aas.registry.client.api</apiPackage>
 							<invokerPackage>org.eclipse.basyx.aas.registry.client</invokerPackage>
-							
 							<modelPackage>org.eclipse.basyx.aas.registry.model</modelPackage>
 							<generateModels>false</generateModels>
-						 	<supportingFilesToGenerate>ApiClient.java,RFC3339DateFormat.java,ApiKeyAuth.java,Authentication.java,HttpBasicAuth.java,OAuth.java,OauthFlow.java</supportingFilesToGenerate> 
-							<!-- See https://openapi-generator.tech/docs/generators/java/ -->							
+							<generateApis>true</generateApis>
+							<generateApiTests>false</generateApiTests>
+							<generateModelDocumentation>false</generateModelDocumentation >							
+							<generateApiDocumentation>false</generateApiDocumentation >
+							<generateSupportingFiles>true</generateSupportingFiles>
+					 		<supportingFilesToGenerate>ApiClient.java,RFC3339DateFormat.java,ApiKeyAuth.java,Authentication.java,HttpBasicAuth.java,OAuth.java,OauthFlow.java</supportingFilesToGenerate>
+					 		<!-- See https://openapi-generator.tech/docs/generators/java/ -->
 							<configOptions>
 								<java8>true</java8>
 								<dateLibrary>java8</dateLibrary>
@@ -65,115 +67,7 @@
 					</execution>
 				</executions>
 			</plugin>
-<!-- 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.12</version>
-				<configuration>
-					<systemProperties>
-						<property>
-							<name>loggerPath</name>
-							<value>conf/log4j.properties</value>
-						</property>
-					</systemProperties>
-					<argLine>-Xms512m -Xmx1500m</argLine>
-					<parallel>methods</parallel>
-					<forkMode>pertest</forkMode>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/lib</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
- -->
-			<!-- attach test jar -->
-
-<!-- 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.2</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>jar</goal>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.10</version>
-				<executions>
-					<execution>
-						<id>add_sources</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/main/java</source>
-							</sources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>add_test_sources</id>
-						<phase>generate-test-sources</phase>
-						<goals>
-							<goal>add-test-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/test/java</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.4</version>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			 -->
+			
 		</plugins>
 	</build>
 

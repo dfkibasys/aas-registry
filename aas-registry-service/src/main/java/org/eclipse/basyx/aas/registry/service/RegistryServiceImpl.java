@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
@@ -16,8 +15,8 @@ import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptorEn
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.model.event.RegistryEvent;
 import org.eclipse.basyx.aas.registry.model.event.RegistryEvent.EventType;
-import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
 import org.eclipse.basyx.aas.registry.model.event.RegistryEventListener;
+import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -2,7 +2,6 @@ package org.eclipse.basyx.aas.registry.stream;
 
 import java.io.IOException;
 
-
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 

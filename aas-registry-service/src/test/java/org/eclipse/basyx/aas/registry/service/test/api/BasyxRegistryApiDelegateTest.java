@@ -6,8 +6,6 @@ import static org.junit.Assert.assertThrows;
 import java.io.IOException;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.eclipse.basyx.aas.registry.api.BasyxRegistryApiDelegate;
 import org.eclipse.basyx.aas.registry.api.RegistryApiController;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
@@ -20,7 +18,6 @@ import org.eclipse.basyx.aas.registry.service.test.util.RepositoryMockInitialize
 import org.eclipse.basyx.aas.registry.service.test.util.TestResourcesLoader;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;

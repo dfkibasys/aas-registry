@@ -26,13 +26,17 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 	
 	@Override
 	public ResponseEntity<Void> deleteAssetAdministrationShellDescriptorById(String aasIdentifier) {
-		service.unregisterAssetAdministrationShellDescriptorById(aasIdentifier);
+		if (aasIdentifier != null) {
+			service.unregisterAssetAdministrationShellDescriptorById(aasIdentifier);
+		}
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	@Override
 	public ResponseEntity<Void> deleteSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier) {
-		service.unregisterSubmodelDescriptorById(aasIdentifier, submodelIdentifier);
+		if (aasIdentifier != null && submodelIdentifier != null) {
+			service.unregisterSubmodelDescriptorById(aasIdentifier, submodelIdentifier);
+		}
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
@@ -81,15 +85,12 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 	@Override
 	public ResponseEntity<SubmodelDescriptor> postSubmodelDescriptor(String aasIdentifier,
 			@Valid SubmodelDescriptor body) {
-		if (!service.existsAssetAdministrationShellDescriptorById(aasIdentifier)) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
 		Optional<SubmodelDescriptor> resultOpt = service.registerSubmodelDescriptor(aasIdentifier, body);
 		if (resultOpt.isPresent()) {
 			SubmodelDescriptor result = resultOpt.get();
 			return new ResponseEntity<>(result, HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);	
 		}
 	}
 
@@ -115,7 +116,7 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 	@Override
 	public ResponseEntity<Void> putSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier,
 			@Valid SubmodelDescriptor body) {
-		if (!Objects.equals(aasIdentifier, body.getIdentification())) {
+		if (!Objects.equals(submodelIdentifier, body.getIdentification())) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Optional<SubmodelDescriptor> result = service.registerSubmodelDescriptor(aasIdentifier, body);
