@@ -11,17 +11,18 @@ public class TestSetup {
 	private static final DockerImageName ELASTICSEARCH_TEST_IMAGE = DockerImageName
 			.parse("docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2");
 
-	public static KafkaContainer kafka = new KafkaContainer(KAFKA_TEST_IMAGE);
+	public static KafkaContainer KAFKA = new KafkaContainer(KAFKA_TEST_IMAGE);
 
-	public static ElasticsearchContainer elasticSearch = new ElasticsearchContainer(ELASTICSEARCH_TEST_IMAGE);
+	public static ElasticsearchContainer ELASTICSEARCH = new ElasticsearchContainer(ELASTICSEARCH_TEST_IMAGE);
 
 	public static void main(String[] args) throws InterruptedException {
-		Runtime.getRuntime().addShutdownHook(new Thread(kafka::stop));
-		Runtime.getRuntime().addShutdownHook(new Thread(elasticSearch::stop));
-		kafka.start();
-		elasticSearch.start();
-		System.out.println("Kafka bootstrap: " + kafka.getBootstrapServers());
-		System.out.println("Elastic search: " + elasticSearch.getHttpHostAddress());
+		Runtime.getRuntime().addShutdownHook(new Thread(KAFKA::stop));
+		Runtime.getRuntime().addShutdownHook(new Thread(ELASTICSEARCH::stop));
+		KAFKA.start();
+		ELASTICSEARCH.start();
+	
+		System.out.println("Kafka bootstrap: " + KAFKA.getBootstrapServers());
+		System.out.println("Elastic search: " + ELASTICSEARCH.getHttpHostAddress());
 		
 		
 		

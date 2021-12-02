@@ -18,7 +18,6 @@
 		<testcontainers.version>1.16.2</testcontainers.version>
 	</properties>
 
-
 	<build>
 		<plugins>
 			<plugin>
@@ -47,7 +46,7 @@
 						<configuration>
 							<generateModels>false</generateModels>
 							<generateSupportingFiles>true</generateSupportingFiles>
-							<supportingFilesToGenerate>ApiException.java,ApiOriginFilter.java,ApiREsponseMessage.java,LookupApi.java,LookupApiController.java,NotFoundException.java,RegistryApi.java,RegistryApiController.java,RFC3339DateFormat.java,Swagger2SpringBoot.java,HomeController.java,LocalDateConverter.java,LocalDateTimeConverter.java,SwaggerDocumentationConfig.java,SwaggerUiConfiguration.java</supportingFilesToGenerate> 	
+							<supportingFilesToGenerate>ApiException.java,ApiOriginFilter.java,ApiREsponseMessage.java,LookupApi.java,LookupApiController.java,NotFoundException.java,RegistryApi.java,RegistryApiController.java,RFC3339DateFormat.java,Swagger2SpringBoot.java,HomeController.java,LocalDateConverter.java,LocalDateTimeConverter.java,SwaggerDocumentationConfig.java,SwaggerUiConfiguration.java</supportingFilesToGenerate>
 							<!-- <inputSpec>https://api.swaggerhub.com/apis/Plattform_i40/Registry-and-Discovery/Final-Draft/swagger.yaml?resolved=true</inputSpec> -->
 							<inputSpec>${project.basedir}/../${openapi.file.path}</inputSpec>
 							<language>spring</language>
@@ -86,6 +85,12 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!-- https://www.baeldung.com/spring-boot-docker-images#1-creating-layered-jars -->
+					<layers>
+						<enabled>true</enabled>
+					</layers>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>

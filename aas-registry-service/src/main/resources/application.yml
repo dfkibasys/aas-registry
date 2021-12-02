@@ -6,7 +6,7 @@ server:
   servlet:
     contextPath: /
 elasticsearch:
-   url: microk8s-vm.mshome.net:32330 
+   url: ${ELASTICSEARCH_HOST_URL} 
 spring:
   jackson:
     date-format: org.eclipse.basyx.aas.registry.RFC3339DateFormat
@@ -14,7 +14,7 @@ spring:
       WRITE_DATES_AS_TIMESTAMPS: false
     default-property-inclusion: non_null
   kafka:
-    bootstrap-servers: microk8s-vm.mshome.net:32100
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
   cloud:
     stream:
       bindings:
