@@ -22,6 +22,11 @@ public class TestSetup {
 		elasticSearch.start();
 		System.out.println("Kafka bootstrap: " + kafka.getBootstrapServers());
 		System.out.println("Elastic search: " + elasticSearch.getHttpHostAddress());
+		
+		
+		
+		
+		
 		Thread.sleep(Long.MAX_VALUE);
 	}
 }

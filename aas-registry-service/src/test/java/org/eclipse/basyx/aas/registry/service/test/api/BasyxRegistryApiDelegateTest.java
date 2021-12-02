@@ -12,6 +12,7 @@ import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.model.event.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
+import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
 import org.eclipse.basyx.aas.registry.service.RegistryServiceImpl;
 import org.eclipse.basyx.aas.registry.service.test.util.RegistryServiceTestConfiguration;
 import org.eclipse.basyx.aas.registry.service.test.util.RepositoryMockInitializer;
@@ -50,13 +51,16 @@ public class BasyxRegistryApiDelegateTest {
 
 	@MockBean
 	private AssetAdministrationShellDescriptorRepository repo;
+	
+	@MockBean
+	private AtomicElasticSearchRepoAccess atomicRepoAccess;
 
 	@MockBean
 	private RegistryEventListener listener;
 
 	@Autowired
 	private RegistryApiController controller;
-
+	
 	@Rule
 	@Autowired
 	public TestResourcesLoader testResourcesLoader;

@@ -44,7 +44,6 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 	public ResponseEntity<List<AssetAdministrationShellDescriptor>> getAllAssetAdministrationShellDescriptors() {
 		List<AssetAdministrationShellDescriptor> result = service.getAllAssetAdministrationShellDescriptors();
 		return new ResponseEntity<>(result, HttpStatus.OK);
-
 	}
 
 	@Override
@@ -85,11 +84,10 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 	@Override
 	public ResponseEntity<SubmodelDescriptor> postSubmodelDescriptor(String aasIdentifier,
 			@Valid SubmodelDescriptor body) {
-		Optional<SubmodelDescriptor> resultOpt = service.registerSubmodelDescriptor(aasIdentifier, body);
-		if (resultOpt.isPresent()) {
-			SubmodelDescriptor result = resultOpt.get();
-			return new ResponseEntity<>(result, HttpStatus.CREATED);
-		} else {
+		boolean success = service.registerSubmodelDescriptor(aasIdentifier, body);
+		if (success) {
+			return new ResponseEntity<>(body, HttpStatus.CREATED);
+		} else { // aas not found
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);	
 		}
 	}
@@ -104,7 +102,6 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 		service.registerAssetAdministrationShellDescriptor(body);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-	
 
 	@Override
 	public ResponseEntity<AssetAdministrationShellDescriptor> postAssetAdministrationShellDescriptor(
@@ -119,12 +116,11 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 		if (!Objects.equals(submodelIdentifier, body.getIdentification())) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		Optional<SubmodelDescriptor> result = service.registerSubmodelDescriptor(aasIdentifier, body);
-		if (result.isPresent()) {
+		boolean success = service.registerSubmodelDescriptor(aasIdentifier, body);
+		if (success) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} else {
+		} else { // aas not found
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-	}
-	
+	}	
 }

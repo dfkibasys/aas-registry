@@ -12,6 +12,7 @@ spring:
     date-format: org.eclipse.basyx.aas.registry.RFC3339DateFormat
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
+    default-property-inclusion: non_null
   kafka:
     bootstrap-servers: microk8s-vm.mshome.net:32100
   cloud:

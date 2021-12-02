@@ -1,20 +1,13 @@
 {
-	"id": "2.2",
+	"id": "2",
+	"submodelId": "2.2",
 	"type": "SUBMODEL_REGISTERED",
-	"assetAdministrationShellDescriptor": {
-		"identification": "2",
-		"submodelDescriptors": [
+	"submodelDescriptor": {
+		"identification": "2.2",
+		"description": [
 			{
-				"identification":  "2.1"
-			},
-			{
-				"identification": "2.2",
-				"description": [
-					{
-						"language": "de-DE",
-						"text": "Overridden"
-					}
-				]
+				"language": "de-DE",
+				"text": "Overridden"
 			}
 		]
 	}

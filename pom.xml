@@ -33,6 +33,18 @@
 		<module>aas-registry-model</module>
 	</modules>
 
+	<developers>
+		<developer>
+			<name>Gerhard Sonnenberg</name>
+			<email>gerhard.sonnenberg@dfki.de</email>
+			<organization>DFKI</organization>
+			<organizationUrl>https://www.dfki.de</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

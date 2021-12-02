@@ -24,10 +24,11 @@ public interface RegistryService {
     Optional<List<SubmodelDescriptor>> getAllSubmodelDescriptors(String aasIdentifier);
     
     Optional<SubmodelDescriptor> getSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier);
-    
-    Optional<SubmodelDescriptor> registerSubmodelDescriptor(String aasIdentifier, SubmodelDescriptor body);
-    
-    boolean unregisterSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier);
 
+    // returns false if aas could not be resolved,
+    boolean registerSubmodelDescriptor(String aasIdentifier, SubmodelDescriptor body);
+    
+    // returns false if aas could not be resolved
+    boolean unregisterSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier);
 
 }

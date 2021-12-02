@@ -15,6 +15,7 @@ import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.model.event.RegistryEvent;
 import org.eclipse.basyx.aas.registry.model.event.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
+import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
 import org.eclipse.basyx.aas.registry.service.RegistryService;
 import org.eclipse.basyx.aas.registry.service.RegistryServiceImpl;
 import org.eclipse.basyx.aas.registry.service.test.util.RegistryServiceTestConfiguration;
@@ -39,6 +40,9 @@ public class RegistryServiceTest {
 
 	@MockBean
 	private AssetAdministrationShellDescriptorRepository repo;
+	
+	@MockBean
+	private AtomicElasticSearchRepoAccess repoAccess;
 
 	@MockBean
 	private RegistryEventListener listener;
@@ -270,8 +274,8 @@ public class RegistryServiceTest {
 	public void whenRegisterSubmodelDescriptorUnknownId_thenDoNothingAndReturnEmpty() {
 		List<AssetAdministrationShellDescriptor> initialState = registry.getAllAssetAdministrationShellDescriptors();
 		SubmodelDescriptor ignored = RegistryTestObjects.newSubmodelDescriptor("ignored");
-		Optional<SubmodelDescriptor> returnOpt = registry.registerSubmodelDescriptor("unknown", ignored);
-		assertThat(returnOpt).isEmpty();
+		boolean success = registry.registerSubmodelDescriptor("unknown", ignored);
+		assertThat(success).isFalse();
 		List<AssetAdministrationShellDescriptor> currentState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(currentState).isEqualTo(initialState);
 		verifyNoEventSend();
@@ -282,9 +286,9 @@ public class RegistryServiceTest {
 		List<AssetAdministrationShellDescriptor> initialState = registry.getAllAssetAdministrationShellDescriptors();
 		List<AssetAdministrationShellDescriptor> expected = testResourcesLoader.loadShellDescriptorList();
 		assertThat(initialState).isNotEqualTo(expected);
-		SubmodelDescriptor toAdd = RegistryTestObjects.newSubmodelDescriptor("2.2", "Overridden");
-		Optional<SubmodelDescriptor> resultOpt = registry.registerSubmodelDescriptor("2", toAdd);
-		assertThat(resultOpt).isPresent().get().isEqualTo(toAdd);
+		SubmodelDescriptor toAdd = RegistryTestObjects.newSubmodelDescriptorWithDescription("2.2", "Overridden");
+		boolean success = registry.registerSubmodelDescriptor("2", toAdd);
+		assertThat(success).isTrue();
 		List<AssetAdministrationShellDescriptor> newState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(newState).asList().isNotEqualTo(initialState).containsExactlyInAnyOrderElementsOf(expected);
 		verifyEventSend();
@@ -296,8 +300,8 @@ public class RegistryServiceTest {
 		List<AssetAdministrationShellDescriptor> expected = testResourcesLoader.loadShellDescriptorList();
 		assertThat(initialState).isNotEqualTo(expected);
 		SubmodelDescriptor toAdd = RegistryTestObjects.newSubmodelDescriptor("2.3");
-		Optional<SubmodelDescriptor> resultOpt = registry.registerSubmodelDescriptor("2", toAdd);
-		assertThat(resultOpt).isPresent().get().isEqualTo(toAdd);
+		boolean success = registry.registerSubmodelDescriptor("2", toAdd);
+		assertThat(success).isTrue();
 		List<AssetAdministrationShellDescriptor> newState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(newState).asList().isNotEqualTo(initialState).containsExactlyInAnyOrderElementsOf(expected);
 		verifyEventSend();
@@ -336,10 +340,11 @@ public class RegistryServiceTest {
 	}
 
 	@Test
-	public void whenUnregisterSubmodelDescriptorAndSubmodelWasNotPresent_thenReturnFalse() throws IOException {
+	public void whenUnregisterSubmodelDescriptorAndSubmodelWasNotPresent_thenReturnTrue() throws IOException {
 		List<AssetAdministrationShellDescriptor> initialState = registry.getAllAssetAdministrationShellDescriptors();
 		boolean success = registry.unregisterSubmodelDescriptorById("2", "2.unknown");
-		assertThat(success).isFalse();
+		// returning true makes this method idempotent
+		assertThat(success).isFalse(); 
 		List<AssetAdministrationShellDescriptor> newState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(newState).asList().containsExactlyInAnyOrderElementsOf(initialState);
 		verifyNoEventSend();

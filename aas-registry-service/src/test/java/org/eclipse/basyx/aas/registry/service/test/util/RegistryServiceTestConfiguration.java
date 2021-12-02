@@ -3,6 +3,7 @@ package org.eclipse.basyx.aas.registry.service.test.util;
 import java.io.IOException;
 
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
+import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,7 +29,7 @@ public class RegistryServiceTestConfiguration {
 	}
 	
 	@Bean
-	public RepositoryMockInitializer createMockInitializer(AssetAdministrationShellDescriptorRepository repo, TestResourcesLoader loader) throws IOException {
-		return new RepositoryMockInitializer(repo, loader);
+	public RepositoryMockInitializer createMockInitializer(AssetAdministrationShellDescriptorRepository repo, TestResourcesLoader loader, AtomicElasticSearchRepoAccess access) throws IOException {
+		return new RepositoryMockInitializer(repo, loader, access);
 	}
 }

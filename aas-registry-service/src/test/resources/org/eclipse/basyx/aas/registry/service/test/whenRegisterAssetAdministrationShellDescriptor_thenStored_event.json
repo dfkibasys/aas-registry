@@ -1,7 +1,7 @@
 {
 	"id": "new",
 	"type": "AAS_REGISTERED",
-	"assetAdministrationShellDescriptor": {
+	"aasDescriptor": {
 		"identification": "new",
 		"submodelDescriptors": [
 			{

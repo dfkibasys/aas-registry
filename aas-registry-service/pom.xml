@@ -47,14 +47,14 @@
 						<configuration>
 							<generateModels>false</generateModels>
 							<generateSupportingFiles>true</generateSupportingFiles>
-							<!-- <supportingFilesToGenerate>ApiException.java,ApiOriginFilter.java,ApiREsponseMessage.java,LookupApi.java,LookupApiController.java,NotFoundException.java,RegistryApi.java,RegistryApiController.java,RFC3339DateFormat.java,Swagger2SpringBoot.java,HomeController.java,LocalDateConverter.java,LocalDateTimeConverter.java,SwaggerDocumentationConfig.java,SwaggerUiConfiguration.java</supportingFilesToGenerate> -->		<!-- <inputSpec>https://api.swaggerhub.com/apis/Plattform_i40/Registry-and-Discovery/Final-Draft/swagger.yaml?resolved=true</inputSpec> -->
+							<supportingFilesToGenerate>ApiException.java,ApiOriginFilter.java,ApiREsponseMessage.java,LookupApi.java,LookupApiController.java,NotFoundException.java,RegistryApi.java,RegistryApiController.java,RFC3339DateFormat.java,Swagger2SpringBoot.java,HomeController.java,LocalDateConverter.java,LocalDateTimeConverter.java,SwaggerDocumentationConfig.java,SwaggerUiConfiguration.java</supportingFilesToGenerate> 	
+							<!-- <inputSpec>https://api.swaggerhub.com/apis/Plattform_i40/Registry-and-Discovery/Final-Draft/swagger.yaml?resolved=true</inputSpec> -->
 							<inputSpec>${project.basedir}/../${openapi.file.path}</inputSpec>
 							<language>spring</language>
 							<library>spring-boot</library>
 							<output>${project.basedir}/${generated.folder}</output>
 
 							<skipDefaultInterface>true</skipDefaultInterface>
-
 							<!-- See https://openapi-generator.tech/docs/generators/spring -->
 							<configOptions>
 								<java8>true</java8>
@@ -189,13 +189,8 @@
 			<artifactId>commons-lang3</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-
+		<!-- <dependency> <groupId>junit</groupId> <artifactId>junit</artifactId> 
+			<scope>test</scope> </dependency> -->
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
 			<artifactId>junit-vintage-engine</artifactId>

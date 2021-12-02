@@ -69,7 +69,7 @@ public class IntegrationTest {
 
 	@ClassRule
 	public static ElasticsearchContainer ELASTIC_SEARCH = new ElasticsearchContainer(ELASTICSEARCH_TEST_IMAGE);
-	
+
 	@After
 	public void cleanup() {
 		// kafka and elasticSearch containers need to be static because of the
@@ -118,8 +118,8 @@ public class IntegrationTest {
 		SubmodelDescriptor toRegister = resourceLoader.loadSubmodel("toregister");
 		String aasId = "aasDescr1";
 		ResponseEntity<SubmodelDescriptor> response = api.postSubmodelDescriptorWithHttpInfo(toRegister, aasId);
-		assertEventWasSend(api.getAssetAdministrationShellDescriptorById(aasId), toRegister.getIdentification(),
-				EventType.SUBMODEL_REGISTERED);
+		assertThatEventWasSend(RegistryEvent.builder().id(aasId).submodelId(toRegister.getIdentification())
+				.submodelDescriptor(toRegister).type(EventType.SUBMODEL_REGISTERED).build());
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		SubmodelDescriptor registered = response.getBody();
 		assertThat(registered).isEqualTo(toRegister);
@@ -134,8 +134,8 @@ public class IntegrationTest {
 				toRegister.getIdentification());
 		assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-		assertEventWasSend(api.getAssetAdministrationShellDescriptorById(aasId), toRegister.getIdentification(),
-				EventType.SUBMODEL_UNREGISTERED);
+		assertThatEventWasSend(RegistryEvent.builder().id(aasId).submodelId(toRegister.getIdentification())
+				.type(EventType.SUBMODEL_UNREGISTERED).build());
 
 		aasDescriptor = api.getAssetAdministrationShellDescriptorById(aasId);
 		assertThat(aasDescriptor.getSubmodelDescriptors()).doesNotContain(toRegister);
@@ -160,13 +160,14 @@ public class IntegrationTest {
 		descriptor.setIdentification("identification");
 		HttpStatus status = api.postAssetAdministrationShellDescriptorWithHttpInfo(descriptor).getStatusCode();
 		assertThat(status).isEqualTo(HttpStatus.CREATED);
-		assertEventWasSend(descriptor, descriptor.getIdentification(), EventType.AAS_REGISTERED);
+		assertThatEventWasSend(RegistryEvent.builder().id(descriptor.getIdentification()).aasDescriptor(descriptor)
+				.type(EventType.AAS_REGISTERED).build());
 	}
 
 	private void deleteAdminAssetShellDescriptor(String aasId) {
 		HttpStatus response = api.deleteAssetAdministrationShellDescriptorByIdWithHttpInfo(aasId).getStatusCode();
 		assertThat(response).isEqualTo(HttpStatus.NO_CONTENT);
-		assertEventWasSend(aasId, EventType.AAS_UNREGISTERED);
+		assertThatEventWasSend(RegistryEvent.builder().id(aasId).type(EventType.AAS_UNREGISTERED).build());
 	}
 
 	private List<AssetAdministrationShellDescriptor> initialize()
@@ -177,21 +178,15 @@ public class IntegrationTest {
 					.postAssetAdministrationShellDescriptorWithHttpInfo(eachDescriptor);
 			assertThat(response.getBody()).isEqualTo(eachDescriptor);
 			assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-			assertEventWasSend(eachDescriptor, eachDescriptor.getIdentification(), EventType.AAS_REGISTERED);
+			assertThatEventWasSend(RegistryEvent.builder().id(eachDescriptor.getIdentification())
+					.aasDescriptor(eachDescriptor).type(EventType.AAS_REGISTERED).build());
 		}
 		return descriptors;
 	}
 
-	private void assertEventWasSend(AssetAdministrationShellDescriptor descriptor, String id, EventType type) {
-		RegistryEvent evt = assertEventWasSend(id, type);
-		assertThat(evt.getAssetAdministrationShellDescriptor()).isEqualTo(descriptor);
-	}
-
-	private RegistryEvent assertEventWasSend(String id, EventType type) {
+	private void assertThatEventWasSend(RegistryEvent build) {
 		RegistryEvent evt = listener.poll();
-		assertThat(evt.getId()).isEqualTo(id);
-		assertThat(evt.getType()).isEqualTo(type);
-		return evt;
+		assertThat(evt).isEqualTo(build);
 	}
 
 	@Component
