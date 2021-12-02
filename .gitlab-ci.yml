@@ -4,7 +4,9 @@ variables:
   DOCKER_HOST: "tcp://docker:2375" 
   DOCKER_TLS_CERTDIR: ""
   DOCKER_DRIVER: overlay2
-  MAVEN_TARGET: ${CI_PROJECT_DIR}/${MAVEN_PROJECT}/target
+  MAVEN_TARGET_MODEL: ${CI_PROJECT_DIR}/aas-registry-model/target
+  MAVEN_TARGET_CLIENT: ${CI_PROJECT_DIR}/aas-registry-client/target
+  MAVEN_TARGET_SERVICE: ${CI_PROJECT_DIR}/aas-registry-service/target
   MAVEN_OPTS: "-Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository"
   MAVEN_CLI_OPTS: "-s ${CI_PROJECT_DIR}/.m2/settings.xml --batch-mode  -Pgitlab"
   BUILD_ARTIFACT: aas-registry-service-0.0.1-SNAPSHOT.jar
@@ -39,7 +41,9 @@ compile:
     - mvn $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true
   artifacts:
     paths:
-      - ${MAVEN_TARGET}
+      - $MAVEN_TARGET_MODEL
+      - $MAVEN_TARGET_CLIENT
+      - $MAVEN_TARGET_SERVICE
     
 test:
   stage: test 
@@ -66,7 +70,9 @@ install:
      - compile
   artifacts:
     paths:
-      - ${MAVEN_TARGET}  
+      - $MAVEN_TARGET_MODEL
+      - $MAVEN_TARGET_CLIENT
+      - $MAVEN_TARGET_SERVICE
   
 deploy:
   stage: deploy
@@ -80,9 +86,6 @@ deploy:
     - mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
   dependencies:
     - compile
-  artifacts:
-    paths:
-      - ${MAVEN_TARGET} 
       
 docker:
   stage: publish
