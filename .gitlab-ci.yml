@@ -83,7 +83,7 @@ docker:
        # explicitly disable tls to avoid docker startup interruption
        command: ["--tls=false"]
   dependencies:
-    - deploy
+    - compile
   tags:
     - basys
     - docker
