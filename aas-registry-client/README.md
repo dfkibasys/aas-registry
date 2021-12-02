@@ -1,4 +1,4 @@
-# swagger-java-client
+                 # swagger-java-client
 
 DotAAS Part 2 | HTTP/REST | Registry and Discovery
 - API version: Final-Draft
@@ -40,7 +40,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>io.swagger</groupId>
   <artifactId>swagger-java-client</artifactId>
-  <version>1.0.0</version>
+  <version>0.0.1-SNAPSHOT</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -50,7 +50,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "io.swagger:swagger-java-client:1.0.0"
+compile "io.swagger:swagger-java-client:0.0.1-SNAPSHOT"
 ```
 
 ### Others
@@ -61,10 +61,9 @@ At first generate the JAR by executing:
 mvn clean package
 ```
 
-Then manually install the following JARs:
+Then manually install the following JAR:
 
-* `target/swagger-java-client-1.0.0.jar`
-* `target/lib/*.jar`
+* `target/aas-registry-client-1.0.0-SNAPSHOT.jar`
 
 ## Getting Started
 
@@ -419,32 +418,20 @@ Class | Method | HTTP request | Description
 *RegistryAndDiscoveryInterfaceApi* | [**putAssetAdministrationShellDescriptorById**](docs/RegistryAndDiscoveryInterfaceApi.md#putAssetAdministrationShellDescriptorById) | **PUT** /registry/shell-descriptors/{aasIdentifier} | Updates an existing Asset Administration Shell Descriptor
 *RegistryAndDiscoveryInterfaceApi* | [**putSubmodelDescriptorById**](docs/RegistryAndDiscoveryInterfaceApi.md#putSubmodelDescriptorById) | **PUT** /registry/shell-descriptors/{aasIdentifier}/submodel-descriptors/{submodelIdentifier} | Updates an existing Submodel Descriptor, i.e. registers a submodel
 
-## Documentation for Models
 
- - [AdministrativeInformation](docs/AdministrativeInformation.md)
- - [AssetAdministrationShellDescriptor](docs/AssetAdministrationShellDescriptor.md)
- - [Descriptor](docs/Descriptor.md)
- - [Endpoint](docs/Endpoint.md)
- - [HasSemantics](docs/HasSemantics.md)
- - [Identifier](docs/Identifier.md)
- - [IdentifierKeyValuePair](docs/IdentifierKeyValuePair.md)
- - [Key](docs/Key.md)
- - [KeyElements](docs/KeyElements.md)
- - [KeyType](docs/KeyType.md)
- - [LangString](docs/LangString.md)
- - [ProtocolInformation](docs/ProtocolInformation.md)
- - [Reference](docs/Reference.md)
- - [SubmodelDescriptor](docs/SubmodelDescriptor.md)
 
 ## Documentation for Authorization
 
 All endpoints do not require authorization.
-Authentication schemes defined for the API:
 
 ## Recommendation
 
 It's recommended to create an instance of `ApiClient` per thread in a multithreaded environment to avoid any potential issues.
 
 ## Author
+
+Gerhard Sonnenberg
+gerhard.sonnenberg@dfki.de
+https://www.dfki.de
 
 

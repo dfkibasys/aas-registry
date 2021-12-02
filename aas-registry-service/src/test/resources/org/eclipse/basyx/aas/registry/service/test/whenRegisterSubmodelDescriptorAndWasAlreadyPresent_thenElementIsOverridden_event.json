@@ -1,0 +1,14 @@
+{
+	"id": "2",
+	"submodelId": "2.2",
+	"type": "SUBMODEL_REGISTERED",
+	"submodelDescriptor": {
+		"identification": "2.2",
+		"description": [
+			{
+				"language": "de-DE",
+				"text": "Overridden"
+			}
+		]
+	}
+}

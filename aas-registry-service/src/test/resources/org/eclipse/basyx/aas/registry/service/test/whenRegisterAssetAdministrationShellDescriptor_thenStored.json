@@ -1,0 +1,24 @@
+[
+	{
+		"identification": "1"
+	},
+	{
+		"identification": "2",
+		"submodelDescriptors": [
+			{
+				"identification": "2.1"
+			},
+			{
+				"identification": "2.2"
+			}
+		]
+	},
+	{
+		"identification": "new",
+		"submodelDescriptors": [
+			{
+				"identification": "new.1"
+			}
+		]
+	}
+]

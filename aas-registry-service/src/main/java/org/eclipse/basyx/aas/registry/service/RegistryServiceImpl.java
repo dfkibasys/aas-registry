@@ -1,142 +1,156 @@
 package org.eclipse.basyx.aas.registry.service;
 
-import org.eclipse.basyx.aas.registry.event.RegistryEvent;
-import org.eclipse.basyx.aas.registry.event.RegistryEventBuilder;
-import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptorEnvelop;
-import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.stream.function.StreamBridge;
-import org.springframework.stereotype.Service;
-
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import javax.validation.constraints.NotNull;
+
+import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
+import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptorEnvelop;
+import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
+import org.eclipse.basyx.aas.registry.model.event.RegistryEvent;
+import org.eclipse.basyx.aas.registry.model.event.RegistryEvent.EventType;
+import org.eclipse.basyx.aas.registry.model.event.RegistryEventListener;
+import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
+import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.query.UpdateResponse.Result;
+import org.springframework.stereotype.Service;
+
+import lombok.NonNull;
+
 @Service
 public class RegistryServiceImpl implements RegistryService {
 
-    @Autowired
-    private AssetAdministrationShellDescriptorRepository aasDescriptorRepository;
+	private static final String SUBMODEL_ID_IS_NULL = "Submodel id is null!";
 
-    @Autowired
-    private StreamBridge streamBridge;
+	private static final String AAS_ID_IS_NULL = "Aas id is null!";
 
-    @Override
-    public boolean existsAssetAdministrationShellDescriptorById(String aasIdentifier) {
-        return aasDescriptorRepository.existsById(aasIdentifier);
-    }
+	@Autowired
+	private AssetAdministrationShellDescriptorRepository aasDescriptorRepository;
 
-    @Override
-    public boolean existsSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier) {
-        if (aasDescriptorRepository.existsById(aasIdentifier)) {
-            AssetAdministrationShellDescriptor assetAdministrationShellDescriptor = aasDescriptorRepository.findById(aasIdentifier).get().getAssetAdministrationShellDescriptor();
-            assetAdministrationShellDescriptor.getSubmodelDescriptors().stream().filter(submodelDescriptor -> submodelDescriptor.getIdentification().getId().equals(submodelIdentifier)).findFirst().isPresent();
-        }
-        return false;
-    }
+	@Autowired
+	private AtomicElasticSearchRepoAccess atomicRepoAccess;
 
-    @Override
-    public List<AssetAdministrationShellDescriptor> getAllAssetAdministrationShellDescriptors() {
-        Iterable<AssetAdministrationShellDescriptorEnvelop> iterable = aasDescriptorRepository.findAll();
-        List<AssetAdministrationShellDescriptor> result =
-                StreamSupport.stream(iterable.spliterator(), false)
-                        .map(AssetAdministrationShellDescriptorEnvelop::getAssetAdministrationShellDescriptor)
-                        .collect(Collectors.toList());
-        return result;
-    }
+	@Autowired
+	private RegistryEventListener listener;
 
+	@Override
+	public boolean existsAssetAdministrationShellDescriptorById(@NotNull @NonNull String aasIdentifier) {
+		return aasDescriptorRepository.existsById(aasIdentifier);
+	}
 
-    @Override
-    public Optional<AssetAdministrationShellDescriptor> getAssetAdministrationShellDescriptorById(String aasIdentifier) {
-        if (aasDescriptorRepository.existsById(aasIdentifier)) {
-            AssetAdministrationShellDescriptor assetAdministrationShellDescriptor = aasDescriptorRepository.findById(aasIdentifier).get().getAssetAdministrationShellDescriptor();
-            return Optional.of(assetAdministrationShellDescriptor);
-        } else {
-            return Optional.empty();
-        }
-    }
+	@Override
+	public boolean existsSubmodelDescriptorById(@NotNull @NonNull String aasIdentifier,
+			@NotNull @NonNull String submodelIdentifier) {
+		SubmodelDescriptorIdMatcher matcher = new SubmodelDescriptorIdMatcher(submodelIdentifier);
+		return getAssetAdministrationShellDescriptorById(aasIdentifier)
+				.map(AssetAdministrationShellDescriptor::getSubmodelDescriptors).stream().flatMap(List::stream)
+				.anyMatch(matcher::matches);
+	}
 
-    @Override
-    public AssetAdministrationShellDescriptor registerAssetAdministrationShellDescriptor(AssetAdministrationShellDescriptor body) {
-        AssetAdministrationShellDescriptorEnvelop result = aasDescriptorRepository.save(new AssetAdministrationShellDescriptorEnvelop(body));
-        sendEvent(new RegistryEventBuilder()
-                .setType(RegistryEvent.EventType.AAS_REGISTERED)
-                .setId(result.getId())
-                .setAssetAdministrationShellDescriptor(result.getAssetAdministrationShellDescriptor())
-                .build());
-        return result.getAssetAdministrationShellDescriptor();
-    }
+	@Override
+	public List<AssetAdministrationShellDescriptor> getAllAssetAdministrationShellDescriptors() {
+		Iterable<AssetAdministrationShellDescriptorEnvelop> iterable = aasDescriptorRepository.findAll();
+		return StreamSupport.stream(iterable.spliterator(), false)
+				.map(AssetAdministrationShellDescriptorEnvelop::getAssetAdministrationShellDescriptor)
+				.collect(Collectors.toUnmodifiableList());
+	}
 
-    @Override
-    public void unregisterAssetAdministrationShellDescriptorById(String aasIdentifier) {
-        if (aasDescriptorRepository.existsById(aasIdentifier)) {
-            aasDescriptorRepository.deleteById(aasIdentifier);
-            sendEvent(new RegistryEventBuilder()
-                    .setType(RegistryEvent.EventType.AAS_UNREGISTERED)
-                    .setId(aasIdentifier)
-                    .build());
-        }
-    }
+	@Override
+	public Optional<AssetAdministrationShellDescriptor> getAssetAdministrationShellDescriptorById(
+			@NotNull @NonNull String aasIdentifier) {
+		return aasDescriptorRepository.findById(aasIdentifier)
+				.map(AssetAdministrationShellDescriptorEnvelop::getAssetAdministrationShellDescriptor);
+	}
 
-    @Override
-    public List<SubmodelDescriptor> getAllSubmodelDescriptors(String aasIdentifier) {
-        if (aasDescriptorRepository.existsById(aasIdentifier)) {
-            AssetAdministrationShellDescriptor assetAdministrationShellDescriptor = aasDescriptorRepository.findById(aasIdentifier).get().getAssetAdministrationShellDescriptor();
-            return assetAdministrationShellDescriptor.getSubmodelDescriptors();
-        } else {
-            return null;
-        }
-    }
+	@Override
+	public AssetAdministrationShellDescriptor registerAssetAdministrationShellDescriptor(
+			@NotNull @NonNull AssetAdministrationShellDescriptor descriptor) {
+		Objects.requireNonNull(descriptor.getIdentification(), AAS_ID_IS_NULL);
+		AssetAdministrationShellDescriptorEnvelop envelop = new AssetAdministrationShellDescriptorEnvelop(descriptor);
+		AssetAdministrationShellDescriptorEnvelop result = aasDescriptorRepository.save(envelop);
+		RegistryEvent evt = RegistryEvent.builder().id(result.getId()).type(RegistryEvent.EventType.AAS_REGISTERED)
+				.aasDescriptor(result.getAssetAdministrationShellDescriptor()).build();
+		listener.onEvent(evt);
 
-    @Override
-    public Optional<SubmodelDescriptor> getSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier) {
-        if (aasDescriptorRepository.existsById(aasIdentifier)) {
-            AssetAdministrationShellDescriptor assetAdministrationShellDescriptor = aasDescriptorRepository.findById(aasIdentifier).get().getAssetAdministrationShellDescriptor();
-            return assetAdministrationShellDescriptor.getSubmodelDescriptors().stream().filter(submodelDescriptor -> submodelDescriptor.getIdentification().getId().equals(submodelIdentifier)).findFirst();
-        } else {
-            return null;
-        }
-    }
+		return result.getAssetAdministrationShellDescriptor();
+	}
 
-    @Override
-    public SubmodelDescriptor registerSubmodelDescriptor(String aasIdentifier, SubmodelDescriptor body) {
-        if (aasDescriptorRepository.existsById(aasIdentifier)) {
-            AssetAdministrationShellDescriptor assetAdministrationShellDescriptor = aasDescriptorRepository.findById(aasIdentifier).get().getAssetAdministrationShellDescriptor();
-            assetAdministrationShellDescriptor.getSubmodelDescriptors().removeIf(submodelDescriptor -> submodelDescriptor.getIdentification().getId().equals(body.getIdentification().getId()));
-            assetAdministrationShellDescriptor.getSubmodelDescriptors().add(body);
-            AssetAdministrationShellDescriptorEnvelop result = aasDescriptorRepository.save(new AssetAdministrationShellDescriptorEnvelop(assetAdministrationShellDescriptor));
+	@Override
+	public boolean unregisterAssetAdministrationShellDescriptorById(@NotNull @NonNull String aasIdentifier) {
+		if (aasDescriptorRepository.existsById(aasIdentifier)) {
+			aasDescriptorRepository.deleteById(aasIdentifier);
+			RegistryEvent evt = RegistryEvent.builder().id(aasIdentifier)
+					.type(RegistryEvent.EventType.AAS_UNREGISTERED).build();
+			listener.onEvent(evt);
+			return true;
+		}
+		return false;
+	}
 
-            sendEvent(new RegistryEventBuilder()
-                    .setType(RegistryEvent.EventType.SUBMODEL_REGISTERED)
-                    .setId(body.getIdentification().getId())
-                    .setAssetAdministrationShellDescriptor(result.getAssetAdministrationShellDescriptor())
-                    .build());
+	@Override
+	public Optional<List<SubmodelDescriptor>> getAllSubmodelDescriptors(@NotNull @NonNull String aasIdentifier) {
+		Optional<AssetAdministrationShellDescriptor> descriptorOpt = getAssetAdministrationShellDescriptorById(
+				aasIdentifier);
+		if (descriptorOpt.isEmpty()) {
+			return Optional.empty();
+		}
+		List<SubmodelDescriptor> descriptorList = descriptorOpt
+				.map(AssetAdministrationShellDescriptor::getSubmodelDescriptors).orElse(Collections.emptyList());
+		return Optional.of(Collections.unmodifiableList(descriptorList));
+	}
 
-            return body;
-        } else {
-            return null;
-        }
-    }
+	@Override
+	public Optional<SubmodelDescriptor> getSubmodelDescriptorById(@NotNull @NonNull String aasIdentifier,
+			@NotNull @NonNull String submodelIdentifier) {
+		SubmodelDescriptorIdMatcher matcher = new SubmodelDescriptorIdMatcher(submodelIdentifier);
+		return getAssetAdministrationShellDescriptorById(aasIdentifier)
+				.map(AssetAdministrationShellDescriptor::getSubmodelDescriptors).stream().flatMap(List::stream)
+				.filter(matcher::matches).findFirst();
+	}
 
-    @Override
-    public void unregisterSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier) {
-        if (aasDescriptorRepository.existsById(aasIdentifier)) {
-            AssetAdministrationShellDescriptor assetAdministrationShellDescriptor = aasDescriptorRepository.findById(aasIdentifier).get().getAssetAdministrationShellDescriptor();
-            assetAdministrationShellDescriptor.getSubmodelDescriptors().removeIf(submodelDescriptor -> submodelDescriptor.getIdentification().getId().equals(submodelIdentifier));
-            AssetAdministrationShellDescriptorEnvelop result = aasDescriptorRepository.save(new AssetAdministrationShellDescriptorEnvelop(assetAdministrationShellDescriptor));
+	@Override
+	public boolean registerSubmodelDescriptor(@NotNull @NonNull String aasIdentifier,
+			@NotNull @NonNull SubmodelDescriptor submodel) {
+		Objects.requireNonNull(submodel.getIdentification(), SUBMODEL_ID_IS_NULL);
+		Result result = atomicRepoAccess.storeAssetAdministrationSubmodel(aasIdentifier, submodel);
+		if (result == Result.UPDATED) {
+			RegistryEvent evt = RegistryEvent.builder().id(aasIdentifier).submodelId(submodel.getIdentification())
+					.type(EventType.SUBMODEL_REGISTERED).submodelDescriptor(submodel).build();
+			listener.onEvent(evt);
+			return true;
+		}
+		return false;
+	}
 
-            sendEvent(new RegistryEventBuilder()
-                    .setType(RegistryEvent.EventType.SUBMODEL_UNREGISTERED)
-                    .setId(submodelIdentifier)
-                    .setAssetAdministrationShellDescriptor(result.getAssetAdministrationShellDescriptor())
-                    .build());
-        }
-    }
+	@Override
+	public boolean unregisterSubmodelDescriptorById(@NotNull @NonNull String aasIdentifier,
+			@NotNull @NonNull String subModelId) {
+		Result result =  atomicRepoAccess.removeAssetAdministrationSubmodel(aasIdentifier, subModelId);
+		if (result == Result.UPDATED) {
+			RegistryEvent evt = RegistryEvent.builder().id(aasIdentifier).submodelId(subModelId)
+					.type(EventType.SUBMODEL_UNREGISTERED).build();
+			listener.onEvent(evt);
+			return true;
+		}
+		return false;
+	}
 
-    private void sendEvent(RegistryEvent event) {
-        streamBridge.send("aasRegistryBinding",event);
-    }
+	private static final class SubmodelDescriptorIdMatcher {
+
+		private final String subModelIdentifier;
+
+		private SubmodelDescriptorIdMatcher(String subModelIdentifier) {
+			this.subModelIdentifier = subModelIdentifier;
+		}
+
+		private boolean matches(SubmodelDescriptor descriptor) {
+			return Objects.equals(descriptor.getIdentification(), subModelIdentifier);
+		}
+	}
 }

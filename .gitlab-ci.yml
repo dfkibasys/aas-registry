@@ -1,0 +1,69 @@
+image: maven:3-jdk-11
+
+services:
+  - name: docker:dind
+    # explicitly disable tls to avoid docker startup interruption
+    command: ["--tls=false"]
+
+variables:
+  DOCKER_HOST: "tcp://docker:2375" 
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_DRIVER: overlay2
+  MAVEN_TARGET: ${CI_PROJECT_DIR}/${MAVEN_PROJECT}/target
+  MAVEN_OPTS: "-Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository"
+  MAVEN_CLI_OPTS: "-s ${CI_PROJECT_DIR}/.m2/settings.xml --batch-mode  -Pgitlab"
+
+cache:
+  paths:
+    - .m2/repository/
+    
+stages:
+  - validate
+  - build
+  - test
+  - deploy
+
+validate:
+  stage: validate
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn -V $MAVEN_CLI_OPTS validate
+    
+compile:
+  stage: build
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true
+  artifacts:
+    paths:
+      - ${MAVEN_TARGET}
+    
+test:
+  stage: test
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
+  dependencies:
+     - compile
+  
+deploy:
+  stage: deploy
+  tags:
+    - basys
+    - maven
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    #- if: $CI_COMMIT_BRANCH == 'development'
+  script:
+    - mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
+  dependencies:
+    - compile
+  artifacts:
+    paths:
+      - ${MAVEN_TARGET}
