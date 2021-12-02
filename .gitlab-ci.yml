@@ -44,9 +44,9 @@ compile:
 test:
   stage: test 
   services:
-    - name: docker:19.03.15-dind
-    # explicitly disable tls to avoid docker startup interruption
-      command: ["--tls=false"]]
+     - name: docker:19.03.15-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
   tags:
     - basys
     - maven
