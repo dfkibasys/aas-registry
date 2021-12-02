@@ -1,4 +1,4 @@
-image: 3.8.4-jdk-11-slim
+image: maven:3-jdk-11
 
 services:
   - name: docker:dind
@@ -50,7 +50,7 @@ test:
   script:
     - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
   dependencies:
-     - build
+     - compile
   
 deploy:
   stage: deploy
@@ -63,7 +63,7 @@ deploy:
   script:
     - mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
   dependencies:
-    - build
+    - compile
   artifacts:
     paths:
       - ${MAVEN_TARGET}
