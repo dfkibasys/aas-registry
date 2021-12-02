@@ -61,7 +61,7 @@ install:
     - basys
     - maven
   script:
-    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Dmaven.install.skip=true
+    - mvn $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Dmaven.install.skip=true
   dependencies:
      - compile
   artifacts:
