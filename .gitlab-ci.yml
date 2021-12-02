@@ -18,6 +18,7 @@ stages:
   - validate
   - build
   - test
+  - install
   - deploy
   - publish
 
@@ -45,7 +46,7 @@ test:
   services:
     - name: docker:19.03.15-dind
     # explicitly disable tls to avoid docker startup interruption
-      command: ["--tls=false"]
+      command: ["--tls=false"]]
   tags:
     - basys
     - maven
@@ -53,6 +54,19 @@ test:
     - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
   dependencies:
      - compile
+  
+install:
+  stage: install
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Dmaven.install.skip=true
+  dependencies:
+     - compile
+  artifacts:
+    paths:
+      - ${MAVEN_TARGET}  
   
 deploy:
   stage: deploy
@@ -83,14 +97,14 @@ docker:
        # explicitly disable tls to avoid docker startup interruption
        command: ["--tls=false"]
   dependencies:
-    - compile
+    - install
   tags:
     - basys
     - docker
   before_script:
     - docker info      
   script:
-    - cp aas-registry-service/target/$BUILD_ARTIFACT docker/$DOCKER_JAR
+    - cp ./aas-registry-service/target/$BUILD_ARTIFACT docker/$DOCKER_JAR
     - cd docker
     - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
     - docker build -t "$DOCKER_IMAGE" .
