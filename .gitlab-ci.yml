@@ -44,6 +44,7 @@ compile:
       - $MAVEN_TARGET_MODEL
       - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_SERVICE
+    expire_in: 1 hour    
     
 test:
   stage: test 
@@ -73,6 +74,7 @@ install:
       - $MAVEN_TARGET_MODEL
       - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_SERVICE
+    expire_in: 1 hour
   
 deploy:
   stage: deploy
@@ -107,7 +109,7 @@ docker:
   before_script:
     - docker info      
   script:
-    - cp ./aas-registry-service/target/$BUILD_ARTIFACT docker/$DOCKER_JAR
+    - cp ${MAVEN_TARGET_SERVICE}/$BUILD_ARTIFACT docker/$DOCKER_JAR
     - cd docker
     - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
     - docker build -t "$DOCKER_IMAGE" .
