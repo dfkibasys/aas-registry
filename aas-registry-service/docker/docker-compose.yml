@@ -84,7 +84,7 @@ services:
       - basyx      
                
   aas-registry:
-    image: aas-registry/latest
+    image: dfkibasys/aas-registry:dotaas
     container_name: aas-registry
     ports:
       - "8020:8080"
