@@ -44,7 +44,7 @@ compile:
       - $MAVEN_TARGET_MODEL
       - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_SERVICE
-    expire_in: 1 hour    
+    expire_in: 3 hour    
     
 test:
   stage: test 
@@ -74,7 +74,7 @@ install:
       - $MAVEN_TARGET_MODEL
       - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_SERVICE
-    expire_in: 1 hour
+    expire_in: 3 hour
   
 deploy:
   stage: deploy

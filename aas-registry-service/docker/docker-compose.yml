@@ -64,6 +64,7 @@ services:
       - elasticsearch-data:/usr/share/elasticsearch/data     
     environment:
       - discovery.type=single-node  
+    restart: always
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -80,6 +81,7 @@ services:
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
     depends_on:
       - elasticsearch
+    restart: always
     networks:
       - basyx      
                
