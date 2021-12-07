@@ -49,7 +49,11 @@ services:
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      # use one protocol in the docker network 
+      # and one from outside docker for testing
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
     links:
       - zookeeper
@@ -85,17 +89,17 @@ services:
     networks:
       - basyx      
                
-  aas-registry:
-    image: aas-registry/latest
-    container_name: aas-registry
-    ports:
-      - "8020:8080"
-    depends_on:
-      - elasticsearch
-      - kafka
-    restart: always
-    environment:
-      ELASTICSEARCH_HOST_URL: elasticsearch:9200 
-      KAFKA_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
-    networks:
-       - basyx
+  # aas-registry:
+  #   image: aas-registry/latest
+  #   container_name: aas-registry
+  #   ports:
+  #     - "8020:8080"
+  #   depends_on:
+  #     - elasticsearch
+  #     - kafka
+  #   restart: always
+  #   environment:
+  #     ELASTICSEARCH_HOST_URL: elasticsearch:9200 
+  #     KAFKA_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
+  #   networks:
+  #      - basyx

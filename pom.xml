@@ -25,6 +25,7 @@
 		<swagger.codegen.version>3.0.30</swagger.codegen.version>
 		<spring.fox.version>3.0.0</spring.fox.version>
 		<openapi.file.path>open-api/Plattform_i40-Registry-and-Discovery-Final-Draft-resolved.yaml</openapi.file.path>
+		<guava.version>31.0.1-jre</guava.version>
 	</properties>
 
 	<modules>
@@ -66,6 +67,11 @@
 				<groupId>io.springfox</groupId>
 				<artifactId>springfox-oas</artifactId>
 				<version>${spring.fox.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
