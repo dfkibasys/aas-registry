@@ -94,8 +94,7 @@ docker:
   image: docker:19.03.15
   variables:
     DOCKER_DRIVER: overlay2
-    DOCKER_IMAGE_NAME: '$CI_PROJECT_NAME'
-    DOCKER_IMAGE_VERSION: 'latest'
+    DOCKER_IMAGE_VERSION: 'dotaas-latest'
     DOCKER_IMAGE: '$DOCKER_REGISTRY_USER/$CI_PROJECT_NAME:$DOCKER_IMAGE_VERSION'
   services:
      - name: docker:19.03.15-dind
@@ -109,8 +108,7 @@ docker:
   before_script:
     - docker info      
   script:
-    - cp ${MAVEN_TARGET_SERVICE}/$BUILD_ARTIFACT docker/$DOCKER_JAR
-    - cd docker
+    - cd aas-registry-model
     - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
     - docker build -t "$DOCKER_IMAGE" .
     #- docker push "$DOCKER_IMAGE"
