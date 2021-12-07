@@ -1,7 +1,7 @@
 # see https://www.baeldung.com/spring-boot-docker-images#layered-jars 
 FROM adoptopenjdk:11-jre-hotspot as builder
-ARG JAR_FILE=aas-registry-service.jar
-COPY ${JAR_FILE} application.jar
+ARG JAR_FILE_WITHOUT=aas-registry-service
+COPY target/${JAR_FILE_WITHOUT}-*.jar application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 
 FROM adoptopenjdk:11-jre-hotspot
