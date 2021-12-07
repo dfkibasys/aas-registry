@@ -108,7 +108,7 @@ docker:
   before_script:
     - docker info      
   script:
-    - cd aas-registry-model
+    - cd aas-registry-service
     - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
     - docker build -t "$DOCKER_IMAGE" .
     #- docker push "$DOCKER_IMAGE"
