@@ -100,6 +100,6 @@ services:
     restart: always
     environment:
       ELASTICSEARCH_HOST_URL: elasticsearch:9200 
-      KAFKA_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
+      KAFKA_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:29092
     networks:
       - basyx
