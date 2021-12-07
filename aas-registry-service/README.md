@@ -9,11 +9,17 @@ The underlying library integrating swagger to SpringBoot is [springdoc-openapi](
 
 Start your server as an simple java application  
 
-You can view the api documentation in swagger-ui by pointing to  
-http://localhost:8080/  
-
-Change default port value in application.properties
 
 ## Testing
 
 The integration tests start a kafka and an elasticsearch instance using [testcontainers](https://www.testcontainers.org/), so you need to start a docker daemon first.
+
+## Docker
+
+To run the server from a docker-compose script locally, execute the following shell-scripts from the current folder:
+- *./mvn-install.sh* to create the output jar file
+- *./docker-build.sh* to build the docker image (docker daemon needs to be running)
+- *./docker-compose-up.sh* to start to create all involved services
+- You can check the installation from the [portainer installation](http://localhost:9090)
+- Open [http://localhost:8020/swagger-ui/](http://localhost:8020/swagger-ui/) or [http://localhost:8020/registry/shell-descriptors/](http://localhost:8020/registry/shell-descriptors/) to test the backend
+- *./docker-compose-down.sh* to tear down the components

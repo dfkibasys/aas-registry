@@ -23,8 +23,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.CharStreams;
 
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
+
 @Configuration
 @EnableElasticsearchRepositories(basePackages = "org.eclipse.basyx.aas.registry.repository")
+@Log4j2
 public class ElasticConfiguration {
 
 	@Value("${elasticsearch.url}")
@@ -32,6 +36,7 @@ public class ElasticConfiguration {
 
 	@Bean
 	public RestHighLevelClient client() {
+		log.info("Connecting to elasticsearch server '" + elasticsearchUrl + "' ...");
 		ClientConfiguration clientConfiguration = ClientConfiguration.builder().connectedTo(elasticsearchUrl).build();
 		return RestClients.create(clientConfiguration).rest();
 	}

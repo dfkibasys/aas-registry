@@ -1,17 +1,16 @@
 image: maven:3-jdk-11
 
-services:
-  - name: docker:dind
-    # explicitly disable tls to avoid docker startup interruption
-    command: ["--tls=false"]
-
 variables:
   DOCKER_HOST: "tcp://docker:2375" 
   DOCKER_TLS_CERTDIR: ""
   DOCKER_DRIVER: overlay2
-  MAVEN_TARGET: ${CI_PROJECT_DIR}/${MAVEN_PROJECT}/target
+  MAVEN_TARGET_MODEL: ${CI_PROJECT_DIR}/aas-registry-model/target
+  MAVEN_TARGET_CLIENT: ${CI_PROJECT_DIR}/aas-registry-client/target
+  MAVEN_TARGET_SERVICE: ${CI_PROJECT_DIR}/aas-registry-service/target
   MAVEN_OPTS: "-Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository"
   MAVEN_CLI_OPTS: "-s ${CI_PROJECT_DIR}/.m2/settings.xml --batch-mode  -Pgitlab"
+  BUILD_ARTIFACT: aas-registry-service-0.0.1-SNAPSHOT.jar
+  DOCKER_JAR: aas-registry-service.jar  
 
 cache:
   paths:
@@ -21,7 +20,9 @@ stages:
   - validate
   - build
   - test
+  - install
   - deploy
+  - publish
 
 validate:
   stage: validate
@@ -40,10 +41,17 @@ compile:
     - mvn $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true
   artifacts:
     paths:
-      - ${MAVEN_TARGET}
+      - $MAVEN_TARGET_MODEL
+      - $MAVEN_TARGET_CLIENT
+      - $MAVEN_TARGET_SERVICE
+    expire_in: 3 hour    
     
 test:
-  stage: test
+  stage: test 
+  services:
+     - name: docker:19.03.15-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
   tags:
     - basys
     - maven
@@ -51,6 +59,22 @@ test:
     - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
   dependencies:
      - compile
+  
+install:
+  stage: install
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Dmaven.install.skip=true
+  dependencies:
+     - compile
+  artifacts:
+    paths:
+      - $MAVEN_TARGET_MODEL
+      - $MAVEN_TARGET_CLIENT
+      - $MAVEN_TARGET_SERVICE
+    expire_in: 3 hour
   
 deploy:
   stage: deploy
@@ -64,6 +88,30 @@ deploy:
     - mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
   dependencies:
     - compile
-  artifacts:
-    paths:
-      - ${MAVEN_TARGET}
+      
+docker:
+  stage: publish
+  image: docker:19.03.15
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_IMAGE_VERSION: 'dotaas-latest'
+    DOCKER_IMAGE: '$DOCKER_REGISTRY_USER/$CI_PROJECT_NAME:$DOCKER_IMAGE_VERSION'
+  services:
+     - name: docker:19.03.15-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  dependencies:
+    - install
+  tags:
+    - basys
+    - docker
+  before_script:
+    - docker info      
+  script:
+    - cd aas-registry-service
+    - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
+    - docker build -t "$DOCKER_IMAGE" .
+    - docker push "$DOCKER_IMAGE"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == 'development'
