@@ -4,7 +4,7 @@ This in a Java-based implementation of the Asset Adminstration Shell Registry se
 
 Model classes are provided in aas-registry-model that are referenced in the generated client (aas-registry-client) and the spring server implementation aas-registry-service.
 
-The server uses [Elasicsearch](https://www.elastic.co/de/elasticsearch/) as persistence layer and [Apache Kafka](https://kafka.apache.org/) as event broadcasting mechanism. Both are encapsulated via [Spring Data Elasticsearch](https://spring.io/projects/spring-data-elasticsearch) and [Spring Cloud Stream](https://spring.io/projects/spring-cloud-stream) and can easily be replaced.
+The server uses [Elasticsearch](https://www.elastic.co/de/elasticsearch/) as persistence layer and [Apache Kafka](https://kafka.apache.org/) as event broadcasting mechanism. Both are encapsulated via [Spring Data Elasticsearch](https://spring.io/projects/spring-data-elasticsearch) and [Spring Cloud Stream](https://spring.io/projects/spring-cloud-stream) and can easily be replaced.
 
 A docker image can be retrieved via `docker pull dfkibasys/aas-registry:dotaas-latest` or found [here](https://hub.docker.com/r/dfkibasys/aas-registry/).
 
