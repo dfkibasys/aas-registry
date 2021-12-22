@@ -31,7 +31,13 @@ validate:
     - basys
     - maven
   script:
-    - mvn -V -e $MAVEN_CLI_OPTS validate
+    # We need to build the plugins before we validate.
+    # It's due to the fact that the build-plugin are validated,
+    # but our puglins are not yet build
+    - cd aas-registry-plugins
+    - mvn $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true -Dmaven.test.skip=true
+    - cd ..
+    - mvn -V $MAVEN_CLI_OPTS validate
     
 compile:
   stage: build
@@ -68,7 +74,7 @@ install:
     - basys
     - maven
   script:
-    - mvn $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Dmaven.install.skip=true
+    - mvn $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
   dependencies:
      - compile
   artifacts:
