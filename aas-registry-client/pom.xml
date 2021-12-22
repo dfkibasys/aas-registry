@@ -36,7 +36,7 @@
 
 			<plugin>
 				<groupId>org.eclipse.basyx.aas.registry</groupId>
-				<artifactId>aas-registry-util</artifactId>
+				<artifactId>aas-registry-plugins</artifactId>
 				<executions>
 					<execution>
 						<goals>
