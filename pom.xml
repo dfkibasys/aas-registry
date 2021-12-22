@@ -24,14 +24,22 @@
 		<springfox-version>3.0.0</springfox-version>
 		<swagger.codegen.version>3.0.30</swagger.codegen.version>
 		<spring.fox.version>3.0.0</spring.fox.version>
-		<openapi.file.path>open-api/Plattform_i40-Registry-and-Discovery-Final-Draft-resolved.yaml</openapi.file.path>
+		<openapi.folder.name>open-api</openapi.folder.name>
+		<openapi.base.name>Plattform_i40-Registry-and-Discovery-Final-Draft-resolved.yaml</openapi.base.name>
+		<openapi.search.name>Plattform_i40-Registry-and-Discovery-Search.yaml</openapi.search.name>
+		<openapi.name>Plattform_i40-Registry-and-Discovery.yaml</openapi.name>
 		<guava.version>31.0.1-jre</guava.version>
+		<maven-plugin.version>3.6.0</maven-plugin.version>
+		<maven-project.version>3.0-alpha-2</maven-project.version>
+		<mustache.compiler.version>0.9.4</mustache.compiler.version>
+		<snakeyaml.version>1.30</snakeyaml.version>
 	</properties>
 
 	<modules>
 		<module>aas-registry-service</module>
 		<module>aas-registry-client</module>
 		<module>aas-registry-model</module>
+		<module>aas-registry-plugins</module>
 	</modules>
 
 	<developers>
@@ -45,7 +53,17 @@
 			</roles>
 		</developer>
 	</developers>
-
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-plugin-plugin</artifactId>
+					<version>${maven-plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -72,6 +90,41 @@
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>${guava.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.basyx.aas.registry</groupId>
+				<artifactId>aas-registry-util</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven</groupId>
+				<artifactId>maven-plugin-api</artifactId>
+				<version>${maven-plugin.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven.plugin-tools</groupId>
+				<artifactId>maven-plugin-annotations</artifactId>
+				<version>${maven-plugin.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven</groupId>
+				<artifactId>maven-project</artifactId>
+				<version>${maven-project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+				<version>${maven-plugin.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.yaml</groupId>
+				<artifactId>snakeyaml</artifactId>
+				<version>${snakeyaml.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.spullara.mustache.java</groupId>
+				<artifactId>compiler</artifactId>
+				<version>${mustache.compiler.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

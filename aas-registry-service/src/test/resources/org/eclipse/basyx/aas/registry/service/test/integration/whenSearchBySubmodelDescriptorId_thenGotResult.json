@@ -1,0 +1,22 @@
+{
+	"idShort": "aas1",
+	"identification": "aasDescr1",
+	"description": [
+		{
+			"language": "de-DE",
+			"text": "Sub model asset shell descriptor."
+		}
+	],
+	"submodelDescriptors": [
+		{
+			"idShort": "sm0",
+			"identification": "submodel0",
+			"description": [
+				{
+					"language": "de-DE",
+					"text": "Sub model descriptor."
+				}
+			]
+		}
+	]
+}

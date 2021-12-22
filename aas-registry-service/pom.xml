@@ -16,6 +16,7 @@
 	<properties>
 		<spring-cloud.version>2020.0.4</spring-cloud.version>
 		<testcontainers.version>1.16.2</testcontainers.version>
+		<openapi.input.file.path>${project.basedir}/../${openapi.folder.name}/${openapi.name}</openapi.input.file.path>
 	</properties>
 
 	<build>
@@ -48,7 +49,7 @@
 							<generateSupportingFiles>true</generateSupportingFiles>
 							<supportingFilesToGenerate>ApiException.java,ApiOriginFilter.java,ApiREsponseMessage.java,LookupApi.java,LookupApiController.java,NotFoundException.java,RegistryApi.java,RegistryApiController.java,RFC3339DateFormat.java,Swagger2SpringBoot.java,HomeController.java,LocalDateConverter.java,LocalDateTimeConverter.java,SwaggerDocumentationConfig.java,SwaggerUiConfiguration.java</supportingFilesToGenerate>
 							<!-- <inputSpec>https://api.swaggerhub.com/apis/Plattform_i40/Registry-and-Discovery/Final-Draft/swagger.yaml?resolved=true</inputSpec> -->
-							<inputSpec>${project.basedir}/../${openapi.file.path}</inputSpec>
+							<inputSpec>${openapi.input.file.path}</inputSpec>
 							<language>spring</language>
 							<library>spring-boot</library>
 							<output>${project.basedir}/${generated.folder}</output>

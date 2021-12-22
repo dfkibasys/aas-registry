@@ -9,9 +9,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.eclipse.basyx.aas.registry.client.api.AssetAdministrationShellDescriptorPaths;
 import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
+import org.eclipse.basyx.aas.registry.model.TermQuery;
+import org.eclipse.basyx.aas.registry.model.TermQueryContainer;
 import org.eclipse.basyx.aas.registry.model.event.RegistryEvent;
 import org.eclipse.basyx.aas.registry.model.event.RegistryEvent.EventType;
 import org.eclipse.basyx.aas.registry.service.test.util.TestResourcesLoader;
@@ -162,6 +165,22 @@ public class IntegrationTest {
 		assertThat(status).isEqualTo(HttpStatus.CREATED);
 		assertThatEventWasSend(RegistryEvent.builder().id(descriptor.getIdentification()).aasDescriptor(descriptor)
 				.type(EventType.AAS_REGISTERED).build());
+	}
+
+	@Test
+	public void whenSearchBySubmodelDescriptorId_thenGotResult() throws Exception {
+		initialize();
+		AssetAdministrationShellDescriptor expected = resourceLoader.loadAssetAdminShellDescriptor();
+
+		TermQueryContainer query = new TermQueryContainer().putTermItem(
+				AssetAdministrationShellDescriptorPaths.SUBMODELDESCRIPTORS_IDENTIFICATION, new TermQuery().value("submodel0"));
+
+		ResponseEntity<List<AssetAdministrationShellDescriptor>> response = api
+				.searchAssetAdministrationShellDescriptorsWithHttpInfo(query);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(response.getBody().size()).isEqualTo(1);
+		assertThat(response.getBody().get(0)).isEqualTo(expected);
 	}
 
 	private void deleteAdminAssetShellDescriptor(String aasId) {

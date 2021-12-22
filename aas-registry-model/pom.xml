@@ -12,6 +12,9 @@
 	<artifactId>aas-registry-model</artifactId>
 	<name>aas-registry-model</name>
 
+	<properties>
+		<openapi.result.file>${project.basedir}/../${openapi.folder.name}/${openapi.name}</openapi.result.file>
+	</properties>
 
 	<build>
 		<plugins>
@@ -26,7 +29,32 @@
 							</excludes>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
+						<fileset>
+							<directory>${project.basedir}/${openapi.folder.name}</directory>
+							<includes>
+								<include>${openapi.name}</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
 					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.basyx.aas.registry</groupId>
+				<artifactId>aas-registry-util</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>yaml-overlay</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- <inputSpec>https://api.swaggerhub.com/apis/Plattform_i40/Registry-and-Discovery/Final-Draft/swagger.yaml?resolved=true</inputSpec> -->
+					<base>${project.basedir}/../${openapi.folder.name}/${openapi.base.name}</base>
+					<overlay>${project.basedir}/../${openapi.folder.name}/${openapi.search.name}</overlay>
+					<out>${openapi.result.file}</out>
 				</configuration>
 			</plugin>
 
@@ -43,8 +71,8 @@
 							<generateModelTests>false</generateModelTests>
 							<generateSupportingFiles>false</generateSupportingFiles>
 							<generateModelDocumentation>false</generateModelDocumentation>
-							<!-- <inputSpec>https://api.swaggerhub.com/apis/Plattform_i40/Registry-and-Discovery/Final-Draft/swagger.yaml?resolved=true</inputSpec> -->
-							<inputSpec>${project.basedir}/../${openapi.file.path}</inputSpec>
+							
+							<inputSpec>${openapi.result.file}</inputSpec>
 							<!-- use spring for model validation here because we want the validation 
 								annotations for automatic object validation -->
 							<language>spring</language>

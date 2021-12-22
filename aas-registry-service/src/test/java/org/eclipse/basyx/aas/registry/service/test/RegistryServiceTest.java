@@ -6,12 +6,16 @@ import static org.junit.Assert.assertThrows;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.eclipse.basyx.aas.registry.client.api.AssetAdministrationShellDescriptorPaths;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
+import org.eclipse.basyx.aas.registry.model.TermQuery;
+import org.eclipse.basyx.aas.registry.model.TermQueryContainer;
 import org.eclipse.basyx.aas.registry.model.event.RegistryEvent;
 import org.eclipse.basyx.aas.registry.model.event.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
@@ -28,6 +32,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
@@ -44,6 +49,9 @@ public class RegistryServiceTest {
 	@MockBean
 	private AtomicElasticSearchRepoAccess repoAccess;
 
+	@MockBean
+	private ElasticsearchOperations operations;
+	
 	@MockBean
 	private RegistryEventListener listener;
 
@@ -348,6 +356,26 @@ public class RegistryServiceTest {
 		List<AssetAdministrationShellDescriptor> newState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(newState).asList().containsExactlyInAnyOrderElementsOf(initialState);
 		verifyNoEventSend();
+	}
+	
+	@Test
+	public void whenSearchBySubModel_thenReturnDescriptorList() throws IOException {
+		TermQueryContainer queryContainer = new TermQueryContainer();
+		TermQuery query = new TermQuery().value("2.1");
+		queryContainer.setTerm(Map.of(AssetAdministrationShellDescriptorPaths.SUBMODELDESCRIPTORS_IDENTIFICATION, query));
+		List<AssetAdministrationShellDescriptor> result = registry.searchAssetAdministrationShellDescriptors(queryContainer);
+		AssetAdministrationShellDescriptor descriptor = testResourcesLoader.loadAssetAdminShellDescriptor();
+		assertThat(result.size()).isEqualTo(1);
+		assertThat(result.get(0)).isEqualTo(descriptor);
+	}
+	
+	@Test
+	public void whenSearchBySubModelAndNotFound_thenReturnEmptyList() {
+		TermQueryContainer queryContainer = new TermQueryContainer();
+		TermQuery query = new TermQuery().value("unknown");
+		queryContainer.setTerm(Map.of(AssetAdministrationShellDescriptorPaths.SUBMODELDESCRIPTORS_IDENTIFICATION, query));
+		List<AssetAdministrationShellDescriptor> result = registry.searchAssetAdministrationShellDescriptors(queryContainer);
+		assertThat(result.size()).isZero();	
 	}
 
 	private void assertNullPointerThrown(ThrowingCallable callable) {

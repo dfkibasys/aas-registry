@@ -24,7 +24,7 @@ spring:
     stream:
       bindings:
         default:
-           key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+           key-desewrializer: org.apache.kafka.common.serialization.StringDeserializer
            value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
         aasRegistryBinding:
           destination: aas-registry

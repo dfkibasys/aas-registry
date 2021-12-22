@@ -23,3 +23,10 @@ To run the server from a docker-compose script locally, execute the following sh
 - You can check the installation from the [portainer installation](http://localhost:9090)
 - Open [http://localhost:8020/swagger-ui/](http://localhost:8020/swagger-ui/) or [http://localhost:8020/registry/shell-descriptors/](http://localhost:8020/registry/shell-descriptors/) to test the backend
 - *./docker-compose-down.sh* to tear down the components
+- If you want to test the application from your eclipse IDE run "RegistryServiceDocker.launch"
+
+## Kubernetes
+
+Install your kubernetes environment like minikube, microk8s ... and the package manager [helm](https://helm.sh/).
+
+Run 

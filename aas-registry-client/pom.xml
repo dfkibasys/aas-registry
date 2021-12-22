@@ -13,7 +13,9 @@
 	<name>aas-registry-client</name>
 	<packaging>jar</packaging>
 
-
+	<properties>
+		<openapi.input.file.path>${project.basedir}/../${openapi.folder.name}/${openapi.name}</openapi.input.file.path>
+	</properties>
 	<build>
 		<plugins>
 
@@ -33,6 +35,24 @@
 			</plugin>
 
 			<plugin>
+				<groupId>org.eclipse.basyx.aas.registry</groupId>
+				<artifactId>aas-registry-util</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>simple-json-path-generator</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<className>org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor</className>
+					<targetSourceFolder>${project.basedir}/src/generated/java</targetSourceFolder>
+					<targetClassName>AssetAdministrationShellDescriptorPaths</targetClassName>
+					<targetPackageName>org.eclipse.basyx.aas.registry.client.api</targetPackageName>
+				</configuration>
+			</plugin>
+
+			<plugin>
 				<groupId>io.swagger.codegen.v3</groupId>
 				<artifactId>swagger-codegen-maven-plugin</artifactId>
 				<executions>
@@ -45,7 +65,7 @@
 						<configuration>
 							<language>java</language>
 							<library>resttemplate</library>
-							<inputSpec>${project.basedir}/../${openapi.file.path}</inputSpec>
+							<inputSpec>${openapi.input.file.path}</inputSpec>
 							<output>${project.basedir}/${generated.folder}</output>
 							<apiPackage>org.eclipse.basyx.aas.registry.client.api</apiPackage>
 							<invokerPackage>org.eclipse.basyx.aas.registry.client</invokerPackage>
@@ -53,11 +73,11 @@
 							<generateModels>false</generateModels>
 							<generateApis>true</generateApis>
 							<generateApiTests>false</generateApiTests>
-							<generateModelDocumentation>false</generateModelDocumentation >							
-							<generateApiDocumentation>false</generateApiDocumentation >
+							<generateModelDocumentation>false</generateModelDocumentation>
+							<generateApiDocumentation>false</generateApiDocumentation>
 							<generateSupportingFiles>true</generateSupportingFiles>
-					 		<supportingFilesToGenerate>ApiClient.java,RFC3339DateFormat.java,ApiKeyAuth.java,Authentication.java,HttpBasicAuth.java,OAuth.java,OauthFlow.java</supportingFilesToGenerate>
-					 		<!-- See https://openapi-generator.tech/docs/generators/java/ -->
+							<supportingFilesToGenerate>ApiClient.java,RFC3339DateFormat.java,ApiKeyAuth.java,Authentication.java,HttpBasicAuth.java,OAuth.java,OauthFlow.java</supportingFilesToGenerate>
+							<!-- See https://openapi-generator.tech/docs/generators/java/ -->
 							<configOptions>
 								<java8>true</java8>
 								<dateLibrary>java8</dateLibrary>
@@ -74,7 +94,7 @@
 						<configuration>
 							<language>java</language>
 							<library>resttemplate</library>
-							<inputSpec>${project.basedir}/../${openapi.file.path}</inputSpec>
+							<inputSpec>${openapi.input.file.path}</inputSpec>
 							<output>${project.basedir}/${generated.folder}</output>
 							<apiPackage>org.eclipse.basyx.aas.registry.client.api</apiPackage>
 							<invokerPackage>org.eclipse.basyx.aas.registry.client</invokerPackage>
@@ -82,11 +102,11 @@
 							<generateModels>false</generateModels>
 							<generateApis>true</generateApis>
 							<generateApiTests>false</generateApiTests>
-							<generateModelDocumentation>false</generateModelDocumentation >							
-							<generateApiDocumentation>false</generateApiDocumentation >
+							<generateModelDocumentation>false</generateModelDocumentation>
+							<generateApiDocumentation>false</generateApiDocumentation>
 							<generateSupportingFiles>true</generateSupportingFiles>
-					 		<supportingFilesToGenerate>ApiClient.java,RFC3339DateFormat.java,ApiKeyAuth.java,Authentication.java,HttpBasicAuth.java,OAuth.java,OauthFlow.java</supportingFilesToGenerate>
-					 		<!-- See https://openapi-generator.tech/docs/generators/java/ -->
+							<supportingFilesToGenerate>ApiClient.java,RFC3339DateFormat.java,ApiKeyAuth.java,Authentication.java,HttpBasicAuth.java,OAuth.java,OauthFlow.java</supportingFilesToGenerate>
+							<!-- See https://openapi-generator.tech/docs/generators/java/ -->
 							<configOptions>
 								<java8>true</java8>
 								<dateLibrary>java8</dateLibrary>
@@ -96,7 +116,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 		</plugins>
 	</build>
 
@@ -114,7 +134,6 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>aas-registry-model</artifactId>
 		</dependency>
-
 	</dependencies>
 
 </project>

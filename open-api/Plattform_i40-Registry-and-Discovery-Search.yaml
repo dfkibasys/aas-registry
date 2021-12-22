@@ -1,0 +1,71 @@
+---
+openapi: 3.0.3
+info:
+  title: DotAAS Part 2 | HTTP/REST | Registry and Discovery and Search
+  version: Final-Draft + Search
+paths:
+  /registry/shell-descriptors/search:
+    post:
+      operationId: SearchAssetAdministrationShellDescriptors
+      tags:
+        - Registry and Discovery Interface
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TermQueryContainer'
+        required: true
+      responses:
+        "200":
+          description: Asset Administration Shell Descriptor created successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/AssetAdministrationShellDescriptor'   
+components:
+  schemas:
+    QueryContainer:
+      type: object
+      oneOf:
+         - $ref: '#/components/schemas/TermQueryContainer'
+      discriminator:
+        propertyName: _qtype
+    TermQueryContainer:
+       allOf:
+         - $ref: '#/components/schemas/QueryContainer'
+         - type: object
+           required: 
+             - term
+             - _qtype
+           properties:
+             term:
+               additionalProperties:
+                 $ref: "#/components/schemas/TermQuery"
+               type: object
+               minProperties: 1
+               maxProperties: 1
+             _qtype:
+                type: string
+                default: TermQueryContainer
+    BaseQuery:
+       type: object
+       oneOf:
+         - $ref: '#/components/schemas/TermQuery'
+       discriminator:
+         propertyName: _qtype
+    TermQuery:
+      allOf:
+        - $ref: '#/components/schemas/BaseQuery'
+        - type: object
+          required:
+            - value
+            - _qtype
+          properties:
+            value:
+              type: object
+              properties: {}
+            _qtype:
+               type: string
+               default: TermQuery
