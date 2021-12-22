@@ -1,4 +1,4 @@
-image: maven:3-jdk-11
+image: maven:3.6.0-jdk-11
 
 variables:
   DOCKER_HOST: "tcp://docker:2375" 
