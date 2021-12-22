@@ -61,6 +61,16 @@
 					<artifactId>maven-plugin-plugin</artifactId>
 					<version>${maven-plugin.version}</version>
 				</plugin>
+				<plugin>
+					<groupId>org.eclipse.basyx.aas.registry</groupId>
+					<artifactId>aas-registry-pugins</artifactId>
+					<version>0.0.1-SNAPSHOT</version>
+				</plugin>
+				<plugin>
+					<groupId>io.swagger.codegen.v3</groupId>
+					<artifactId>swagger-codegen-maven-plugin</artifactId>
+					<version>${swagger.codegen.version}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -75,11 +85,6 @@
 				<groupId>${project.groupId}</groupId>
 				<artifactId>aas-registry-client</artifactId>
 				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.swagger.codegen.v3</groupId>
-				<artifactId>swagger-codegen-maven-plugin</artifactId>
-				<version>${swagger.codegen.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.springfox</groupId>

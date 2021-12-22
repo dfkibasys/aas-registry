@@ -41,8 +41,7 @@
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.basyx.aas.registry</groupId>
-				<artifactId>aas-registry-util</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<artifactId>aas-registry-plugins</artifactId>
 				<executions>
 					<execution>
 						<goals>
