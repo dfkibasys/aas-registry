@@ -31,7 +31,7 @@ validate:
     - basys
     - maven
   script:
-    - mvn -V $MAVEN_CLI_OPTS validate
+    - mvn -V -e $MAVEN_CLI_OPTS validate
     
 compile:
   stage: build
