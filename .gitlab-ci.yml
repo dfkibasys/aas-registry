@@ -18,30 +18,34 @@ cache:
     - .m2/repository/
     
 stages:
+  - install-plugin
   - validate
-  - build
   - test
   - install
   - deploy
   - publish
 
+install-plugin:
+  stage: install-plugin:
+  tages:
+    - basys
+    - maven
+  script:
+    - cd aas-registry-plugins
+    - mvn $MAVEN_CLI_OPTS install 
+  paths:
+      - $MAVEN_TARGET_PLUGINS
+    expire_in: 3 hour    
+    
 validate:
   stage: validate
   tags:
     - basys
     - maven
   script:
-    # We need to build the plugins before we validate.
-    # It's due to the fact that the build-plugin are validated,
-    # but our puglins are not yet build
-    - cd aas-registry-plugins
-    - mvn $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true -Dmaven.test.skip=true
-    - cd ..
     - mvn -V $MAVEN_CLI_OPTS validate
-  artifacts:
-    paths:
-      - $MAVEN_TARGET_PLUGINS
-    expire_in: 3 hour    
+  dependencies:
+    - install-plugin
     
 compile:
   stage: build
@@ -51,13 +55,12 @@ compile:
   script:
     - mvn $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true
   dependencies:
-    - validate
+    - install-plugin
   artifacts:
     paths:
       - $MAVEN_TARGET_MODEL
       - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_SERVICE
-      - $MAVEN_TARGET_PLUGINS
     expire_in: 3 hour    
     
 test:
@@ -88,7 +91,6 @@ install:
       - $MAVEN_TARGET_MODEL
       - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_SERVICE
-      - $MAVEN_TARGET_PLUGINS
     expire_in: 3 hour
   
 deploy:
