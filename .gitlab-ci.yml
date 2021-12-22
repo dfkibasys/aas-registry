@@ -18,22 +18,24 @@ cache:
     - .m2/repository/
     
 stages:
-  - install-plugin
+  - plugin
   - validate
+  - build
   - test
   - install
   - deploy
   - publish
 
-install-plugin:
-  stage: install-plugin:
-  tages:
+build-plugin:
+  stage: plugin
+  tags:
     - basys
     - maven
   script:
     - cd aas-registry-plugins
     - mvn $MAVEN_CLI_OPTS install 
-  paths:
+  artifacts:
+    paths:
       - $MAVEN_TARGET_PLUGINS
     expire_in: 3 hour    
     
@@ -45,7 +47,7 @@ validate:
   script:
     - mvn -V $MAVEN_CLI_OPTS validate
   dependencies:
-    - install-plugin
+    - build-plugin
     
 compile:
   stage: build
@@ -55,7 +57,7 @@ compile:
   script:
     - mvn $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true
   dependencies:
-    - install-plugin
+    - build-plugin
   artifacts:
     paths:
       - $MAVEN_TARGET_MODEL
