@@ -63,7 +63,7 @@
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.basyx.aas.registry</groupId>
-					<artifactId>aas-registry-pugins</artifactId>
+					<artifactId>aas-registry-plugins</artifactId>
 					<version>0.0.1-SNAPSHOT</version>
 				</plugin>
 				<plugin>
