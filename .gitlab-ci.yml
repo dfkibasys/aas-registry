@@ -4,6 +4,7 @@ variables:
   DOCKER_HOST: "tcp://docker:2375" 
   DOCKER_TLS_CERTDIR: ""
   DOCKER_DRIVER: overlay2
+  MAVEN_TARGET_PLUGINS: ${CI_PROJECT_DIR}/aas-registry-plugins/target
   MAVEN_TARGET_MODEL: ${CI_PROJECT_DIR}/aas-registry-model/target
   MAVEN_TARGET_CLIENT: ${CI_PROJECT_DIR}/aas-registry-client/target
   MAVEN_TARGET_SERVICE: ${CI_PROJECT_DIR}/aas-registry-service/target
@@ -44,6 +45,7 @@ compile:
       - $MAVEN_TARGET_MODEL
       - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_SERVICE
+      - $MAVEN_TARGET_PLUGINS
     expire_in: 3 hour    
     
 test:
@@ -74,6 +76,7 @@ install:
       - $MAVEN_TARGET_MODEL
       - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_SERVICE
+      - $MAVEN_TARGET_PLUGINS
     expire_in: 3 hour
   
 deploy:
