@@ -39,7 +39,6 @@
 		<module>aas-registry-service</module>
 		<module>aas-registry-client</module>
 		<module>aas-registry-model</module>
-		<module>aas-registry-plugins</module>
 	</modules>
 
 	<developers>
