@@ -10,8 +10,6 @@ import java.util.stream.StreamSupport;
 import javax.validation.constraints.NotNull;
 
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptorEnvelop;
-import org.eclipse.basyx.aas.registry.model.QueryContainer;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.model.TermQueryContainer;
 import org.eclipse.basyx.aas.registry.model.event.RegistryEvent;
@@ -65,30 +63,25 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Override
 	public List<AssetAdministrationShellDescriptor> getAllAssetAdministrationShellDescriptors() {
-		Iterable<AssetAdministrationShellDescriptorEnvelop> iterable = aasDescriptorRepository.findAll();
-		return StreamSupport.stream(iterable.spliterator(), false)
-				.map(AssetAdministrationShellDescriptorEnvelop::getAssetAdministrationShellDescriptor)
-				.collect(Collectors.toUnmodifiableList());
+		Iterable<AssetAdministrationShellDescriptor> iterable = aasDescriptorRepository.findAll();
+		return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toUnmodifiableList());
 	}
 
 	@Override
 	public Optional<AssetAdministrationShellDescriptor> getAssetAdministrationShellDescriptorById(
 			@NotNull @NonNull String aasIdentifier) {
-		return aasDescriptorRepository.findById(aasIdentifier)
-				.map(AssetAdministrationShellDescriptorEnvelop::getAssetAdministrationShellDescriptor);
+		return aasDescriptorRepository.findById(aasIdentifier);
 	}
 
 	@Override
 	public AssetAdministrationShellDescriptor registerAssetAdministrationShellDescriptor(
 			@NotNull @NonNull AssetAdministrationShellDescriptor descriptor) {
 		Objects.requireNonNull(descriptor.getIdentification(), AAS_ID_IS_NULL);
-		AssetAdministrationShellDescriptorEnvelop envelop = new AssetAdministrationShellDescriptorEnvelop(descriptor);
-		AssetAdministrationShellDescriptorEnvelop result = aasDescriptorRepository.save(envelop);
-		RegistryEvent evt = RegistryEvent.builder().id(result.getId()).type(RegistryEvent.EventType.AAS_REGISTERED)
-				.aasDescriptor(result.getAssetAdministrationShellDescriptor()).build();
+		AssetAdministrationShellDescriptor result = aasDescriptorRepository.save(descriptor);
+		RegistryEvent evt = RegistryEvent.builder().id(result.getIdentification())
+				.type(RegistryEvent.EventType.AAS_REGISTERED).aasDescriptor(result).build();
 		listener.onEvent(evt);
-
-		return result.getAssetAdministrationShellDescriptor();
+		return result;
 	}
 
 	@Override
@@ -152,13 +145,12 @@ public class RegistryServiceImpl implements RegistryService {
 	}
 
 	@Override
-	public List<AssetAdministrationShellDescriptor> searchAssetAdministrationShellDescriptors(TermQueryContainer container) {
+	public List<AssetAdministrationShellDescriptor> searchAssetAdministrationShellDescriptors(
+			TermQueryContainer container) {
 		NativeSearchQuery query = SearchRequestMapper.mapTermQuery(container);
-		SearchHits<AssetAdministrationShellDescriptorEnvelop> hits = ops.search(query,
-				AssetAdministrationShellDescriptorEnvelop.class);
-		return hits.stream().map(SearchHit::getContent)
-				.map(AssetAdministrationShellDescriptorEnvelop::getAssetAdministrationShellDescriptor)
-				.collect(Collectors.toList());
+		SearchHits<AssetAdministrationShellDescriptor> hits = ops.search(query,
+				AssetAdministrationShellDescriptor.class);
+		return hits.stream().map(SearchHit::getContent).collect(Collectors.toUnmodifiableList());
 	}
 
 	private static final class SubmodelDescriptorIdMatcher {

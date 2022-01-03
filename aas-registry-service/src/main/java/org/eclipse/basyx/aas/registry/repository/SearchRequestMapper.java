@@ -18,7 +18,7 @@ public class SearchRequestMapper {
 		Map<String, TermQuery> query = request.getTerm();
 		// we have exactly one entry
 		Entry<String, TermQuery> entry = query.entrySet().iterator().next();
-		String key = "assetAdministrationShellDescriptor." + entry.getKey();
+		String key = entry.getKey();
 		TermQuery tValue = entry.getValue();
 		Object value = tValue.getValue();
 		TermQueryBuilder builder = QueryBuilders.termQuery(key, value);

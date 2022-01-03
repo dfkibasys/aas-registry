@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptorEnvelop;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
 import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
@@ -41,7 +40,7 @@ public class RepositoryMockInitializer extends TestWatcher {
 
 	private final AssetAdministrationShellDescriptorRepository repo;
 
-	private Map<String, AssetAdministrationShellDescriptorEnvelop> repoContent;
+	private Map<String, AssetAdministrationShellDescriptor> repoContent;
 
 	private final TestResourcesLoader loader;
 
@@ -60,8 +59,8 @@ public class RepositoryMockInitializer extends TestWatcher {
 	}
 
 	public void initialize(List<AssetAdministrationShellDescriptor> content) throws IOException {
-		repoContent = content.stream().map(AssetAdministrationShellDescriptorEnvelop::new)
-				.collect(Collectors.toMap(AssetAdministrationShellDescriptorEnvelop::getId, Function.identity()));
+		repoContent = content.stream()
+				.collect(Collectors.toMap(AssetAdministrationShellDescriptor::getIdentification, Function.identity()));
 
 		prepareFindAll();
 		prepareFindById();
@@ -83,11 +82,10 @@ public class RepositoryMockInitializer extends TestWatcher {
 	private Result answerStoreAssetAdminstrationSubmodel(InvocationOnMock invocation) {
 		String aasId = invocation.getArgument(0);
 		SubmodelDescriptor toAdd = invocation.getArgument(1);
-		AssetAdministrationShellDescriptorEnvelop envelop = repoContent.get(aasId);
-		if (envelop == null) {
+		AssetAdministrationShellDescriptor descriptor = repoContent.get(aasId);
+		if (descriptor == null) {
 			return Result.NOT_FOUND; // aasid not found
 		}
-		AssetAdministrationShellDescriptor descriptor = envelop.getAssetAdministrationShellDescriptor();
 		List<SubmodelDescriptor> submodels = descriptor.getSubmodelDescriptors();
 		if (submodels != null) {
 			ListIterator<SubmodelDescriptor> submodelIter = submodels.listIterator();
@@ -106,11 +104,11 @@ public class RepositoryMockInitializer extends TestWatcher {
 	private Result answerRemoveAssetAdminstrationSubmodel(InvocationOnMock invocation) {
 		String aasId = invocation.getArgument(0);
 		String submodelId = invocation.getArgument(1);
-		AssetAdministrationShellDescriptorEnvelop envelop = repoContent.get(aasId);
-		if (envelop == null) {
+		AssetAdministrationShellDescriptor descriptor = repoContent.get(aasId);
+		if (descriptor == null) {
 			return Result.NOT_FOUND;
 		}
-		List<SubmodelDescriptor> descrList = envelop.getAssetAdministrationShellDescriptor().getSubmodelDescriptors();
+		List<SubmodelDescriptor> descrList = descriptor.getSubmodelDescriptors();
 		if (descrList != null) {
 			if (descrList.removeIf(d -> Objects.equals(d.getIdentification(), submodelId))) {
 				return Result.UPDATED;
@@ -120,22 +118,22 @@ public class RepositoryMockInitializer extends TestWatcher {
 	}
 
 	private void prepareSave() {
-		Mockito.when(repo.save(Mockito.any(AssetAdministrationShellDescriptorEnvelop.class))).then(this::answerSave);
+		Mockito.when(repo.save(Mockito.any(AssetAdministrationShellDescriptor.class))).then(this::answerSave);
 	}
 
-	private AssetAdministrationShellDescriptorEnvelop answerSave(InvocationOnMock invocation) {
-		AssetAdministrationShellDescriptorEnvelop envelop = invocation.getArgument(0);
-		AssetAdministrationShellDescriptorEnvelop toStore = SerializationUtils.clone(envelop);
-		repoContent.put(toStore.getId(), toStore);
+	private AssetAdministrationShellDescriptor answerSave(InvocationOnMock invocation) {
+		AssetAdministrationShellDescriptor envelop = invocation.getArgument(0);
+		AssetAdministrationShellDescriptor toStore = SerializationUtils.clone(envelop);
+		repoContent.put(toStore.getIdentification(), toStore);
 		return SerializationUtils.clone(toStore);
 	}
 
-	private Map<String, AssetAdministrationShellDescriptorEnvelop> cloneRepo()
+	private Map<String, AssetAdministrationShellDescriptor> cloneRepo()
 			throws JsonMappingException, JsonProcessingException {
-		Map<String, AssetAdministrationShellDescriptorEnvelop> toReturn = new HashMap<>();
-		for (Entry<String, AssetAdministrationShellDescriptorEnvelop> eachEntry : repoContent.entrySet()) {
-			AssetAdministrationShellDescriptorEnvelop clone = SerializationUtils.clone(eachEntry.getValue());
-			toReturn.put(clone.getId(), clone);
+		Map<String, AssetAdministrationShellDescriptor> toReturn = new HashMap<>();
+		for (Entry<String, AssetAdministrationShellDescriptor> eachEntry : repoContent.entrySet()) {
+			AssetAdministrationShellDescriptor clone = SerializationUtils.clone(eachEntry.getValue());
+			toReturn.put(clone.getIdentification(), clone);
 		}
 		return toReturn;
 	}
@@ -160,26 +158,26 @@ public class RepositoryMockInitializer extends TestWatcher {
 	}
 
 	private void prepareSearchBySubmodelId() {
-		Mockito.when(ops.search(Mockito.any(Query.class), Mockito.eq(AssetAdministrationShellDescriptorEnvelop.class)))
+		Mockito.when(ops.search(Mockito.any(Query.class), Mockito.eq(AssetAdministrationShellDescriptor.class)))
 				.then(this::answerSearchBySubmodelId);
 	}
 
 	@SuppressWarnings("unchecked")
-	private SearchHits<AssetAdministrationShellDescriptorEnvelop> answerSearchBySubmodelId(InvocationOnMock invocation) {
+	private SearchHits<AssetAdministrationShellDescriptor> answerSearchBySubmodelId(InvocationOnMock invocation) {
 		NativeSearchQuery nsQuery = invocation.getArgument(0);
 		TermQueryBuilder builder = (TermQueryBuilder) nsQuery.getQuery();
-		// for the test we expect that it is a submodel id request because we do not want complex logic in our mock
+		// for the test we expect that it is a submodel id request because we do not
+		// want complex logic in our mock
 		Object value = builder.value();
-		SearchHits<AssetAdministrationShellDescriptorEnvelop> hits = Mockito.mock(SearchHits.class);
-		for (AssetAdministrationShellDescriptorEnvelop descrEnvelop : repoContent.values()) {
-			AssetAdministrationShellDescriptor descr = descrEnvelop.getAssetAdministrationShellDescriptor();
+		SearchHits<AssetAdministrationShellDescriptor> hits = Mockito.mock(SearchHits.class);
+		for (AssetAdministrationShellDescriptor descr : repoContent.values()) {
 			for (SubmodelDescriptor sDescr : Optional.ofNullable(descr.getSubmodelDescriptors())
 					.orElseGet(Collections::emptyList)) {
 				if (Objects.equals(sDescr.getIdentification(), value)) {
-					SearchHit<AssetAdministrationShellDescriptorEnvelop> hit = Mockito.mock(SearchHit.class);
-					Mockito.when(hits.get()).thenAnswer(i->Stream.of(hit));
-					Mockito.when(hits.stream()).thenAnswer(i->Stream.of(hit));
-					Mockito.when(hit.getContent()).thenReturn(descrEnvelop);
+					SearchHit<AssetAdministrationShellDescriptor> hit = Mockito.mock(SearchHit.class);
+					Mockito.when(hits.get()).thenAnswer(i -> Stream.of(hit));
+					Mockito.when(hits.stream()).thenAnswer(i -> Stream.of(hit));
+					Mockito.when(hit.getContent()).thenReturn(descr);
 					return hits;
 				}
 			}
@@ -192,7 +190,7 @@ public class RepositoryMockInitializer extends TestWatcher {
 		Mockito.when(repo.findById(Mockito.anyString())).thenAnswer(this::answerFindById);
 	}
 
-	private Optional<AssetAdministrationShellDescriptorEnvelop> answerFindById(InvocationOnMock invocation)
+	private Optional<AssetAdministrationShellDescriptor> answerFindById(InvocationOnMock invocation)
 			throws JsonMappingException, JsonProcessingException {
 		String id = invocation.getArgument(0);
 		return Optional.ofNullable(cloneRepo().get(id));

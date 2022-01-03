@@ -7,7 +7,6 @@ import java.io.IOException;
 import org.eclipse.basyx.aas.registry.configuration.ElasticConfiguration;
 import org.eclipse.basyx.aas.registry.configuration.ElasticConfiguration.PainlessElasticSearchScripts;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptorEnvelop;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
 import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
 import org.eclipse.basyx.aas.registry.service.test.util.RegistryTestObjects;
@@ -69,32 +68,30 @@ public class ElasticSearchTest {
 
 	@Test
 	public void whenSubmodelAddedOrOverridden_thenModelIsApplied() throws IOException {
-		AssetAdministrationShellDescriptorEnvelop input = RegistryTestObjects.newEnvelop(ID_1);
-		AssetAdministrationShellDescriptorEnvelop result = repo.save(input);
+		AssetAdministrationShellDescriptor input = RegistryTestObjects.newDescriptor(ID_1);
+		AssetAdministrationShellDescriptor result = repo.save(input);
 		assertThat(result).isEqualTo(input);
 
 		access.storeAssetAdministrationSubmodel(ID_1, RegistryTestObjects.newSubmodelDescriptorWithIdShort(ID_1_1, IDSHORT_1));
 		access.storeAssetAdministrationSubmodel(ID_1, RegistryTestObjects.newSubmodelDescriptorWithIdShort(ID_1_2, ID_SHORT2));
 		access.storeAssetAdministrationSubmodel(ID_1, RegistryTestObjects.newSubmodelDescriptorWithIdShort(ID_1_1, ID_SHORT1B));
 
-		AssetAdministrationShellDescriptorEnvelop envelop = repo.findById(ID_1).get();
+		AssetAdministrationShellDescriptor descriptor = repo.findById(ID_1).get();
 
-		AssetAdministrationShellDescriptorEnvelop expected = RegistryTestObjects.newEnvelop(ID_1);
-		AssetAdministrationShellDescriptor descriptor = expected.getAssetAdministrationShellDescriptor();
-		descriptor.addSubmodelDescriptorsItem(RegistryTestObjects.newSubmodelDescriptorWithIdShort(ID_1_1, ID_SHORT1B));
-		descriptor.addSubmodelDescriptorsItem(RegistryTestObjects.newSubmodelDescriptorWithIdShort(ID_1_2, ID_SHORT2));
+		AssetAdministrationShellDescriptor expected = RegistryTestObjects.newDescriptor(ID_1);
+		expected.addSubmodelDescriptorsItem(RegistryTestObjects.newSubmodelDescriptorWithIdShort(ID_1_1, ID_SHORT1B));
+		expected.addSubmodelDescriptorsItem(RegistryTestObjects.newSubmodelDescriptorWithIdShort(ID_1_2, ID_SHORT2));
 
 		com.fasterxml.jackson.databind.ObjectWriter writer = new ObjectMapper()
 				.setSerializationInclusion(Include.NON_NULL).writerWithDefaultPrettyPrinter();
-		assertThat(writer.writeValueAsString(envelop)).isEqualTo(writer.writeValueAsString(expected));
+		assertThat(writer.writeValueAsString(descriptor)).isEqualTo(writer.writeValueAsString(expected));
 	}
 
 	@Test
 	public void whenSubmodelRemoved_thenUnavailable() throws IOException {
-		AssetAdministrationShellDescriptorEnvelop input = RegistryTestObjects.newEnvelop(ID_1);
-		AssetAdministrationShellDescriptor descr = input.getAssetAdministrationShellDescriptor();
-		descr.addSubmodelDescriptorsItem(RegistryTestObjects.newSubmodelDescriptorWithIdShort(ID_1_1, IDSHORT_1));
-		descr.addSubmodelDescriptorsItem(RegistryTestObjects.newSubmodelDescriptorWithIdShort(ID_1_2, ID_SHORT2));
+		AssetAdministrationShellDescriptor input = RegistryTestObjects.newDescriptor(ID_1);
+		input.addSubmodelDescriptorsItem(RegistryTestObjects.newSubmodelDescriptorWithIdShort(ID_1_1, IDSHORT_1));
+		input.addSubmodelDescriptorsItem(RegistryTestObjects.newSubmodelDescriptorWithIdShort(ID_1_2, ID_SHORT2));
 		repo.save(input);
 
 		Result result = access.removeAssetAdministrationSubmodel(ID_1, ID_1_2);
@@ -103,19 +100,17 @@ public class ElasticSearchTest {
 		result = access.removeAssetAdministrationSubmodel(ID_1, ID_1_2);
 		assertThat(result).isEqualTo(Result.NOOP);
 
-		AssetAdministrationShellDescriptorEnvelop envelop = repo.findById(ID_1).get();
-		AssetAdministrationShellDescriptorEnvelop expected = RegistryTestObjects.newEnvelop(ID_1);
-		AssetAdministrationShellDescriptor descriptor = expected.getAssetAdministrationShellDescriptor();
-		descriptor.addSubmodelDescriptorsItem(RegistryTestObjects.newSubmodelDescriptorWithIdShort(ID_1_1, IDSHORT_1));
+		AssetAdministrationShellDescriptor descriptor = repo.findById(ID_1).get();
+		AssetAdministrationShellDescriptor expected = RegistryTestObjects.newDescriptor(ID_1);
+		expected.addSubmodelDescriptorsItem(RegistryTestObjects.newSubmodelDescriptorWithIdShort(ID_1_1, IDSHORT_1));
 
 		com.fasterxml.jackson.databind.ObjectWriter writer = new ObjectMapper()
 				.setSerializationInclusion(Include.NON_NULL).writerWithDefaultPrettyPrinter();
-		assertThat(writer.writeValueAsString(envelop)).isEqualTo(writer.writeValueAsString(expected));
+		assertThat(writer.writeValueAsString(descriptor)).isEqualTo(writer.writeValueAsString(expected));
 
 		result = access.removeAssetAdministrationSubmodel(ID_2, ID_2_2);
 		assertThat(result).isEqualTo(Result.NOT_FOUND);
 
-		assertThat(writer.writeValueAsString(envelop)).isEqualTo(writer.writeValueAsString(expected));
+		assertThat(writer.writeValueAsString(descriptor)).isEqualTo(writer.writeValueAsString(expected));
 	}
-
 }

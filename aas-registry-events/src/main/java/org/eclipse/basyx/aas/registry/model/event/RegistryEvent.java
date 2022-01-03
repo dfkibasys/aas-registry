@@ -1,10 +1,7 @@
 package org.eclipse.basyx.aas.registry.model.event;
 
 
-import javax.validation.constraints.Null;
-
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.eclipse.basyx.aas.registry.model.Descriptor;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.springframework.lang.Nullable;
 

@@ -1,0 +1,68 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.eclipse.basyx.aas.registry</groupId>
+		<artifactId>aas-registry</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>aas-registry-paths</artifactId>
+	<name>aas-registry-paths</name>
+
+	<properties>
+		<openapi.result.file>${project.basedir}/../${openapi.folder.name}/${openapi.name}</openapi.result.file>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${project.basedir}/${generated.folder}</directory>
+							<excludes>
+								<exclude>**/.gitkeep</exclude>
+							</excludes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.basyx.aas.registry</groupId>
+				<artifactId>aas-registry-plugins</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>simple-json-path-generator</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<className>org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor</className>
+					<targetSourceFolder>${project.basedir}/src/generated/java</targetSourceFolder>
+					<targetClassName>AssetAdministrationShellDescriptorPaths</targetClassName>
+					<targetPackageName>org.eclipse.basyx.aas.registry.client.api</targetPackageName>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>aas-registry-client</artifactId>
+			<!-- we can either use the client library or the spring and elasticsearch specific on server-side -->
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+</project>

@@ -1,0 +1,11 @@
+---
+components:
+   schemas:
+      AssetAdministrationShellDescriptor:
+         x-java-class-annotations: 
+            - '@org.springframework.data.elasticsearch.annotations.Document(indexName = "shell-descriptors")'       
+      Identifier:
+         x-java-field-annotations:
+             - '@org.springframework.data.annotation.Id'
+             - '@org.springframework.data.elasticsearch.annotations.Field(type = org.springframework.data.elasticsearch.annotations.FieldType.Keyword)'
+ 
