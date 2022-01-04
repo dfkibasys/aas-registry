@@ -1,4 +1,4 @@
-package org.eclipse.basyx.aas.registry.model.event;
+package org.eclipse.basyx.aas.registry.events;
 
 
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;

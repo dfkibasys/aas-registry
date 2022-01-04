@@ -11,12 +11,14 @@
 
 	<artifactId>aas-registry-paths</artifactId>
 	<name>aas-registry-paths</name>
+	<packaging>jar</packaging>
 
 	<properties>
 		<openapi.result.file>${project.basedir}/../${openapi.folder.name}/${openapi.name}</openapi.result.file>
 	</properties>
 
 	<build>
+		<sourceDirectory>src/generated/java</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>

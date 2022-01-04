@@ -14,7 +14,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class SearchRequestMapper {
 
-	public NativeSearchQuery mapTermQuery(TermQueryContainer request) {
+	public static NativeSearchQuery mapTermQuery(TermQueryContainer request) {
 		Map<String, TermQuery> query = request.getTerm();
 		// we have exactly one entry
 		Entry<String, TermQuery> entry = query.entrySet().iterator().next();

@@ -1,7 +1,7 @@
 package org.eclipse.basyx.aas.registry.configuration;
 
-import org.eclipse.basyx.aas.registry.model.event.RegistryEvent;
-import org.eclipse.basyx.aas.registry.model.event.RegistryEventListener;
+import org.eclipse.basyx.aas.registry.events.RegistryEvent;
+import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

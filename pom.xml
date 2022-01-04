@@ -37,7 +37,7 @@
 	</properties>
 
 	<modules>
-		<module>aas-registry-service</module>
+ 		<module>aas-registry-service</module>
 		<module>aas-registry-client</module>
 		<module>aas-registry-events</module>
 		<module>aas-registry-paths</module>

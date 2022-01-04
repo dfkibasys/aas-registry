@@ -11,6 +11,7 @@
 
 	<artifactId>aas-registry-events</artifactId>
 	<name>aas-registry-events</name>
+	<packaging>jar</packaging>
 
 	<dependencies>
 		<dependency>

@@ -9,12 +9,12 @@ import java.util.stream.StreamSupport;
 
 import javax.validation.constraints.NotNull;
 
+import org.eclipse.basyx.aas.registry.events.RegistryEvent;
+import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
+import org.eclipse.basyx.aas.registry.events.RegistryEvent.EventType;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.model.TermQueryContainer;
-import org.eclipse.basyx.aas.registry.model.event.RegistryEvent;
-import org.eclipse.basyx.aas.registry.model.event.RegistryEvent.EventType;
-import org.eclipse.basyx.aas.registry.model.event.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
 import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
 import org.eclipse.basyx.aas.registry.repository.SearchRequestMapper;

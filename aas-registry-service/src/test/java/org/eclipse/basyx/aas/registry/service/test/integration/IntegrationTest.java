@@ -11,12 +11,12 @@ import java.util.concurrent.TimeoutException;
 
 import org.eclipse.basyx.aas.registry.client.api.AssetAdministrationShellDescriptorPaths;
 import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import org.eclipse.basyx.aas.registry.events.RegistryEvent;
+import org.eclipse.basyx.aas.registry.events.RegistryEvent.EventType;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.model.TermQuery;
 import org.eclipse.basyx.aas.registry.model.TermQueryContainer;
-import org.eclipse.basyx.aas.registry.model.event.RegistryEvent;
-import org.eclipse.basyx.aas.registry.model.event.RegistryEvent.EventType;
 import org.eclipse.basyx.aas.registry.service.test.util.TestResourcesLoader;
 import org.junit.After;
 import org.junit.Before;
