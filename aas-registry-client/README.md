@@ -38,9 +38,9 @@ Add this dependency to your project's POM:
 
 ```xml
 <dependency>
-  <groupId>io.swagger</groupId>
-  <artifactId>swagger-java-client</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <groupId>org.eclipse.basyx.aas.registry</groupId>
+  <artifactId>aas-registry-client</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -50,7 +50,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "io.swagger:swagger-java-client:0.0.1-SNAPSHOT"
+compile "org.eclipse.basyx.aas.registry:aas-registry-client:0.1.0-SNAPSHOT"
 ```
 
 ### Others
@@ -63,7 +63,7 @@ mvn clean package
 
 Then manually install the following JAR:
 
-* `target/aas-registry-client-1.0.0-SNAPSHOT.jar`
+* `target/aas-registry-client-0.1.0-SNAPSHOT.jar`
 
 ## Getting Started
 
