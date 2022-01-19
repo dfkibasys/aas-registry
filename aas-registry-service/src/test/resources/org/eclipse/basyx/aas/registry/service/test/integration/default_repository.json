@@ -25,7 +25,37 @@
 				"description": [
 					{
 						"language": "de-DE",
-						"text": "Sub model descriptor."
+						"text": "G1"
+					}
+				]
+			},
+			{
+				"idShort": "sm1",
+				"identification": "submodel1",
+				"description": [
+					{
+						"language": "de-DE",
+						"text": "G2"
+					}
+				]
+			},
+			{
+				"idShort": "sm3",
+				"identification": "submodel2",
+				"description": [
+					{
+						"language": "de-DE",
+						"text": "G1"
+					}
+				]
+			},
+			{
+				"idShort": "sm4",
+				"identification": "submodel3",
+				"description": [
+					{
+						"language": "de-DE",
+						"text": "G2"
 					}
 				]
 			}

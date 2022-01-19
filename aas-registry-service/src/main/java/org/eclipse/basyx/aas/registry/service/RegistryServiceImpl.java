@@ -10,17 +10,17 @@ import java.util.stream.StreamSupport;
 import javax.validation.constraints.NotNull;
 
 import org.eclipse.basyx.aas.registry.events.RegistryEvent;
-import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent.EventType;
+import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.model.TermQueryContainer;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
 import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
+import org.eclipse.basyx.aas.registry.repository.DescriptorMapper;
 import org.eclipse.basyx.aas.registry.repository.SearchRequestMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.UpdateResponse.Result;
@@ -146,11 +146,13 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Override
 	public List<AssetAdministrationShellDescriptor> searchAssetAdministrationShellDescriptors(
-			TermQueryContainer container) {
-		NativeSearchQuery query = SearchRequestMapper.mapTermQuery(container);
-		SearchHits<AssetAdministrationShellDescriptor> hits = ops.search(query,
+			ShellDescriptorSearchQuery query) {
+		NativeSearchQuery nQuery = SearchRequestMapper.mapSearchQuery(query);
+		SearchHits<AssetAdministrationShellDescriptor> hits = ops.search(nQuery,
 				AssetAdministrationShellDescriptor.class);
-		return hits.stream().map(SearchHit::getContent).collect(Collectors.toUnmodifiableList());
+				
+		DescriptorMapper cutter = new DescriptorMapper();
+		return cutter.mapHits(hits);
 	}
 
 	private static final class SubmodelDescriptorIdMatcher {

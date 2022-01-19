@@ -33,7 +33,8 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
   {{/jackson}}
   {{#gson}}
   @SerializedName("{{baseName}}")
-  {{/gson}}
+  {{/gson}} 
+  @org.springframework.data.elasticsearch.annotations.Field(name="{{baseName}}"{{#vendorExtensions.x-field-type}}, type=org.springframework.data.elasticsearch.annotations.FieldType.{{.}}{{/vendorExtensions.x-field-type}})
   {{#isContainer}}
   {{#useBeanValidation}}@Valid{{/useBeanValidation}}
   private {{{datatypeWithEnum}}} {{name}}{{#required}} = {{{defaultValue}}}{{/required}}{{^required}} = null{{/required}};

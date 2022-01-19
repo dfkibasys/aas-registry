@@ -7,8 +7,9 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.model.TermQueryContainer;
 import org.eclipse.basyx.aas.registry.service.RegistryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -123,11 +124,11 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 		} else { // aas not found
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-	}	
-	
+	}
 	@Override
-	public org.springframework.http.ResponseEntity<java.util.List<AssetAdministrationShellDescriptor>> searchAssetAdministrationShellDescriptors(TermQueryContainer container) {
-		List<AssetAdministrationShellDescriptor> result = service.searchAssetAdministrationShellDescriptors(container);
-		return new ResponseEntity<>(result, HttpStatus.OK);
+	public ResponseEntity<ShellDescriptorSearchResponse> searchShellDescriptors(ShellDescriptorSearchQuery query) {
+		List<AssetAdministrationShellDescriptor> results = service.searchAssetAdministrationShellDescriptors(query); 
+		ShellDescriptorSearchResponse response = new ShellDescriptorSearchResponse().hits(results);
+		return ResponseEntity.ok(response);
 	}
 }

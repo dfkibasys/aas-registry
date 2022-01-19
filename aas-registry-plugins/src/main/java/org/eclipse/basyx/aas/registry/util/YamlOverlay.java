@@ -38,14 +38,6 @@ public class YamlOverlay extends AbstractMojo {
 	@Parameter(property = "charset", defaultValue = "UTF-8")
 	private String charSet;
 
-	public static void main(String[] args) throws MojoExecutionException, MojoFailureException {
-		YamlOverlay combiner = new YamlOverlay();
-		combiner.base = new File("../open-api/Plattform_i40-Registry-and-Discovery-Final-Draft-resolved.yaml");
-		combiner.overlay = new File("../open-api/Plattform_i40-Registry-and-Discovery-Search.yaml");
-		combiner.out = new File("../open-api/Plattform_i40-Registry-and-Discovery-Overlay.yaml");
-		combiner.charSet = "UTF-8";
-		combiner.execute();
-	}
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		Yaml yaml = new Yaml();

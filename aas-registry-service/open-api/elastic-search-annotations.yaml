@@ -3,9 +3,19 @@ components:
    schemas:
       AssetAdministrationShellDescriptor:
          x-java-class-annotations: 
-            - '@org.springframework.data.elasticsearch.annotations.Document(indexName = "shell-descriptors")'       
+            - '@org.springframework.data.elasticsearch.annotations.Document(indexName = "shell-descriptors")'  
+         properties:
+            identification:
+               # Only the shell descriptor should have the ID annotation not the submodel so we need a new String type
+               # as it is modeled like that
+               $ref: '#/components/schemas/DocumentIdentifier'
+            submodelDescriptors:
+               x-field-type: 'Nested'
+                    
       Identifier:
+         x-field-type: 'Keyword'
+      DocumentIdentifier:
+         type: string
          x-java-field-annotations:
-             - '@org.springframework.data.annotation.Id'
-             - '@org.springframework.data.elasticsearch.annotations.Field(type = org.springframework.data.elasticsearch.annotations.FieldType.Keyword)'
- 
+            - '@org.springframework.data.annotation.Id'
+      

@@ -1,22 +1,32 @@
 {
-	"idShort": "aas1",
-	"identification": "aasDescr1",
-	"description": [
-		{
-			"language": "de-DE",
-			"text": "Sub model asset shell descriptor."
-		}
-	],
-	"submodelDescriptors": [
-		{
-			"idShort": "sm0",
-			"identification": "submodel0",
-			"description": [
-				{
-					"language": "de-DE",
-					"text": "Sub model descriptor."
-				}
-			]
-		}
-	]
-}
+		"idShort": "aas1",
+		"identification": "aasDescr1",
+		"description": [
+			{
+				"language": "de-DE",
+				"text": "Sub model asset shell descriptor."
+			}
+		],
+		"submodelDescriptors": [
+			{
+				"idShort": "sm1",
+				"identification": "submodel1",
+				"description": [
+					{
+						"language": "de-DE",
+						"text": "G2"
+					}
+				]
+			},
+			{
+				"idShort": "sm4",
+				"identification": "submodel3",
+				"description": [
+					{
+						"language": "de-DE",
+						"text": "G2"
+					}
+				]
+			}
+		]
+	}

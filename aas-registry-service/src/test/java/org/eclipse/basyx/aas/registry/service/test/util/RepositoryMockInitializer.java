@@ -11,14 +11,17 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.eclipse.basyx.aas.registry.client.api.ShellDescriptorPaths;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
 import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
-import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.NestedQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.mockito.Mockito;
@@ -164,26 +167,47 @@ public class RepositoryMockInitializer extends TestWatcher {
 
 	@SuppressWarnings("unchecked")
 	private SearchHits<AssetAdministrationShellDescriptor> answerSearchBySubmodelId(InvocationOnMock invocation) {
-		NativeSearchQuery nsQuery = invocation.getArgument(0);
-		TermQueryBuilder builder = (TermQueryBuilder) nsQuery.getQuery();
-		// for the test we expect that it is a submodel id request because we do not
-		// want complex logic in our mock
-		Object value = builder.value();
+		Object value = getValueAndAssertCorrectPath(invocation.getArgument(0));
+	    
 		SearchHits<AssetAdministrationShellDescriptor> hits = Mockito.mock(SearchHits.class);
 		for (AssetAdministrationShellDescriptor descr : repoContent.values()) {
 			for (SubmodelDescriptor sDescr : Optional.ofNullable(descr.getSubmodelDescriptors())
 					.orElseGet(Collections::emptyList)) {
 				if (Objects.equals(sDescr.getIdentification(), value)) {
 					SearchHit<AssetAdministrationShellDescriptor> hit = Mockito.mock(SearchHit.class);
-					Mockito.when(hits.get()).thenAnswer(i -> Stream.of(hit));
-					Mockito.when(hits.stream()).thenAnswer(i -> Stream.of(hit));
+					mockHitList(hits, List.of(hit));
 					Mockito.when(hit.getContent()).thenReturn(descr);
 					return hits;
 				}
 			}
 		}
-		Mockito.when(hits.get()).thenReturn(Stream.empty());
+		mockHitList(hits, List.of());
 		return hits;
+	}
+
+	private void mockHitList(SearchHits<AssetAdministrationShellDescriptor> hits,
+			List<SearchHit<AssetAdministrationShellDescriptor>> toReturn) {
+		Mockito.when(hits.get()).thenAnswer(i -> toReturn.stream());
+		Mockito.when(hits.stream()).thenAnswer(i -> toReturn.stream());
+		Mockito.when(hits.getSearchHits()).thenAnswer(i -> toReturn);
+		
+	}
+
+	private Object getValueAndAssertCorrectPath(NativeSearchQuery nsQuery) {
+		QueryBuilder builder = nsQuery.getQuery();
+		BoolQueryBuilder bBuilder;
+		if (builder instanceof NestedQueryBuilder) {
+			NestedQueryBuilder nQueryBuilder = (NestedQueryBuilder) builder;
+			bBuilder = (BoolQueryBuilder) nQueryBuilder.query();
+		} else {
+			bBuilder = (BoolQueryBuilder) builder;
+		}
+		MatchQueryBuilder mBuilder = (MatchQueryBuilder) bBuilder.must().get(0);
+		// for the test we expect that it is a submodel id request because we do not
+		// want complex logic in our mock
+		String path = mBuilder.fieldName();
+		assert ShellDescriptorPaths.submodelDescriptors().identification().equals(path);
+		return mBuilder.value();
 	}
 
 	private void prepareFindById() {

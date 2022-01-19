@@ -6,18 +6,16 @@ import static org.junit.Assert.assertThrows;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.eclipse.basyx.aas.registry.client.api.AssetAdministrationShellDescriptorPaths;
+import org.eclipse.basyx.aas.registry.client.api.ShellDescriptorPaths;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent;
 import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.model.TermQuery;
-import org.eclipse.basyx.aas.registry.model.TermQueryContainer;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
 import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
 import org.eclipse.basyx.aas.registry.service.RegistryService;
@@ -360,10 +358,10 @@ public class RegistryServiceTest {
 	
 	@Test
 	public void whenSearchBySubModel_thenReturnDescriptorList() throws IOException {
-		TermQueryContainer queryContainer = new TermQueryContainer();
-		TermQuery query = new TermQuery().value("2.1");
-		queryContainer.setTerm(Map.of(AssetAdministrationShellDescriptorPaths.SUBMODELDESCRIPTORS_IDENTIFICATION, query));
-		List<AssetAdministrationShellDescriptor> result = registry.searchAssetAdministrationShellDescriptors(queryContainer);
+		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery();
+		query.setPath(ShellDescriptorPaths.submodelDescriptors().identification());
+		query.setValue("2.1");
+		List<AssetAdministrationShellDescriptor> result = registry.searchAssetAdministrationShellDescriptors(query);
 		AssetAdministrationShellDescriptor descriptor = testResourcesLoader.loadAssetAdminShellDescriptor();
 		assertThat(result.size()).isEqualTo(1);
 		assertThat(result.get(0)).isEqualTo(descriptor);
@@ -371,10 +369,10 @@ public class RegistryServiceTest {
 	
 	@Test
 	public void whenSearchBySubModelAndNotFound_thenReturnEmptyList() {
-		TermQueryContainer queryContainer = new TermQueryContainer();
-		TermQuery query = new TermQuery().value("unknown");
-		queryContainer.setTerm(Map.of(AssetAdministrationShellDescriptorPaths.SUBMODELDESCRIPTORS_IDENTIFICATION, query));
-		List<AssetAdministrationShellDescriptor> result = registry.searchAssetAdministrationShellDescriptors(queryContainer);
+		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery();
+		query.setPath(ShellDescriptorPaths.submodelDescriptors().identification());
+		query.setValue("unknown");
+		List<AssetAdministrationShellDescriptor> result = registry.searchAssetAdministrationShellDescriptors(query);
 		assertThat(result.size()).isZero();	
 	}
 

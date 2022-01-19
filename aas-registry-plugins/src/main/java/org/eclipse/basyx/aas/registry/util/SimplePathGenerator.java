@@ -4,23 +4,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
@@ -31,14 +21,15 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
+import org.eclipse.basyx.aas.registry.util.path.SearchPathGenerator;
+import org.eclipse.basyx.aas.registry.util.path.SearchPathInfo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
-@Mojo(name = "simple-json-path-generator", requiresDependencyResolution = ResolutionScope.COMPILE, defaultPhase = LifecyclePhase.INITIALIZE)
-public class SimpleJsonPathGenerator extends AbstractMojo {
+@Mojo(name = "simple-path-generator", requiresDependencyResolution = ResolutionScope.COMPILE, defaultPhase = LifecyclePhase.INITIALIZE)
+public class SimplePathGenerator extends AbstractMojo {
 
 	@Parameter(defaultValue = "${project}", required = true, readonly = true)
 	private MavenProject project;
@@ -81,6 +72,10 @@ public class SimpleJsonPathGenerator extends AbstractMojo {
 	public void setCharSet(String charSet) {
 		this.charSet = charSet;
 	}
+	
+	public void setProject(MavenProject project) {
+		this.project = project;
+	}
 
 	public String getTargetPackageName(Class<?> cls) {
 		if (targetPackageName == null) {
@@ -100,7 +95,7 @@ public class SimpleJsonPathGenerator extends AbstractMojo {
 		try {
 			URL[] urlsForClassLoader = getClassLoaderUrls();
 			try (URLClassLoader loader = new URLClassLoader(urlsForClassLoader,
-					SimpleJsonPathGenerator.class.getClassLoader())) {
+					SimplePathGenerator.class.getClassLoader())) {
 				generateClass(loader);
 			}
 		} catch (ClassNotFoundException | IOException | DependencyResolutionRequiredException ex) {
@@ -108,9 +103,9 @@ public class SimpleJsonPathGenerator extends AbstractMojo {
 		}
 	}
 
-	private void generateClass(URLClassLoader loader) throws IOException, ClassNotFoundException {
+	private void generateClass(ClassLoader loader) throws IOException, ClassNotFoundException {
 		MustacheFactory mf = new DefaultMustacheFactory();
-		Mustache mustache = mf.compile("jackson-path-util.mustache");
+		Mustache mustache = mf.compile("simple-path.mustache");
 		File outputFile = prepareOutputFile();
 		try (FileWriter fOut = new FileWriter(outputFile, Charset.forName(charSet));
 				BufferedWriter writer = new BufferedWriter(fOut)) {
@@ -123,7 +118,7 @@ public class SimpleJsonPathGenerator extends AbstractMojo {
 	private File prepareOutputFile() throws IOException {
 		File targetFolder = new File(targetSourceFolder, targetPackageName.replace('.', File.separatorChar));
 		if (targetFolder.mkdirs()) {
-
+			getLog().info("Target folder created");
 		}
 		File targetFile = new File(targetFolder, targetClassName + ".java");
 		if (targetFile.createNewFile()) {
@@ -142,65 +137,9 @@ public class SimpleJsonPathGenerator extends AbstractMojo {
 	}
 
 	private Map<String, Object> buildContext(Class<?> inputCls) {
-		return Map.of("target", buildTarget(inputCls), "info", buildInfo(inputCls));
+		SearchPathGenerator generator = new SearchPathGenerator(inputCls);
+		SearchPathInfo info = generator.generate(targetPackageName, targetClassName );
+		return Map.of("info", info);
 	}
 
-	private Map<String, String> buildTarget(Class<?> inputCls) {
-		HashMap<String, String> target = new HashMap<>();
-		target.put("packageName", getTargetPackageName(inputCls));
-		target.put("className", getTargetClassName(inputCls));
-		return target;
-	}
-
-	public void setProject(MavenProject project) {
-		this.project = project;
-	}
-
-	public Set<Entry<String, String>> buildInfo(Class<?> cls) {
-		Map<String, String> target = new HashMap<>();
-		fillInfoFor(cls, null, target);
-		Set<Entry<String, String>> toReturn = new TreeSet<>(Comparator.comparing(Entry::getKey));
-		toReturn.addAll(target.entrySet());
-		return toReturn;
-	}
-
-	private void fillInfoFor(Class<?> cls, String currentPath, Map<String, String> target) {
-		for (Field eachField : cls.getDeclaredFields()) {
-			fillInfoFor(eachField, currentPath, target);
-		}
-	}
-
-	private void fillInfoFor(Field eachField, String currentPath, Map<String, String> target) {
-		if (Modifier.isStatic(eachField.getModifiers())) {
-			return;
-		}
-		String fieldName = getPathSegment(eachField);
-		String newPath = deliverPath(currentPath, fieldName, target);
-		Class<?> type = eachField.getType();
-		if (type.isPrimitive() || type.equals(String.class)) {
-			return;
-		} else if (List.class.isAssignableFrom(type)) {
-			type = getGenericClass(eachField, 0);
-		} else if (Map.class.isAssignableFrom(type)) {
-			type = getGenericClass(eachField, 1);
-		}
-		fillInfoFor(type, newPath, target);
-	}
-
-	private Class<?> getGenericClass(Field field, int pos) {
-		ParameterizedType genType = (ParameterizedType) field.getGenericType();
-		return (Class<?>) genType.getActualTypeArguments()[pos];
-	}
-
-	private String getPathSegment(Field eachField) {
-		return Optional.ofNullable(eachField.getDeclaredAnnotation(JsonProperty.class)).map(JsonProperty::value)
-				.orElse(eachField.getName());
-	}
-
-	private String deliverPath(String currentPath, String fieldName, Map<String, String> target) {
-		String value = currentPath == null ? fieldName : String.join(".", currentPath, fieldName);
-		String key = value.toUpperCase().replace('.', '_');
-		target.put(key, value);
-		return value;
-	}
 }

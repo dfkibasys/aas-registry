@@ -5,16 +5,15 @@ import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.basyx.aas.registry.api.BasyxRegistryApiDelegate;
 import org.eclipse.basyx.aas.registry.api.RegistryApiController;
-import org.eclipse.basyx.aas.registry.client.api.AssetAdministrationShellDescriptorPaths;
+import org.eclipse.basyx.aas.registry.client.api.ShellDescriptorPaths;
 import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.model.TermQuery;
-import org.eclipse.basyx.aas.registry.model.TermQueryContainer;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
 import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
 import org.eclipse.basyx.aas.registry.service.RegistryServiceImpl;
@@ -278,15 +277,14 @@ public class BasyxRegistryApiDelegateTest {
 
 	@Test
 	public void whenSearchForUnknownAasDescriptor_thenReturnEmptyList() {
-		java.util.Map<String, TermQuery> qMap = Map.of(
-				AssetAdministrationShellDescriptorPaths.SUBMODELDESCRIPTORS_IDENTIFICATION,
-				new TermQuery().value("unknown"));
-		ResponseEntity<List<AssetAdministrationShellDescriptor>> entry = controller
-				.searchAssetAdministrationShellDescriptors(new TermQueryContainer().term(qMap));
+		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
+				.path(ShellDescriptorPaths.submodelDescriptors().identification()).value("unknown");
+		ResponseEntity<ShellDescriptorSearchResponse> entry = controller
+				.searchShellDescriptors(query);
 		assertThat(entry.getStatusCode()).isEqualTo(HttpStatus.OK);
-		assertThat(entry.getBody()).isEmpty();
+		assertThat(entry.getBody().getHits()).isEmpty();
 	}
-	
+
 	@Test
 	public void whenSearchForAasDescriptor_thenReturnResult() {
 		AssetAdministrationShellDescriptor input = new AssetAdministrationShellDescriptor();
@@ -296,14 +294,14 @@ public class BasyxRegistryApiDelegateTest {
 				.postAssetAdministrationShellDescriptor(input);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assertThat(response.getBody()).isEqualTo(input);
-		
-		java.util.Map<String, TermQuery> qMap = Map.of(
-				AssetAdministrationShellDescriptorPaths.SUBMODELDESCRIPTORS_IDENTIFICATION,
-				new TermQuery().value(ID_2_1));
-		ResponseEntity<List<AssetAdministrationShellDescriptor>> entry = controller
-				.searchAssetAdministrationShellDescriptors(new TermQueryContainer().term(qMap));
+
+		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
+				.path(ShellDescriptorPaths.submodelDescriptors().identification()).value(ID_2_1);
+		ResponseEntity<ShellDescriptorSearchResponse> entry = controller
+				.searchShellDescriptors(query);
 		assertThat(entry.getStatusCode()).isEqualTo(HttpStatus.OK);
-		assertThat(entry.getBody().size()).isEqualTo(1);
-		assertThat(entry.getBody().get(0)).isEqualTo(input);
+		List<AssetAdministrationShellDescriptor> result = entry.getBody().getHits();
+		assertThat(result.size()).isEqualTo(1);
+		assertThat(result.get(0)).isEqualTo(input);
 	}
 }

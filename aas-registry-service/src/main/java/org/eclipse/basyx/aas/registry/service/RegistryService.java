@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.eclipse.basyx.aas.registry.model.QueryContainer;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.model.TermQueryContainer;
-
 
 public interface RegistryService {
 
@@ -32,6 +30,6 @@ public interface RegistryService {
     // returns false if aas could not be resolved
     boolean unregisterSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier);
 
-	List<AssetAdministrationShellDescriptor> searchAssetAdministrationShellDescriptors(TermQueryContainer container);
+	List<AssetAdministrationShellDescriptor> searchAssetAdministrationShellDescriptors(ShellDescriptorSearchQuery query);
 
 }

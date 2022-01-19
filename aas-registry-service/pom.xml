@@ -216,7 +216,6 @@
 		<dependency>
 			<groupId>org.eclipse.basyx.aas.registry</groupId>
 			<artifactId>aas-registry-paths</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

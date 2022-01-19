@@ -1,6 +1,7 @@
 package org.eclipse.basyx.aas.registry.service.test.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
@@ -9,14 +10,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.eclipse.basyx.aas.registry.client.api.AssetAdministrationShellDescriptorPaths;
 import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import org.eclipse.basyx.aas.registry.client.api.ShellDescriptorPaths;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent.EventType;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.model.TermQuery;
-import org.eclipse.basyx.aas.registry.model.TermQueryContainer;
 import org.eclipse.basyx.aas.registry.service.test.util.TestResourcesLoader;
 import org.junit.After;
 import org.junit.Before;
@@ -167,20 +168,39 @@ public class IntegrationTest {
 				.type(EventType.AAS_REGISTERED).build());
 	}
 
+	
+
 	@Test
 	public void whenSearchBySubmodelDescriptorId_thenGotResult() throws Exception {
 		initialize();
 		AssetAdministrationShellDescriptor expected = resourceLoader.loadAssetAdminShellDescriptor();
 
-		TermQueryContainer query = new TermQueryContainer().putTermItem(
-				AssetAdministrationShellDescriptorPaths.SUBMODELDESCRIPTORS_IDENTIFICATION, new TermQuery().value("submodel0"));
+		String path = ShellDescriptorPaths.submodelDescriptors().description().text();
+		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery().path(path).value("G2");
 
-		ResponseEntity<List<AssetAdministrationShellDescriptor>> response = api
-				.searchAssetAdministrationShellDescriptorsWithHttpInfo(query);
+		ResponseEntity<ShellDescriptorSearchResponse> response = api.searchShellDescriptorsWithHttpInfo(query);
 
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-		assertThat(response.getBody().size()).isEqualTo(1);
-		assertThat(response.getBody().get(0)).isEqualTo(expected);
+		List<AssetAdministrationShellDescriptor> result = response.getBody().getHits();
+		assertThat(result.size()).isEqualTo(1);
+		assertThat(result.get(0)).isEqualTo(expected);
+	}
+	
+	@Test
+	public void whenSearchWithSorting_thenReturnSorted() throws IOException, InterruptedException, TimeoutException {
+//		initialize();
+//		AssetAdministrationShellDescriptor expected = resourceLoader.loadAssetAdminShellDescriptor();
+//
+//		String path = ShellDescriptorPaths.submodelDescriptors().description().text();
+//		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery().path(path).value("G1");
+//
+//		ResponseEntity<ShellDescriptorSearchResponse> response = api.searchShellDescriptorsWithHttpInfo(query);
+//
+//		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+//		List<AssetAdministrationShellDescriptor> result = response.getBody().getHits();
+//		assertThat(result.size()).isEqualTo(1);
+//		assertThat(result.get(0)).isEqualTo(expected);
+		
 	}
 
 	private void deleteAdminAssetShellDescriptor(String aasId) {
