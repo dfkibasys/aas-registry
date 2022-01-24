@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.basyx.aas.registry.util.path.PojoClassVisitor.PojoRelation;
+import org.eclipse.basyx.aas.registry.util.path.PojoClassVisitor.PojoRelation.PojoRelationBuilder;
+import org.eclipse.basyx.aas.registry.util.path.PojoClassVisitor.PojoRelation.PojoRelationType;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
@@ -29,12 +32,12 @@ class PojoClassWalker {
 
 	private void walkClass(Class<?> cls, String path) {
 		String name = cls.getSimpleName();
-		if (!visitor.visitType(name, cls == root)) {
-			return;
+		if (visitor.startType(name, cls == root)) {
+			for (Field field : getFields(cls)) {
+				walkField(cls, field, path);
+			}
 		}
-		for (Field field : getFields(cls)) {
-			walkField(cls, field, path);
-		}
+		visitor.endType();
 	}
 
 	private void walkField(Class<?> subjectcls, Field field, String path) {
@@ -46,30 +49,54 @@ class PojoClassWalker {
 		if (isFieldHidden(fieldName)) {
 			return; // hidden
 		}
+		PojoRelation.PojoRelationBuilder builder = PojoRelation.builder().methodName(methodName).fieldName(fieldName)
+				.isRootRelation(subjectcls == root).subject(subjectcls.getSimpleName());
 		String newPath = generateNewPath(path, fieldName);
+		Class<?> type = getFieldTypeAndAssignRange(field, builder);
+				
+		if (type.isPrimitive() || type.equals(String.class) || Enum.class.isAssignableFrom(type)) {
+			walkPrimitiveRelation(builder);
+		} else {
+			walkComplexRelation(type, newPath, builder);
+		}
+	}
+
+	private Class<?> getFieldTypeAndAssignRange(Field field, PojoRelationBuilder builder) {
 		Class<?> type = field.getType();
 		if (List.class.isAssignableFrom(type)) {
 			type = getGenericClass(field, 0);
+			builder.type(PojoRelationType.LIST);
 		} else if (Map.class.isAssignableFrom(type)) {
 			type = getGenericClass(field, 1);
-		}
-		if (type.isPrimitive() || type.equals(String.class) || Enum.class.isAssignableFrom(type)) {
-			visitor.onPrimitiveRelation(methodName, fieldName, subjectcls == root);
+			builder.type(PojoRelationType.MAP);
 		} else {
-			String typeName = type.getSimpleName();
-			List<Class<?>> subTypes = getSubTypes(type);
-			visitor.onComplexRelation(methodName, fieldName, typeName, subjectcls == root);
-			if (subTypes.isEmpty()) {
-				walkClass(type, newPath);
-			} else {
-				List<String> subTypeNames = subTypes.stream().map(Class::getSimpleName).collect(Collectors.toList());
-				visitor.onSubTypeRelation(typeName, subTypeNames);
-				walkClass(type, newPath);
-				for (Class<?> eachSubtype : subTypes) {
-					walkClass(eachSubtype, newPath);
-				}
+			builder.type(PojoRelationType.FUNCTIONAL);
+		}
+		return type;
+	}
+
+	private void walkComplexRelation(Class<?> type, String newPath, PojoRelationBuilder builder) {
+		String typeName = type.getSimpleName();
+		List<Class<?>> subTypes = getSubTypes(type);
+		PojoRelation relation = builder.range(typeName).build();
+		visitor.startRelation(relation);
+		if (subTypes.isEmpty()) {
+			walkClass(type, newPath);
+		} else {
+			List<String> subTypeNames = subTypes.stream().map(Class::getSimpleName).collect(Collectors.toList());
+			visitor.onSubTypeRelation(typeName, subTypeNames);
+			walkClass(type, newPath);
+			for (Class<?> eachSubtype : subTypes) {
+				walkClass(eachSubtype, newPath);
 			}
 		}
+		visitor.endRelation(relation);
+	}
+
+	private void walkPrimitiveRelation(PojoRelationBuilder builder) {
+		PojoRelation relation = builder.build();
+		visitor.startRelation(relation);
+		visitor.endRelation(relation);
 	}
 
 	private static List<Field> getFields(Class<?> cls) {

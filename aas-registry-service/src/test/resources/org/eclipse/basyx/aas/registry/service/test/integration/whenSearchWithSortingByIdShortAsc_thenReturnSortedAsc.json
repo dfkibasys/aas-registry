@@ -1,40 +1,14 @@
 [
 	{
-		"idShort": "7",
-		"identification": "7",
+		"idShort": "2",
+		"identification": "2",
 		"administration": {
-			"revision": "2.2" 
+			"revision": "2.22221" 
 		},
 		"description": [
 			{
 				"language": "de-DE",
-				"text": "7"
-			}
-		]
-	},	
-	{
-		"idShort": "7",
-		"identification": "6",
-		"administration": {
-			"revision": "2.1" 
-		},
-		"description": [
-			{
-				"language": "de-DE",
-				"text": "7"
-			}
-		]
-	},
-	{
-		"idShort": "1",
-		"identification": "1",
-		"administration": {
-			"revision": "2.2" 
-		},
-		"description": [
-			{
-				"language": "en-US",
-				"text": "1"
+				"text": "2"
 			}
 		]
 	},
@@ -92,17 +66,30 @@
 				]
 			}
 		]
-	},
+	},	
 	{
-		"idShort": "2",
-		"identification": "2",
+		"idShort": "7",
+		"identification": "6",
 		"administration": {
-			"revision": "2.22221" 
+			"revision": "2.1" 
 		},
 		"description": [
 			{
 				"language": "de-DE",
-				"text": "2"
+				"text": "7"
+			}
+		]
+	},
+	{
+		"idShort": "7",
+		"identification": "7",
+		"administration": {
+			"revision": "2.2" 
+		},
+		"description": [
+			{
+				"language": "de-DE",
+				"text": "7"
 			}
 		]
 	}

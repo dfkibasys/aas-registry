@@ -3,9 +3,9 @@ package org.eclipse.basyx.aas.registry.service.test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import org.eclipse.basyx.aas.registry.configuration.ResourceLoadingException;
 import org.eclipse.basyx.aas.registry.configuration.ElasticConfiguration.ElasticSearchScripts;
 import org.eclipse.basyx.aas.registry.configuration.ElasticConfiguration.PainlessElasticSearchScripts;
+import org.eclipse.basyx.aas.registry.configuration.ResourceLoadingException;
 import org.junit.Test;
 
 public class PainlessElasticSearchScriptsTest {

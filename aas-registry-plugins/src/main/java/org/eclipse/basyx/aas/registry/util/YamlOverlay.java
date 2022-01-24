@@ -78,6 +78,7 @@ public class YamlOverlay extends AbstractMojo {
 			} else {
 				target.put(key, baseValue);
 			}
+			
 		}
 		// for now we just append the remaining entries
 		overlayContent.forEach(target::put);

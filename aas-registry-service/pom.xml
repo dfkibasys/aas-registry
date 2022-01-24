@@ -21,7 +21,6 @@
 		<openapi.elastics.file>${openapi.folder}/${openapi.elastics.file.name}</openapi.elastics.file>
 		<openapi.search.result.file>${openapi.folder}/temporary-opensearch-result-file.yaml</openapi.search.result.file>
 		<openapi.result.file>${openapi.folder}/${openapi.name}</openapi.result.file>
-
 	</properties>
 
 	<build>
@@ -52,7 +51,7 @@
 				<groupId>org.eclipse.basyx.aas.registry</groupId>
 				<artifactId>aas-registry-plugins</artifactId>
 				<executions>
-					<execution>
+					 <execution>
 						<id>search-api</id>
 						<goals>
 							<goal>yaml-overlay</goal>
@@ -62,7 +61,7 @@
 							<overlay>${project.basedir}/../${openapi.folder.name}/${openapi.search.name}</overlay>
 							<out>${openapi.search.result.file}</out>	
 						</configuration>
-					</execution>
+					</execution> 
 					<execution>
 						<id>elastic-annotations</id>
 						<goals>
@@ -105,7 +104,7 @@
 								<oas3>true</oas3>
 								<useSpringController>true</useSpringController>
 								<modelPackage>org.eclipse.basyx.aas.registry.model</modelPackage>
-								<configPackage>org.eclise.basys.aas.registry.configuration</configPackage>
+								<configPackage>org.eclipse.basys.aas.registry.configuration</configPackage>
 								<apiPackage>org.eclipse.basyx.aas.registry.api</apiPackage>
 								<invokerPackage>org.eclipse.basyx.aas.registry</invokerPackage>
 								<delegatePattern>true</delegatePattern>

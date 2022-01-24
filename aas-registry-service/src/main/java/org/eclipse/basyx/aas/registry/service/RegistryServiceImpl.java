@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -14,17 +16,26 @@ import org.eclipse.basyx.aas.registry.events.RegistryEvent.EventType;
 import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
 import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
-import org.eclipse.basyx.aas.registry.repository.DescriptorMapper;
 import org.eclipse.basyx.aas.registry.repository.SearchRequestMapper;
+import org.eclipse.basyx.aas.registry.repository.SearchResultMapper;
+import org.elasticsearch.ElasticsearchStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.UpdateResponse.Result;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import lombok.NonNull;
 
@@ -145,14 +156,13 @@ public class RegistryServiceImpl implements RegistryService {
 	}
 
 	@Override
-	public List<AssetAdministrationShellDescriptor> searchAssetAdministrationShellDescriptors(
-			ShellDescriptorSearchQuery query) {
+	public ShellDescriptorSearchResponse searchAssetAdministrationShellDescriptors(ShellDescriptorSearchQuery query) {
 		NativeSearchQuery nQuery = SearchRequestMapper.mapSearchQuery(query);
 		SearchHits<AssetAdministrationShellDescriptor> hits = ops.search(nQuery,
 				AssetAdministrationShellDescriptor.class);
-				
-		DescriptorMapper cutter = new DescriptorMapper();
-		return cutter.mapHits(hits);
+		SearchResultMapper cutter = new SearchResultMapper();
+		List<AssetAdministrationShellDescriptor> transformed = cutter.shrinkHits(hits);
+		return new ShellDescriptorSearchResponse().total(hits.getTotalHits()).hits(transformed);
 	}
 
 	private static final class SubmodelDescriptorIdMatcher {

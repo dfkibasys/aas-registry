@@ -1,38 +1,29 @@
 package org.eclipse.basyx.aas.registry.util.path;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.UtilityClass;
 
 @Data
-public class SearchPathInfo {
+public class PathInfo {
 
 	private GenerationTarget target;
 
 	private Set<ConstantInfo> constants;
 
-	private Set<PrimitiveRangeRelationInfo> primitiveRangeRelations;
+	private ModelInfo rootModel;
 
-	private Set<ComplexRangeRelationInfo> complexRangeRelations;
-
-	private List<ModelInfo> models;
-
-	@Data
-	@AllArgsConstructor
-	public static class GenerationTarget {
-
-		private String packageName;
-
-		private String className;
-
-	}
+	private Set<ModelInfo> models;
 
 	@Getter
 	@Setter
@@ -57,7 +48,7 @@ public class SearchPathInfo {
 	public abstract static class RelationInfo {
 
 		private String methodName;
-		
+
 		private String attributeName;
 
 		private String attributeNameUpper;
@@ -67,7 +58,7 @@ public class SearchPathInfo {
 			this.attributeName = attributeName;
 			this.attributeNameUpper = ConstantGenerator.generateConstant(attributeName);
 		}
-		
+
 	}
 
 	@ToString
@@ -90,13 +81,20 @@ public class SearchPathInfo {
 			super(methodName, attributeName);
 			this.modelName = rangeName;
 		}
-		
+
+	}
+
+	@Data
+	@RequiredArgsConstructor
+	public static class BaseConfig {
+		private final boolean skipLists;
+		private final Map<String, ModelInfo> lookupTable = new HashMap<>();
 	}
 
 	@Data
 	public static class ModelInfo {
 
-		private String name;
+		private final String name;
 
 		private String singlePathConstructor;
 
@@ -104,19 +102,20 @@ public class SearchPathInfo {
 
 		private List<String> subModels;
 
-		private List<PrimitiveRangeRelationInfo> primitiveRangeRelations;
+		private List<PrimitiveRangeRelationInfo> primitiveRangeRelations = new LinkedList<>();
 
-		private List<ComplexRangeRelationInfo> complexRangeRelations;
-		
+		private List<ComplexRangeRelationInfo> complexRangeRelations = new LinkedList<>();
+
 		public ModelInfo(String name) {
 			this.name = name;
 		}
+
 	}
 
-	@UtilityClass 
+	@UtilityClass
 	private static class ConstantGenerator {
-
-		String generateConstant(String name) {
+		
+		public String generateConstant(String name) {
 			StringBuilder builder = new StringBuilder();
 			for (int i = 0, len = name.length(); i < len; i++) {
 				char c = name.charAt(i);
@@ -130,5 +129,5 @@ public class SearchPathInfo {
 			return builder.toString();
 		}
 	}
-	
+
 }

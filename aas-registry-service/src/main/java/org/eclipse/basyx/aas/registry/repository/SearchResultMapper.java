@@ -11,11 +11,12 @@ import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 
-public class DescriptorMapper {
+public class SearchResultMapper {
 
-	public List<AssetAdministrationShellDescriptor> mapHits(SearchHits<AssetAdministrationShellDescriptor> hits) {
-		List<AssetAdministrationShellDescriptor> result = new ArrayList<>();
-		for (SearchHit<AssetAdministrationShellDescriptor> eachHit : hits.getSearchHits()) {
+	public List<AssetAdministrationShellDescriptor> shrinkHits(SearchHits<AssetAdministrationShellDescriptor> hits) {		
+		List<SearchHit<AssetAdministrationShellDescriptor>> hitList = hits.getSearchHits();
+		List<AssetAdministrationShellDescriptor> descriptors = new ArrayList<>(hitList.size());
+		for (SearchHit<AssetAdministrationShellDescriptor> eachHit : hitList) {
 			AssetAdministrationShellDescriptor descriptor = eachHit.getContent();
 			Map<String, SearchHits<?>> innerHits = eachHit.getInnerHits();
 			if (!innerHits.isEmpty()) {
@@ -23,9 +24,9 @@ public class DescriptorMapper {
 				Entry<String, SearchHits<?>> innerEntry = innerHits.entrySet().iterator().next();
 				shrinkDescriptor(descriptor, innerEntry.getValue());
 			}
-			result.add(descriptor);
+			descriptors.add(descriptor);
 		}
-		return result;
+		return descriptors;
 	}
 
 	private void shrinkDescriptor(AssetAdministrationShellDescriptor descriptor, SearchHits<?> hits) {

@@ -9,5 +9,4 @@ public interface AssetAdministrationShellDescriptorRepository extends Elasticsea
 
 	
 	
-	
 }

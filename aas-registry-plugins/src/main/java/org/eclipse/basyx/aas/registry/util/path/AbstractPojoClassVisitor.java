@@ -2,28 +2,30 @@ package org.eclipse.basyx.aas.registry.util.path;
 
 import java.util.List;
 
-class AbstractPojoClassVisitor implements PojoClassVisitor {
+abstract class AbstractPojoClassVisitor implements PojoClassVisitor {
 
 	@Override
-	public void onPrimitiveRelation(String methodName, String fieldName, boolean isRootRelation) {
+	public void startRelation(PojoRelation relation) {
 	}
-
+	
 	@Override
-	public void onComplexRelation(String methodName, String fieldName, String range, boolean isRootRelation) {
+	public void endRelation(PojoRelation relation) {	
 	}
-
+	
 	@Override
-	public boolean visitType(String name, boolean isRoot) {
+	public boolean startType(String name, boolean isRoot) {
 		return true;
 	}
-
+	
+	@Override
+	public void endType() {
+	}
+	
 	@Override
 	public void onSubTypeRelation(String parent, List<String> subTypes) {
-
 	}
 
 	@Override
 	public void stop() {
-
 	}
 }

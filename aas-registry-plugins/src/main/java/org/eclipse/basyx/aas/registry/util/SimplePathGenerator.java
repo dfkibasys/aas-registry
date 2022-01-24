@@ -21,14 +21,20 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
-import org.eclipse.basyx.aas.registry.util.path.SearchPathGenerator;
-import org.eclipse.basyx.aas.registry.util.path.SearchPathInfo;
+import org.eclipse.basyx.aas.registry.util.path.GenerationTarget;
+import org.eclipse.basyx.aas.registry.util.path.PathInfo;
+import org.eclipse.basyx.aas.registry.util.path.PathInfoGenerator;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Mojo(name = "simple-path-generator", requiresDependencyResolution = ResolutionScope.COMPILE, defaultPhase = LifecyclePhase.INITIALIZE)
+@Getter
+@Setter
 public class SimplePathGenerator extends AbstractMojo {
 
 	@Parameter(defaultValue = "${project}", required = true, readonly = true)
@@ -48,34 +54,6 @@ public class SimplePathGenerator extends AbstractMojo {
 
 	@Parameter(property = "charset", defaultValue = "UTF-8")
 	private String charSet;
-
-	public String getClassName() {
-		return className;
-	}
-
-	public void setClassName(String className) {
-		this.className = className;
-	}
-
-	public void setTargetClassName(String targetClassName) {
-		this.targetClassName = targetClassName;
-	}
-
-	public void setTargetPackageName(String targetPackageName) {
-		this.targetPackageName = targetPackageName;
-	}
-
-	public void setTargetSourceFolder(File targetSourceFolder) {
-		this.targetSourceFolder = targetSourceFolder;
-	}
-
-	public void setCharSet(String charSet) {
-		this.charSet = charSet;
-	}
-	
-	public void setProject(MavenProject project) {
-		this.project = project;
-	}
 
 	public String getTargetPackageName(Class<?> cls) {
 		if (targetPackageName == null) {
@@ -137,8 +115,9 @@ public class SimplePathGenerator extends AbstractMojo {
 	}
 
 	private Map<String, Object> buildContext(Class<?> inputCls) {
-		SearchPathGenerator generator = new SearchPathGenerator(inputCls);
-		SearchPathInfo info = generator.generate(targetPackageName, targetClassName );
+		PathInfoGenerator generator = new PathInfoGenerator(inputCls);
+		GenerationTarget target = new GenerationTarget(targetPackageName, targetClassName);
+		PathInfo info = generator.generate(target);
 		return Map.of("info", info);
 	}
 

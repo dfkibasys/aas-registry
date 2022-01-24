@@ -11,17 +11,17 @@ class PojoClassVisitorDelegate implements PojoClassVisitor {
 	}
 
 	@Override
-	public void onPrimitiveRelation(String methodName, String fieldName, boolean isRootRelation) {
+	public void startRelation(PojoRelation relation) {
 		for (PojoClassVisitor eachVisitor : visitors) {
-			eachVisitor.onPrimitiveRelation(methodName, fieldName, isRootRelation);
+			eachVisitor.startRelation(relation);
 		}
 	}
-
+	
 	@Override
-	public void onComplexRelation(String methodName, String fieldName, String range, boolean isRootRelation) {
+	public void endRelation(PojoRelation relation) {
 		for (PojoClassVisitor eachVisitor : visitors) {
-			eachVisitor.onComplexRelation(methodName, fieldName, range, isRootRelation);
-		}
+			eachVisitor.endRelation(relation);
+		}	
 	}
 
 	@Override
@@ -32,14 +32,21 @@ class PojoClassVisitorDelegate implements PojoClassVisitor {
 	}
 
 	@Override
-	public boolean visitType(String name, boolean isRoot) {
+	public boolean startType(String name, boolean isRoot) {
 		boolean doContinue = true;
 		for (PojoClassVisitor eachVisitor : visitors) {
-			if (!eachVisitor.visitType(name, isRoot)) {
+			if (!eachVisitor.startType(name, isRoot)) {
 				doContinue = false;
 			}
 		}
 		return doContinue;
+	}
+	
+	@Override
+	public void endType() {
+		for (PojoClassVisitor eachVisitor : visitors) {
+			eachVisitor.endType();
+		}		
 	}
 
 	@Override

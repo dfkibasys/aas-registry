@@ -177,10 +177,12 @@ public class RepositoryMockInitializer extends TestWatcher {
 					SearchHit<AssetAdministrationShellDescriptor> hit = Mockito.mock(SearchHit.class);
 					mockHitList(hits, List.of(hit));
 					Mockito.when(hit.getContent()).thenReturn(descr);
+					Mockito.when(hits.getTotalHits()).thenReturn(1L);
 					return hits;
 				}
 			}
 		}
+		Mockito.when(hits.getTotalHits()).thenReturn(0L);
 		mockHitList(hits, List.of());
 		return hits;
 	}

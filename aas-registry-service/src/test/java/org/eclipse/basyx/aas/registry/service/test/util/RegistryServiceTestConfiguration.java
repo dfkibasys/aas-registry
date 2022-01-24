@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
 import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;

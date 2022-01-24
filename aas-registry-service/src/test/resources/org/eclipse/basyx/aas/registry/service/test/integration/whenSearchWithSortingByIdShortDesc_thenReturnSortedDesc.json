@@ -26,19 +26,6 @@
 		]
 	},
 	{
-		"idShort": "1",
-		"identification": "1",
-		"administration": {
-			"revision": "2.2" 
-		},
-		"description": [
-			{
-				"language": "en-US",
-				"text": "1"
-			}
-		]
-	},
-	{
 		"idShort": "5",
 		"identification": "5",
 		"administration": {

@@ -22,8 +22,16 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/ShellDescriptorSearchResponse'   
+        "400":
+           description: Invalid request
+           content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/IllegalRequest'
 components:
   schemas:
+    IllegalRequest:
+       type: string
     Reference:
       discriminator:
         propertyName: _rType
@@ -40,24 +48,52 @@ components:
     ShellDescriptorSearchQuery:
       type: object
       properties:
-        required:
+        page:
+           $ref: '#/components/schemas/Page'
+        sortBy: 
+           $ref: '#/components/schemas/Sorting'
+        match:
+         $ref: '#/components/schemas/Match'
+    Match:
+       required:
           - path
           - value
-        sorting: 
-          type: Sorting
-        path:
-          type: string
-        value:
-          type: string
+       properties:
+          path:
+            type: string
+          value:
+            type: string
+    Page:
+       type: object
+       required:
+          - index
+          - size
+       properties:
+          index:
+             type: integer
+             minimum: 0
+          size: 
+             type: integer
+             minimum: 0
+             maximum: 10000 
     Sorting:
       type: object
       required:
-        - property
+        - path
       properties:
         direction:
           $ref: '#/components/schemas/SortDirection'
-        property:
-          type: string
+        path:
+           type: array
+           items:
+              $ref: '#/components/schemas/SortingPath'
+    SortingPath:
+       type: string
+       enum: 
+          - idShort
+          - identification
+          - administration.revision
+          - administration.version
     SortDirection:
        type: string
        enum: [ "ASC", "DESC"]
@@ -65,7 +101,12 @@ components:
       type: object
       required:
         - hits
+        - total
       properties:
+        total:
+           type: integer
+           format: int64
+           minimum: 0
         hits:
           type: array
           items: 

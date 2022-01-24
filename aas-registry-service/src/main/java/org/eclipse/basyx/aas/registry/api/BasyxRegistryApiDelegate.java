@@ -25,7 +25,7 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 	public BasyxRegistryApiDelegate(RegistryService service) {
 		this.service = service;
 	}
-	
+
 	@Override
 	public ResponseEntity<Void> deleteAssetAdministrationShellDescriptorById(String aasIdentifier) {
 		if (aasIdentifier != null) {
@@ -90,7 +90,7 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 		if (success) {
 			return new ResponseEntity<>(body, HttpStatus.CREATED);
 		} else { // aas not found
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);	
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -111,7 +111,7 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 		AssetAdministrationShellDescriptor descriptor = service.registerAssetAdministrationShellDescriptor(body);
 		return new ResponseEntity<>(descriptor, HttpStatus.CREATED);
 	}
-	
+
 	@Override
 	public ResponseEntity<Void> putSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier,
 			@Valid SubmodelDescriptor body) {
@@ -125,10 +125,10 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
+
 	@Override
 	public ResponseEntity<ShellDescriptorSearchResponse> searchShellDescriptors(ShellDescriptorSearchQuery query) {
-		List<AssetAdministrationShellDescriptor> results = service.searchAssetAdministrationShellDescriptors(query); 
-		ShellDescriptorSearchResponse response = new ShellDescriptorSearchResponse().hits(results);
-		return ResponseEntity.ok(response);
+		ShellDescriptorSearchResponse result = service.searchAssetAdministrationShellDescriptors(query);
+		return ResponseEntity.ok(result);
 	}
 }

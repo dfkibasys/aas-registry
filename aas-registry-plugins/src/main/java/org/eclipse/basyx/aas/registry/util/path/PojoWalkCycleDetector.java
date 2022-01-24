@@ -7,15 +7,15 @@ class PojoWalkCycleDetector extends PojoClassVisitorDelegate {
 
 	private HashSet<String> typeNames = new HashSet<>();
 
-	public PojoWalkCycleDetector(PojoClassVisitor... visitors) {
-		super(visitors);
+	public PojoWalkCycleDetector(PojoClassVisitor visitor) {
+		super(visitor);
 	}
 
 	@Override
-	public boolean visitType(String name, boolean isRoot) {
+	public boolean startType(String name, boolean isRoot) {
 		boolean doProcess = typeNames.add(name);
 		if (doProcess) {
-			super.visitType(name, isRoot);
+			super.startType(name, isRoot);
 		}
 		return doProcess;
 	}
