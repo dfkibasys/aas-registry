@@ -32,6 +32,4 @@ spring:
           producer:
             partitionKeyExpression: payload.id
             partitionCount: 1
-
-            
             

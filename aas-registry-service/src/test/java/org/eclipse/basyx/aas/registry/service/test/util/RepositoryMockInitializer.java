@@ -13,7 +13,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.SerializationUtils;
-import org.eclipse.basyx.aas.registry.client.api.ShellDescriptorPaths;
+import org.eclipse.basyx.aas.registry.client.api.AasRegistryPaths;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
@@ -208,7 +208,7 @@ public class RepositoryMockInitializer extends TestWatcher {
 		// for the test we expect that it is a submodel id request because we do not
 		// want complex logic in our mock
 		String path = mBuilder.fieldName();
-		assert ShellDescriptorPaths.submodelDescriptors().identification().equals(path);
+		assert AasRegistryPaths.submodelDescriptors().identification().equals(path);
 		return mBuilder.value();
 	}
 

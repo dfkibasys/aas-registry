@@ -94,7 +94,6 @@
 							<output>${project.basedir}/${generated.folder}</output>
 
 							<templateDirectory>${project.basedir}/templates</templateDirectory>
-							<skipDefaultInterface>true</skipDefaultInterface>
 							<!-- See https://openapi-generator.tech/docs/generators/spring -->
 							<configOptions>
 								<java8>true</java8>
@@ -206,12 +205,7 @@
 			<artifactId>aas-registry-client</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- Test configuration -->		
-		<dependency>
-			<groupId>org.eclipse.basyx.aas.registry</groupId>
-			<artifactId>aas-registry-client</artifactId>
-			<scope>test</scope>
-		</dependency>
+		<!-- Test configuration -->	
 		<dependency>
 			<groupId>org.eclipse.basyx.aas.registry</groupId>
 			<artifactId>aas-registry-paths</artifactId>

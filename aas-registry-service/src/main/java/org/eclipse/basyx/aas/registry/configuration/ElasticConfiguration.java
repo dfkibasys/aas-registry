@@ -39,11 +39,6 @@ public class ElasticConfiguration extends AbstractElasticsearchConfiguration {
 		ClientConfiguration clientConfiguration = ClientConfiguration.builder().connectedTo(elasticsearchUrl).build();
 		return RestClients.create(clientConfiguration).rest();
 	}
-//
-//	@Bean
-//	public ElasticsearchOperations elasticsearchTemplate() {
-//		return new ElasticsearchRestTemplate(client());
-//	}
 
 	@Bean
 	public ElasticSearchScripts scripts() {

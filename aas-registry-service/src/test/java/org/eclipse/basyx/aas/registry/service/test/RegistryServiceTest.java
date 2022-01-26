@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.eclipse.basyx.aas.registry.client.api.ShellDescriptorPaths;
+import org.eclipse.basyx.aas.registry.client.api.AasRegistryPaths;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent;
 import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
@@ -360,7 +360,7 @@ public class RegistryServiceTest {
 	@Test
 	public void whenSearchBySubModel_thenReturnDescriptorList() throws IOException {
 		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
-				.match(new Match().path(ShellDescriptorPaths.submodelDescriptors().identification()).value("2.1"));
+				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value("2.1"));
 		ShellDescriptorSearchResponse result = registry.searchAssetAdministrationShellDescriptors(query);
 		AssetAdministrationShellDescriptor descriptor = testResourcesLoader.loadAssetAdminShellDescriptor();
 		assertThat(result.getTotal()).isEqualTo(1);
@@ -370,7 +370,7 @@ public class RegistryServiceTest {
 	@Test
 	public void whenSearchBySubModelAndNotFound_thenReturnEmptyList() {
 		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
-				.match(new Match().path(ShellDescriptorPaths.submodelDescriptors().identification()).value("unknown"));
+				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value("unknown"));
 		ShellDescriptorSearchResponse result = registry.searchAssetAdministrationShellDescriptors(query);
 		assertThat(result.getTotal()).isZero();
 		assertThat(result.getHits().size()).isZero();

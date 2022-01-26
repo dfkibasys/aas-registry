@@ -46,9 +46,7 @@ class PojoClassWalker {
 		}
 		String methodName = field.getName();
 		String fieldName = getModelPropertyOrFieldName(field);
-		if (isFieldHidden(fieldName)) {
-			return; // hidden
-		}
+
 		PojoRelation.PojoRelationBuilder builder = PojoRelation.builder().methodName(methodName).fieldName(fieldName)
 				.isRootRelation(subjectcls == root).subject(subjectcls.getSimpleName());
 		String newPath = generateNewPath(path, fieldName);
@@ -111,11 +109,7 @@ class PojoClassWalker {
 			getFields(cls.getSuperclass(), fields);
 		}
 	}
-
-	private boolean isFieldHidden(String fieldName) {
-		return fieldName.startsWith("_");
-	}
-
+	
 	private String getModelPropertyOrFieldName(Field eachField) {
 		org.springframework.data.elasticsearch.annotations.Field elasticField = eachField
 				.getDeclaredAnnotation(org.springframework.data.elasticsearch.annotations.Field.class);

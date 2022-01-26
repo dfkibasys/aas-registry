@@ -3,7 +3,7 @@ package org.eclipse.basyx.aas.registry.repository;
 import javax.validation.constraints.NotNull;
 
 import org.apache.lucene.search.join.ScoreMode;
-import org.eclipse.basyx.aas.registry.client.api.ShellDescriptorPaths;
+import org.eclipse.basyx.aas.registry.client.api.AasRegistryPaths;
 import org.eclipse.basyx.aas.registry.model.Match;
 import org.eclipse.basyx.aas.registry.model.Page;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
@@ -15,7 +15,6 @@ import org.elasticsearch.index.query.InnerHitBuilder;
 import org.elasticsearch.index.query.MatchAllQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.NestedQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -58,7 +57,7 @@ public class SearchRequestMapper {
 		bqBuilder.must(matchBuilder);
 		if (doBuildSubmodelNestedQuqery(path)) {
 			NestedQueryBuilder nestedBuilder = QueryBuilders
-					.nestedQuery(ShellDescriptorPaths.submodelDescriptors().toString(), bqBuilder, ScoreMode.None);
+					.nestedQuery(AasRegistryPaths.submodelDescriptors().toString(), bqBuilder, ScoreMode.None);
 			InnerHitBuilder innerHitBuilder = new InnerHitBuilder();
 			innerHitBuilder.setSize(MAX_INNER_HITS);
 			nestedBuilder.innerHit(innerHitBuilder);
@@ -99,7 +98,7 @@ public class SearchRequestMapper {
 	}
 
 	private static boolean doBuildSubmodelNestedQuqery(String key) {
-		return key.startsWith(ShellDescriptorPaths.submodelDescriptors().toString() + ".");
+		return key.startsWith(AasRegistryPaths.submodelDescriptors().toString() + ".");
 	}
 
 }

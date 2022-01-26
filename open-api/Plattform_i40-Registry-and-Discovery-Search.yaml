@@ -34,17 +34,13 @@ components:
        type: string
     Reference:
       discriminator:
-        propertyName: _rType
+        propertyName: refType
     GlobalReference:
-      properties:
-        _rType: 
-          type: string
-          default: GlobalReference
+       x-java-class-annotations:
+          - '@com.fasterxml.jackson.annotation.JsonIgnoreProperties(value = "refType")'
     ModelReference:
-      properties:
-        _rType:
-          type: string
-          default: ModelReference
+       x-java-class-annotations:
+          - '@com.fasterxml.jackson.annotation.JsonIgnoreProperties(value = "refType")'
     ShellDescriptorSearchQuery:
       type: object
       properties:

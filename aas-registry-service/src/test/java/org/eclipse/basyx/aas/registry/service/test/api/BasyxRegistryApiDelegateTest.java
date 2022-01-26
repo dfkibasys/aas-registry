@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.eclipse.basyx.aas.registry.api.BasyxRegistryApiDelegate;
 import org.eclipse.basyx.aas.registry.api.RegistryApiController;
-import org.eclipse.basyx.aas.registry.client.api.ShellDescriptorPaths;
+import org.eclipse.basyx.aas.registry.client.api.AasRegistryPaths;
 import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.Match;
@@ -279,7 +279,7 @@ public class BasyxRegistryApiDelegateTest {
 	@Test
 	public void whenSearchForUnknownAasDescriptor_thenReturnEmptyList() {
 		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
-				.match(new Match().path(ShellDescriptorPaths.submodelDescriptors().identification()).value("unknown"));
+				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value("unknown"));
 		ResponseEntity<ShellDescriptorSearchResponse> entry = controller.searchShellDescriptors(query);
 		assertThat(entry.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(entry.getBody().getHits()).isEmpty();
@@ -296,7 +296,7 @@ public class BasyxRegistryApiDelegateTest {
 		assertThat(response.getBody()).isEqualTo(input);
 
 		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
-				.match(new Match().path(ShellDescriptorPaths.submodelDescriptors().identification()).value(ID_2_1));
+				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value(ID_2_1));
 		ResponseEntity<ShellDescriptorSearchResponse> entry = controller.searchShellDescriptors(query);
 		assertThat(entry.getStatusCode()).isEqualTo(HttpStatus.OK);
 		List<AssetAdministrationShellDescriptor> result = entry.getBody().getHits();

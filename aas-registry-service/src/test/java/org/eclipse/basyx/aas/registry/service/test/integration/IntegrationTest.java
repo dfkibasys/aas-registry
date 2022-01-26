@@ -11,7 +11,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
 
 import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
-import org.eclipse.basyx.aas.registry.client.api.ShellDescriptorPaths;
+import org.eclipse.basyx.aas.registry.client.api.AasRegistryPaths;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent.EventType;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
@@ -191,7 +191,7 @@ public class IntegrationTest {
 	public void whenSearchBySubmodelDescriptorId_thenGotResult() throws Exception {
 		initialize();
 		AssetAdministrationShellDescriptor expected = resourceLoader.loadAssetAdminShellDescriptor();
-		String path = ShellDescriptorPaths.submodelDescriptors().idShort();
+		String path = AasRegistryPaths.submodelDescriptors().idShort();
 		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery().match(new Match().path(path).value("sm4"));
 		ResponseEntity<ShellDescriptorSearchResponse> response = api.searchShellDescriptorsWithHttpInfo(query);
 
@@ -259,7 +259,7 @@ public class IntegrationTest {
 			throws IOException, InterruptedException, TimeoutException {
 		initialize();
 		List<AssetAdministrationShellDescriptor> expected = resourceLoader.loadShellDescriptorList();
-		String path = ShellDescriptorPaths.description().language();
+		String path = AasRegistryPaths.description().language();
 		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery().match(new Match().path(path).value("de-DE"))
 				.sortBy(new Sorting().addPathItem(SortingPath.IDSHORT).addPathItem(SortingPath.ADMINISTRATION_REVISION)
 						.direction(direction));
@@ -276,6 +276,7 @@ public class IntegrationTest {
 		api.searchShellDescriptors(new ShellDescriptorSearchQuery());
 	}
 
+	
 	private void deleteAdminAssetShellDescriptor(String aasId) {
 		HttpStatus response = api.deleteAssetAdministrationShellDescriptorByIdWithHttpInfo(aasId).getStatusCode();
 		assertThat(response).isEqualTo(HttpStatus.NO_CONTENT);
