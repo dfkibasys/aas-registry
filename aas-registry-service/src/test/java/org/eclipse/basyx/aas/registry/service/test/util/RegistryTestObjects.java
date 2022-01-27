@@ -1,7 +1,6 @@
 package org.eclipse.basyx.aas.registry.service.test.util;
 
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptorEnvelop;
 import org.eclipse.basyx.aas.registry.model.LangString;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 
@@ -41,10 +40,10 @@ public class RegistryTestObjects {
 		return descr;
 	}
 	
-	public AssetAdministrationShellDescriptorEnvelop newEnvelop(String id) {
+	public AssetAdministrationShellDescriptor newDescriptor(String id) {
 		AssetAdministrationShellDescriptor descriptor = new AssetAdministrationShellDescriptor();
 		descriptor.setIdentification(id);
-		return new AssetAdministrationShellDescriptorEnvelop(descriptor);
+		return descriptor;
 	}
 	
 	public SubmodelDescriptor newSubmodelDescriptorWithIdShort(String id, String idShort) {

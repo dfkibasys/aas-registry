@@ -1,0 +1,85 @@
+{{#info}}
+package {{target.packageName}}; 
+
+public class {{target.className}} {
+
+{{#constants}}
+ private static final String SEGMENT_{{nameUpper}} = "{{name}}";
+{{/constants}}
+
+  private {{target.className}}() {
+  }
+{{#rootModel}}
+{{#primitiveRangeRelations}}
+  public static String {{methodName}}() {
+    return SEGMENT_{{attributeNameUpper}};
+  }
+
+{{/primitiveRangeRelations}}
+{{#complexRangeRelations}}
+  public static {{modelName}}Path {{methodName}}() {
+    return new {{modelName}}Path(SEGMENT_{{attributeNameUpper}});
+  }
+
+{{/complexRangeRelations}}
+{{/rootModel}}
+  public abstract static class SimplePath {
+
+    protected final String path;
+
+    protected SimplePath(String path) {
+      this.path = path;
+    }
+
+    protected SimplePath(String path, String segment) {
+      this(path + "." + segment);
+    }
+
+    protected String append(String segment) {
+		return path + "." + segment;
+    }
+    
+    @Override
+    public String toString() {
+      return path;
+    }
+  }
+
+{{#models}}
+  public static final class {{name}}Path extends SimplePath {
+
+{{#singlePathConstructor}}
+    private {{.}}Path(String path) {
+      super(path);
+    }
+
+{{/singlePathConstructor}}
+{{#pathAndSegmentConstructor}}
+    private {{.}}Path(String path, String segment) {
+	  super(path, segment);
+	}
+
+{{/pathAndSegmentConstructor}}
+{{#subModels}}
+    public {{.}}Path as{{.}}() {
+      return new {{.}}Path(path);
+    }
+
+{{/subModels}}
+{{#primitiveRangeRelations}}
+    public String {{methodName}}() {
+    	return append(SEGMENT_{{attributeNameUpper}});
+    }
+
+{{/primitiveRangeRelations}}
+{{#complexRangeRelations}}
+    public {{modelName}}Path {{methodName}}() {
+      return new {{modelName}}Path(path, SEGMENT_{{attributeNameUpper}});
+    }
+
+{{/complexRangeRelations}}
+
+  }
+{{/models}}
+}
+{{/info}}

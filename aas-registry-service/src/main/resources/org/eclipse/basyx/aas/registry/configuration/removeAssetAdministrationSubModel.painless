@@ -1,4 +1,4 @@
-Map descr = ctx._source.assetAdministrationShellDescriptor; 
+Map descr = ctx._source; 
 if (descr.submodelDescriptors == null) {
 	ctx.op = 'none';
 	return;	

@@ -8,16 +8,27 @@ import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Stream;
 
 import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import org.eclipse.basyx.aas.registry.client.api.AasRegistryPaths;
+import org.eclipse.basyx.aas.registry.events.RegistryEvent;
+import org.eclipse.basyx.aas.registry.events.RegistryEvent.EventType;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
+import org.eclipse.basyx.aas.registry.model.Match;
+import org.eclipse.basyx.aas.registry.model.Page;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
+import org.eclipse.basyx.aas.registry.model.SortDirection;
+import org.eclipse.basyx.aas.registry.model.Sorting;
+import org.eclipse.basyx.aas.registry.model.SortingPath;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.model.event.RegistryEvent;
-import org.eclipse.basyx.aas.registry.model.event.RegistryEvent.EventType;
 import org.eclipse.basyx.aas.registry.service.test.util.TestResourcesLoader;
 import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.ClassRule;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +46,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -64,11 +76,19 @@ public class IntegrationTest {
 
 	private final RegistryAndDiscoveryInterfaceApi api = new RegistryAndDiscoveryInterfaceApi();
 
-	@ClassRule
 	public static KafkaContainer KAFKA = new KafkaContainer(KAFKA_TEST_IMAGE);
 
-	@ClassRule
 	public static ElasticsearchContainer ELASTIC_SEARCH = new ElasticsearchContainer(ELASTICSEARCH_TEST_IMAGE);
+
+	@BeforeClass
+	public static void startContainersInParallel() {
+		Stream.of(KAFKA, ELASTIC_SEARCH).parallel().forEach(GenericContainer::start);
+	}
+
+	@AfterClass
+	public static void stopContainersInParallel() {
+		Stream.of(KAFKA, ELASTIC_SEARCH).parallel().forEach(GenericContainer::stop);
+	}
 
 	@After
 	public void cleanup() {
@@ -111,12 +131,13 @@ public class IntegrationTest {
 	@Test
 	public void whenRegisterAndUnregisterSubmodel_thenSubmodelIsCreatedAndDeleted()
 			throws IOException, InterruptedException, TimeoutException {
+		initialize();
 		List<AssetAdministrationShellDescriptor> deployed = initialize();
 		List<AssetAdministrationShellDescriptor> all = api.getAllAssetAdministrationShellDescriptors();
 		assertThat(all).asList().containsExactlyInAnyOrderElementsOf(deployed);
 
 		SubmodelDescriptor toRegister = resourceLoader.loadSubmodel("toregister");
-		String aasId = "aasDescr1";
+		String aasId = "1";
 		ResponseEntity<SubmodelDescriptor> response = api.postSubmodelDescriptorWithHttpInfo(toRegister, aasId);
 		assertThatEventWasSend(RegistryEvent.builder().id(aasId).submodelId(toRegister.getIdentification())
 				.submodelDescriptor(toRegister).type(EventType.SUBMODEL_REGISTERED).build());
@@ -144,7 +165,9 @@ public class IntegrationTest {
 	}
 
 	@Test
-	public void whenInvalidInput_thenSuccessfullyValidated() throws IOException {
+	public void whenInvalidInput_thenSuccessfullyValidated()
+			throws IOException, InterruptedException, TimeoutException {
+		initialize();
 		assertThrows(HttpClientErrorException.class, () -> api.deleteSubmodelDescriptorByIdWithHttpInfo(null, null));
 		assertThrows(HttpClientErrorException.class, () -> api.deleteAssetAdministrationShellDescriptorById(null));
 		assertThrows(HttpClientErrorException.class, () -> api.getAllSubmodelDescriptors(null));
@@ -164,6 +187,96 @@ public class IntegrationTest {
 				.type(EventType.AAS_REGISTERED).build());
 	}
 
+	@Test
+	public void whenSearchBySubmodelDescriptorId_thenGotResult() throws Exception {
+		initialize();
+		AssetAdministrationShellDescriptor expected = resourceLoader.loadAssetAdminShellDescriptor();
+		String path = AasRegistryPaths.submodelDescriptors().idShort();
+		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery().match(new Match().path(path).value("sm4"));
+		ResponseEntity<ShellDescriptorSearchResponse> response = api.searchShellDescriptorsWithHttpInfo(query);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		List<AssetAdministrationShellDescriptor> result = response.getBody().getHits();
+		assertThat(result.size()).isEqualTo(1);
+		assertThat(result.get(0)).isEqualTo(expected);
+	}
+
+	@Test
+	public void whenUsePagination_thenUseRefetching() throws IOException, InterruptedException, TimeoutException {
+		initialize();
+
+		List<AssetAdministrationShellDescriptor> expected = resourceLoader.loadShellDescriptorList();
+
+		assertResultByPage(0, expected);
+		assertResultByPage(1, expected);
+		assertResultByPage(2, expected);
+		assertResultByPage(3, expected);
+	}
+
+	private void assertResultByPage(int from, List<AssetAdministrationShellDescriptor> expected) {
+		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery().sortBy(new Sorting()
+				.addPathItem(SortingPath.IDSHORT).addPathItem(SortingPath.IDENTIFICATION).direction(SortDirection.ASC))
+				.page(new Page().index(from).size(2));
+		ShellDescriptorSearchResponse response = api.searchShellDescriptors(query);
+		int total = 5;
+		assertThat(response.getTotal()).isEqualTo(total);
+		List<AssetAdministrationShellDescriptor> hits = response.getHits();
+		int position = from * 2;
+		if (position < total) {
+			AssetAdministrationShellDescriptor hit0 = hits.get(0);
+			AssetAdministrationShellDescriptor expected0 = expected.get(position);
+			assertThat(hit0).isEqualTo(expected0);
+		} else {
+			assertThat(hits).isEmpty();
+		}
+		position++;
+		if (position < total) {
+			AssetAdministrationShellDescriptor hit1 = hits.get(1);
+			AssetAdministrationShellDescriptor expected1 = expected.get(position);
+			assertThat(hit1).isEqualTo(expected1);
+		}
+	}
+
+	@Test
+	public void whenSearchWithSortingByIdShortAsc_thenReturnSortedAsc()
+			throws IOException, InterruptedException, TimeoutException {
+		whenSearchWithSortingByIdShort_thenReturnSorted(SortDirection.ASC);
+	}
+	
+	@Test
+	public void whenSearchWithSortingByIdNoSortOrder_thenReturnSortedAsc()
+			throws IOException, InterruptedException, TimeoutException {
+		whenSearchWithSortingByIdShort_thenReturnSorted(null);
+	}
+
+	@Test
+	public void whenSearchWithSortingByIdShortDesc_thenReturnSortedDesc()
+			throws IOException, InterruptedException, TimeoutException {
+		whenSearchWithSortingByIdShort_thenReturnSorted(SortDirection.DESC);
+	}
+
+	private void whenSearchWithSortingByIdShort_thenReturnSorted(SortDirection direction)
+			throws IOException, InterruptedException, TimeoutException {
+		initialize();
+		List<AssetAdministrationShellDescriptor> expected = resourceLoader.loadShellDescriptorList();
+		String path = AasRegistryPaths.description().language();
+		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery().match(new Match().path(path).value("de-DE"))
+				.sortBy(new Sorting().addPathItem(SortingPath.IDSHORT).addPathItem(SortingPath.ADMINISTRATION_REVISION)
+						.direction(direction));
+		ResponseEntity<ShellDescriptorSearchResponse> response = api.searchShellDescriptorsWithHttpInfo(query);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		List<AssetAdministrationShellDescriptor> result = response.getBody().getHits();
+		Assert.assertEquals(expected.toString(), result.toString());
+		assertThat(result).asList().isEqualTo(expected);
+	}
+
+	@Test
+	public void whenIllegalArguments_thenResult() throws IOException, InterruptedException, TimeoutException {
+		initialize();
+		api.searchShellDescriptors(new ShellDescriptorSearchQuery());
+	}
+
+	
 	private void deleteAdminAssetShellDescriptor(String aasId) {
 		HttpStatus response = api.deleteAssetAdministrationShellDescriptorByIdWithHttpInfo(aasId).getStatusCode();
 		assertThat(response).isEqualTo(HttpStatus.NO_CONTENT);

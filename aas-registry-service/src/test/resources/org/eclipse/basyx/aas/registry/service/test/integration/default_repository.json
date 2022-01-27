@@ -1,21 +1,53 @@
 [
 	{
-		"idShort": "aas0",
-		"identification": "aasDescr0",
+		"idShort": "7",
+		"identification": "7",
+		"administration": {
+			"revision": "2.2" 
+		},
 		"description": [
 			{
 				"language": "de-DE",
-				"text": "First asset shell descriptor."
+				"text": "7"
+			}
+		]
+	},	
+	{
+		"idShort": "7",
+		"identification": "6",
+		"administration": {
+			"revision": "2.1" 
+		},
+		"description": [
+			{
+				"language": "de-DE",
+				"text": "7"
 			}
 		]
 	},
 	{
-		"idShort": "aas1",
-		"identification": "aasDescr1",
+		"idShort": "1",
+		"identification": "1",
+		"administration": {
+			"revision": "2.2" 
+		},
+		"description": [
+			{
+				"language": "en-US",
+				"text": "1"
+			}
+		]
+	},
+	{
+		"idShort": "5",
+		"identification": "5",
+		"administration": {
+			"revision": "1.1" 
+		},
 		"description": [
 			{
 				"language": "de-DE",
-				"text": "Sub model asset shell descriptor."
+				"text": "5"
 			}
 		],
 		"submodelDescriptors": [
@@ -25,19 +57,52 @@
 				"description": [
 					{
 						"language": "de-DE",
-						"text": "Sub model descriptor."
+						"text": "G1"
+					}
+				]
+			},
+			{
+				"idShort": "sm1",
+				"identification": "submodel1",
+				"description": [
+					{
+						"language": "de-DE",
+						"text": "G2"
+					}
+				]
+			},
+			{
+				"idShort": "sm3",
+				"identification": "submodel2",
+				"description": [
+					{
+						"language": "de-DE",
+						"text": "G1"
+					}
+				]
+			},
+			{
+				"idShort": "sm4",
+				"identification": "submodel3",
+				"description": [
+					{
+						"language": "de-DE",
+						"text": "G2"
 					}
 				]
 			}
 		]
 	},
 	{
-		"idShort": "aas2",
-		"identification": "aasDescr2",
+		"idShort": "2",
+		"identification": "2",
+		"administration": {
+			"revision": "2.22221" 
+		},
 		"description": [
 			{
 				"language": "de-DE",
-				"text": "Third asset shell descriptor."
+				"text": "2"
 			}
 		]
 	}

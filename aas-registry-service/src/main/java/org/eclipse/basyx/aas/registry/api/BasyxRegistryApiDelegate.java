@@ -7,6 +7,8 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.service.RegistryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 	public BasyxRegistryApiDelegate(RegistryService service) {
 		this.service = service;
 	}
-	
+
 	@Override
 	public ResponseEntity<Void> deleteAssetAdministrationShellDescriptorById(String aasIdentifier) {
 		if (aasIdentifier != null) {
@@ -88,7 +90,7 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 		if (success) {
 			return new ResponseEntity<>(body, HttpStatus.CREATED);
 		} else { // aas not found
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);	
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -109,7 +111,7 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 		AssetAdministrationShellDescriptor descriptor = service.registerAssetAdministrationShellDescriptor(body);
 		return new ResponseEntity<>(descriptor, HttpStatus.CREATED);
 	}
-	
+
 	@Override
 	public ResponseEntity<Void> putSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier,
 			@Valid SubmodelDescriptor body) {
@@ -122,5 +124,11 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 		} else { // aas not found
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-	}	
+	}
+
+	@Override
+	public ResponseEntity<ShellDescriptorSearchResponse> searchShellDescriptors(ShellDescriptorSearchQuery query) {
+		ShellDescriptorSearchResponse result = service.searchAssetAdministrationShellDescriptors(query);
+		return ResponseEntity.ok(result);
+	}
 }

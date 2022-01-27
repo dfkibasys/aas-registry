@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.eclipse.basyx.aas.registry.events.RegistryEvent;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.model.event.RegistryEvent;
 import org.junit.rules.TestName;
 import org.junit.runner.Description;
 

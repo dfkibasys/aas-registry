@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-
 
 public interface RegistryService {
 
@@ -17,18 +18,20 @@ public interface RegistryService {
     
     Optional<AssetAdministrationShellDescriptor> getAssetAdministrationShellDescriptorById(String aasIdentifier);
     
-    AssetAdministrationShellDescriptor registerAssetAdministrationShellDescriptor(AssetAdministrationShellDescriptor body);
+    AssetAdministrationShellDescriptor registerAssetAdministrationShellDescriptor(AssetAdministrationShellDescriptor descriptor);
     
     boolean unregisterAssetAdministrationShellDescriptorById(String aasIdentifier);
 
     Optional<List<SubmodelDescriptor>> getAllSubmodelDescriptors(String aasIdentifier);
     
     Optional<SubmodelDescriptor> getSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier);
-
     // returns false if aas could not be resolved,
-    boolean registerSubmodelDescriptor(String aasIdentifier, SubmodelDescriptor body);
+    boolean registerSubmodelDescriptor(String aasIdentifier, SubmodelDescriptor submodel);
     
     // returns false if aas could not be resolved
     boolean unregisterSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier);
 
+    ShellDescriptorSearchResponse searchAssetAdministrationShellDescriptors(ShellDescriptorSearchQuery query);
+
+	
 }

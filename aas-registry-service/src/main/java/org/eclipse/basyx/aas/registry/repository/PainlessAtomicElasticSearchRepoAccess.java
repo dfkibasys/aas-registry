@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 import org.eclipse.basyx.aas.registry.configuration.ElasticConfiguration.ElasticSearchScripts;
-import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptorEnvelop;
+import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.rest.RestStatus;
@@ -52,7 +52,7 @@ public class PainlessAtomicElasticSearchRepoAccess implements AtomicElasticSearc
 	private Result update(String aasId, String script, Map<String, Object> params) {
 		UpdateQuery query = UpdateQuery.builder(aasId).withLang(scripts.getLanguage()).withScriptType(ScriptType.INLINE)
 				.withRefreshPolicy(RefreshPolicy.IMMEDIATE).withScript(script).withParams(params).build();
-		IndexCoordinates coordinates = ops.getIndexCoordinatesFor(AssetAdministrationShellDescriptorEnvelop.class);
+		IndexCoordinates coordinates = ops.getIndexCoordinatesFor(AssetAdministrationShellDescriptor.class);
 		try {
 			UpdateResponse response = ops.update(query, coordinates);
 			return response.getResult();

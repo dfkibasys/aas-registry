@@ -10,10 +10,14 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.eclipse.basyx.aas.registry.client.api.AasRegistryPaths;
+import org.eclipse.basyx.aas.registry.events.RegistryEvent;
+import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
+import org.eclipse.basyx.aas.registry.model.Match;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.model.event.RegistryEvent;
-import org.eclipse.basyx.aas.registry.model.event.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
 import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
 import org.eclipse.basyx.aas.registry.service.RegistryService;
@@ -28,6 +32,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
@@ -40,24 +45,27 @@ public class RegistryServiceTest {
 
 	@MockBean
 	private AssetAdministrationShellDescriptorRepository repo;
-	
+
 	@MockBean
 	private AtomicElasticSearchRepoAccess repoAccess;
+
+	@MockBean
+	private ElasticsearchOperations operations;
 
 	@MockBean
 	private RegistryEventListener listener;
 
 	@Autowired
 	private RegistryService registry;
-	
+
 	@Rule
 	@Autowired
 	public TestResourcesLoader testResourcesLoader;
-		
+
 	@Rule
 	@Autowired
 	public RepositoryMockInitializer initializer;
-	
+
 	@Test
 	public void whenGetAllAssetAdministrationShellDescriptors_thenAll() throws IOException {
 		List<AssetAdministrationShellDescriptor> found = registry.getAllAssetAdministrationShellDescriptors();
@@ -111,7 +119,7 @@ public class RegistryServiceTest {
 
 	@Test
 	public void whenExistsAssetAdministratationShellDescriptorAndNullArg_thenNullPointer() {
-		assertNullPointerThrown(()-> registry.existsAssetAdministrationShellDescriptorById(null));
+		assertNullPointerThrown(() -> registry.existsAssetAdministrationShellDescriptorById(null));
 	}
 
 	@Test
@@ -147,12 +155,12 @@ public class RegistryServiceTest {
 
 	@Test
 	public void whenGetSubmodelDescriptorByIdAndBothArgsNull_thenNullPointer() {
-		assertNullPointerThrown(()->registry.getSubmodelDescriptorById(null, null));
+		assertNullPointerThrown(() -> registry.getSubmodelDescriptorById(null, null));
 	}
 
 	@Test
 	public void whenGetSubmodelDescriptorByIdAndSubmodelIdIsNull_thenNullPointer() {
-		assertNullPointerThrown(()->registry.getSubmodelDescriptorById("2", null));
+		assertNullPointerThrown(() -> registry.getSubmodelDescriptorById("2", null));
 	}
 
 	@Test
@@ -200,8 +208,7 @@ public class RegistryServiceTest {
 	}
 
 	@Test
-	public void whenRegisterAssetAdministrationShellDescriptorNoIdentifier_thenNullPointer()
-			throws IOException {
+	public void whenRegisterAssetAdministrationShellDescriptorNoIdentifier_thenNullPointer() throws IOException {
 		AssetAdministrationShellDescriptor descr = new AssetAdministrationShellDescriptor();
 		assertNullPointerThrown(() -> registry.registerAssetAdministrationShellDescriptor(descr));
 	}
@@ -225,7 +232,7 @@ public class RegistryServiceTest {
 	@Test
 	public void whenUnregisterAssetAdministrationShellDescriptorByIdAndNullId_thenReturnFalseAndNoChanges() {
 		List<AssetAdministrationShellDescriptor> initialState = registry.getAllAssetAdministrationShellDescriptors();
-		assertThrows(NullPointerException.class, ()-> registry.unregisterAssetAdministrationShellDescriptorById(null));
+		assertThrows(NullPointerException.class, () -> registry.unregisterAssetAdministrationShellDescriptorById(null));
 		List<AssetAdministrationShellDescriptor> currentState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(currentState).asList().containsExactlyInAnyOrderElementsOf(initialState);
 		verifyNoEventSend();
@@ -344,10 +351,29 @@ public class RegistryServiceTest {
 		List<AssetAdministrationShellDescriptor> initialState = registry.getAllAssetAdministrationShellDescriptors();
 		boolean success = registry.unregisterSubmodelDescriptorById("2", "2.unknown");
 		// returning true makes this method idempotent
-		assertThat(success).isFalse(); 
+		assertThat(success).isFalse();
 		List<AssetAdministrationShellDescriptor> newState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(newState).asList().containsExactlyInAnyOrderElementsOf(initialState);
 		verifyNoEventSend();
+	}
+
+	@Test
+	public void whenSearchBySubModel_thenReturnDescriptorList() throws IOException {
+		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
+				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value("2.1"));
+		ShellDescriptorSearchResponse result = registry.searchAssetAdministrationShellDescriptors(query);
+		AssetAdministrationShellDescriptor descriptor = testResourcesLoader.loadAssetAdminShellDescriptor();
+		assertThat(result.getTotal()).isEqualTo(1);
+		assertThat(result.getHits().get(0)).isEqualTo(descriptor);
+	}
+
+	@Test
+	public void whenSearchBySubModelAndNotFound_thenReturnEmptyList() {
+		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
+				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value("unknown"));
+		ShellDescriptorSearchResponse result = registry.searchAssetAdministrationShellDescriptors(query);
+		assertThat(result.getTotal()).isZero();
+		assertThat(result.getHits().size()).isZero();
 	}
 
 	private void assertNullPointerThrown(ThrowingCallable callable) {

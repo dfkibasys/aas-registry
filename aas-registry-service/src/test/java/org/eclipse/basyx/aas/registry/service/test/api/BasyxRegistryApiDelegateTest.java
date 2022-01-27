@@ -8,9 +8,13 @@ import java.util.List;
 
 import org.eclipse.basyx.aas.registry.api.BasyxRegistryApiDelegate;
 import org.eclipse.basyx.aas.registry.api.RegistryApiController;
+import org.eclipse.basyx.aas.registry.client.api.AasRegistryPaths;
+import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
+import org.eclipse.basyx.aas.registry.model.Match;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.model.event.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
 import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
 import org.eclipse.basyx.aas.registry.service.RegistryServiceImpl;
@@ -22,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -51,16 +56,19 @@ public class BasyxRegistryApiDelegateTest {
 
 	@MockBean
 	private AssetAdministrationShellDescriptorRepository repo;
-	
+
 	@MockBean
 	private AtomicElasticSearchRepoAccess atomicRepoAccess;
+
+	@MockBean
+	private ElasticsearchOperations operations;
 
 	@MockBean
 	private RegistryEventListener listener;
 
 	@Autowired
 	private RegistryApiController controller;
-	
+
 	@Rule
 	@Autowired
 	public TestResourcesLoader testResourcesLoader;
@@ -166,23 +174,23 @@ public class BasyxRegistryApiDelegateTest {
 		ResponseEntity<SubmodelDescriptor> response = controller.getSubmodelDescriptorById(ID_UNKNOWN, ID_UNKNOWN);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 	}
-	
+
 	@Test
 	public void whenPostSubmodelDescriptorNullArgs_thenNullPointer() {
-		assertThrows(NullPointerException.class, () ->  controller.postSubmodelDescriptor(null, null));
+		assertThrows(NullPointerException.class, () -> controller.postSubmodelDescriptor(null, null));
 	}
-	
+
 	@Test
 	public void whenPostSubmodelDescriptor_thenCreated() throws IOException {
 		SubmodelDescriptor input = testResourcesLoader.loadSubmodel("input");
 		ResponseEntity<SubmodelDescriptor> response = controller.postSubmodelDescriptor(ID_2, input);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-		assertThat(response.getBody()).isEqualTo(input);	
+		assertThat(response.getBody()).isEqualTo(input);
 		ResponseEntity<List<SubmodelDescriptor>> all = controller.getAllSubmodelDescriptors(ID_2);
 		List<SubmodelDescriptor> expected = testResourcesLoader.loadSubmodelList();
 		assertThat(all.getBody()).isEqualTo(expected);
 	}
-	
+
 	@Test
 	public void whenPostSubmodelDescriptorUnknownAasId_thenNotFound() throws IOException {
 		SubmodelDescriptor input = new SubmodelDescriptor();
@@ -191,75 +199,108 @@ public class BasyxRegistryApiDelegateTest {
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 		assertThat(response.getBody()).isNull();
 	}
-	
+
 	@Test
 	public void whenPutAssetAdministrationShellDescriptorById_thenNoContent() throws IOException {
 		AssetAdministrationShellDescriptor descriptor = testResourcesLoader.loadAssetAdminShellDescriptor();
 		ResponseEntity<Void> response = controller.putAssetAdministrationShellDescriptorById(ID_3, descriptor);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-		
-		ResponseEntity<AssetAdministrationShellDescriptor> stored = controller.getAssetAdministrationShellDescriptorById(ID_3);
+
+		ResponseEntity<AssetAdministrationShellDescriptor> stored = controller
+				.getAssetAdministrationShellDescriptorById(ID_3);
 		assertThat(descriptor).isEqualTo(stored.getBody());
 	}
-	
+
 	@Test
 	public void whenPutSubmodelDescriptorDescriptorById_thenNoContent() throws IOException {
 		SubmodelDescriptor input = new SubmodelDescriptor();
-		input.setIdentification(ID_2_3);	
+		input.setIdentification(ID_2_3);
 		ResponseEntity<Void> response = controller.putSubmodelDescriptorById(ID_2, ID_2_3, input);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-		
+
 		ResponseEntity<SubmodelDescriptor> stored = controller.getSubmodelDescriptorById(ID_2, ID_2_3);
 		assertThat(input).isEqualTo(stored.getBody());
 	}
-	
+
 	@Test
 	public void whenPutSubmodelDescriptorDescriptorByIdUnknownParent_thenNotFound() throws IOException {
 		SubmodelDescriptor input = new SubmodelDescriptor();
-		input.setIdentification(ID_2_3);	
+		input.setIdentification(ID_2_3);
 		ResponseEntity<Void> response = controller.putSubmodelDescriptorById(ID_UNKNOWN, ID_2_3, input);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 	}
-	
+
 	@Test
 	public void whenPutSubmodelDescriptorDescriptorByIdDifferentIds_thenBadRequest() throws IOException {
 		SubmodelDescriptor input = new SubmodelDescriptor();
-		input.setIdentification(ID_2_3);	
+		input.setIdentification(ID_2_3);
 		ResponseEntity<Void> response = controller.putSubmodelDescriptorById(ID_2, ID_2_4, input);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@Test
 	public void whenPutAssetAdministrationShellDescriptorByIdDifferentIds_thenBadRequest() throws IOException {
 		AssetAdministrationShellDescriptor input = new AssetAdministrationShellDescriptor();
-		input.setIdentification(ID_2);	
+		input.setIdentification(ID_2);
 		ResponseEntity<Void> response = controller.putAssetAdministrationShellDescriptorById(ID_3, input);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@Test
 	public void whenPostAssetAdministrationShellDescriptor_thenApplied() throws IOException {
 		AssetAdministrationShellDescriptor input = new AssetAdministrationShellDescriptor();
 		input.setIdentification(ID_3);
-		ResponseEntity<AssetAdministrationShellDescriptor> response = controller.postAssetAdministrationShellDescriptor(input);
+		ResponseEntity<AssetAdministrationShellDescriptor> response = controller
+				.postAssetAdministrationShellDescriptor(input);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assertThat(response.getBody()).isEqualTo(input);
-		
-		ResponseEntity<List<AssetAdministrationShellDescriptor>> all = controller.getAllAssetAdministrationShellDescriptors();
+
+		ResponseEntity<List<AssetAdministrationShellDescriptor>> all = controller
+				.getAllAssetAdministrationShellDescriptors();
 		List<AssetAdministrationShellDescriptor> expected = testResourcesLoader.loadShellDescriptorList();
-		assertThat(all.getBody()).asList().containsExactlyInAnyOrderElementsOf(expected);		
+		assertThat(all.getBody()).asList().containsExactlyInAnyOrderElementsOf(expected);
 	}
-	
+
 	@Test
 	public void whenPostAssetAdministrationShellDescriptor_thenOverridden() throws IOException {
 		AssetAdministrationShellDescriptor input = new AssetAdministrationShellDescriptor();
 		input.setIdentification(ID_2);
-		ResponseEntity<AssetAdministrationShellDescriptor> response = controller.postAssetAdministrationShellDescriptor(input);
+		ResponseEntity<AssetAdministrationShellDescriptor> response = controller
+				.postAssetAdministrationShellDescriptor(input);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assertThat(response.getBody()).isEqualTo(input);
-		
-		ResponseEntity<List<AssetAdministrationShellDescriptor>> all = controller.getAllAssetAdministrationShellDescriptors();
+
+		ResponseEntity<List<AssetAdministrationShellDescriptor>> all = controller
+				.getAllAssetAdministrationShellDescriptors();
 		List<AssetAdministrationShellDescriptor> expected = testResourcesLoader.loadShellDescriptorList();
-		assertThat(all.getBody()).asList().containsExactlyInAnyOrderElementsOf(expected);		
+		assertThat(all.getBody()).asList().containsExactlyInAnyOrderElementsOf(expected);
+	}
+
+	@Test
+	public void whenSearchForUnknownAasDescriptor_thenReturnEmptyList() {
+		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
+				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value("unknown"));
+		ResponseEntity<ShellDescriptorSearchResponse> entry = controller.searchShellDescriptors(query);
+		assertThat(entry.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(entry.getBody().getHits()).isEmpty();
+	}
+
+	@Test
+	public void whenSearchForAasDescriptor_thenReturnResult() {
+		AssetAdministrationShellDescriptor input = new AssetAdministrationShellDescriptor();
+		input.setIdentification(ID_2);
+		input.submodelDescriptors(List.of(new SubmodelDescriptor().identification(ID_2_1)));
+		ResponseEntity<AssetAdministrationShellDescriptor> response = controller
+				.postAssetAdministrationShellDescriptor(input);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+		assertThat(response.getBody()).isEqualTo(input);
+
+		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
+				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value(ID_2_1));
+		ResponseEntity<ShellDescriptorSearchResponse> entry = controller.searchShellDescriptors(query);
+		assertThat(entry.getStatusCode()).isEqualTo(HttpStatus.OK);
+		List<AssetAdministrationShellDescriptor> result = entry.getBody().getHits();
+		assertThat(result.size()).isEqualTo(1);
+		assertThat(result.get(0)).isEqualTo(input);
 	}
 }
