@@ -21,17 +21,9 @@ paths:
           content:
             application/json:
               schema: 
-                $ref: '#/components/schemas/ShellDescriptorSearchResponse'   
-        "400":
-           description: Invalid request
-           content:
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/IllegalRequest'
+                $ref: '#/components/schemas/ShellDescriptorSearchResponse'
 components:
   schemas:
-    IllegalRequest:
-       type: string
     Reference:
       discriminator:
         propertyName: refType
