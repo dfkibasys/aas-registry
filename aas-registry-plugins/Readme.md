@@ -17,8 +17,8 @@ To use the plugin embed this snippet into your POM file and specify an appropria
 	</executions>
 	<configuration>
 		<base>${project.basedir}/base.yaml</base>
-		<overlay>${project.basedir}/top.yaml</overlay>
-		<out>${project.basedir}/top.yaml</out>
+		<overlay>${project.basedir}/overlay.yaml</overlay>
+		<out>${project.basedir}/result.yaml</out>
 	</configuration>
 </plugin>
 ```
