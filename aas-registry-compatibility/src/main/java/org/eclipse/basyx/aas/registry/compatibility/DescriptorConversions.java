@@ -103,8 +103,8 @@ public class DescriptorConversions {
 
 	private static org.eclipse.basyx.aas.registry.model.KeyElements toDotaasKeyElement(KeyElements key) {
 		switch (key) {
-			case SUBMODEL:
-				return org.eclipse.basyx.aas.registry.model.KeyElements.SUBMODEL;
+			//case SUBMODEL:
+			//	return org.eclipse.basyx.aas.registry.model.KeyElements.SUBMODEL;
 			default:
 				return org.eclipse.basyx.aas.registry.model.KeyElements.CONCEPTDESCRIPTION;
 		}
