@@ -2,7 +2,6 @@ package org.eclipse.basyx.aas.registry.compatibility;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -135,6 +134,6 @@ public class DotAASRegistryProxy implements IAASRegistry {
 	}
 
 	private String encodeId(String id) {
-		return Base64.getUrlEncoder().encodeToString(id.getBytes(StandardCharsets.UTF_8));
+		return URLEncoder.encode(id, StandardCharsets.UTF_8);
 	}
 }

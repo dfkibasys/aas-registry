@@ -1,5 +1,7 @@
 package org.eclipse.basyx.aas.registry.service;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -192,7 +194,8 @@ public class RegistryServiceImpl implements RegistryService {
 	}
 
 	private String decodeId(String id) {
-		return id;
+		//return id;
+		return URLDecoder.decode(id, StandardCharsets.UTF_8);
 		//return new String(Base64.getUrlDecoder().decode(id));
 	}
 }

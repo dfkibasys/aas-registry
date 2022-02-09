@@ -96,9 +96,18 @@ public class DescriptorConversions {
 
 	private static org.eclipse.basyx.aas.registry.model.Key toDotaasKey(IKey key) {
 		org.eclipse.basyx.aas.registry.model.Key dotaasKey = new org.eclipse.basyx.aas.registry.model.Key();
-		dotaasKey.setType(org.eclipse.basyx.aas.registry.model.KeyElements.CONCEPTDESCRIPTION);
+		dotaasKey.setType(toDotaasKeyElement(key.getType()));
 		dotaasKey.setValue(key.getValue());
 		return dotaasKey;
+	}
+
+	private static org.eclipse.basyx.aas.registry.model.KeyElements toDotaasKeyElement(KeyElements key) {
+		switch (key) {
+			case SUBMODEL:
+				return org.eclipse.basyx.aas.registry.model.KeyElements.SUBMODEL;
+			default:
+				return org.eclipse.basyx.aas.registry.model.KeyElements.CONCEPTDESCRIPTION;
+		}
 	}
 
 	public static AASDescriptor toBasyxAASDescriptor(AssetAdministrationShellDescriptor dotaasDescriptor) {
