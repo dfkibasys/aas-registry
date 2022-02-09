@@ -1,9 +1,6 @@
 package org.eclipse.basyx.aas.registry.service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -71,7 +68,10 @@ public class RegistryServiceImpl implements RegistryService {
 	@Override
 	public Optional<AssetAdministrationShellDescriptor> getAssetAdministrationShellDescriptorById(
 			@NotNull @NonNull String aasIdentifier) {
-		return aasDescriptorRepository.findById(aasIdentifier);
+
+		String decodedAasIdentifier = new String(Base64.getUrlDecoder().decode(aasIdentifier));
+
+		return aasDescriptorRepository.findById(decodedAasIdentifier);
 	}
 
 	@Override
@@ -87,9 +87,12 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Override
 	public boolean unregisterAssetAdministrationShellDescriptorById(@NotNull @NonNull String aasIdentifier) {
-		if (aasDescriptorRepository.existsById(aasIdentifier)) {
-			aasDescriptorRepository.deleteById(aasIdentifier);
-			RegistryEvent evt = RegistryEvent.builder().id(aasIdentifier).type(RegistryEvent.EventType.AAS_UNREGISTERED)
+
+		String decodedAasIdentifier = new String(Base64.getUrlDecoder().decode(aasIdentifier));
+
+		if (aasDescriptorRepository.existsById(decodedAasIdentifier)) {
+			aasDescriptorRepository.deleteById(decodedAasIdentifier);
+			RegistryEvent evt = RegistryEvent.builder().id(decodedAasIdentifier).type(RegistryEvent.EventType.AAS_UNREGISTERED)
 					.build();
 			listener.onEvent(evt);
 			return true;
@@ -99,8 +102,13 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Override
 	public Optional<List<SubmodelDescriptor>> getAllSubmodelDescriptors(@NotNull @NonNull String aasIdentifier) {
+
+		//String decodedAasIdentifier = new String(Base64.getUrlDecoder().decode(aasIdentifier));
+
+		//use encoded aasIdentifier here, because it is decoded in getAssetAdministrationShellDescriptorById()!
 		Optional<AssetAdministrationShellDescriptor> descriptorOpt = getAssetAdministrationShellDescriptorById(
 				aasIdentifier);
+
 		if (descriptorOpt.isEmpty()) {
 			return Optional.empty();
 		}
@@ -112,7 +120,13 @@ public class RegistryServiceImpl implements RegistryService {
 	@Override
 	public Optional<SubmodelDescriptor> getSubmodelDescriptorById(@NotNull @NonNull String aasIdentifier,
 			@NotNull @NonNull String submodelIdentifier) {
-		SubmodelDescriptorIdMatcher matcher = new SubmodelDescriptorIdMatcher(submodelIdentifier);
+
+		//String decodedAasIdentifier = new String(Base64.getUrlDecoder().decode(aasIdentifier));
+
+		String decodedSmIdentifier = new String(Base64.getUrlDecoder().decode(submodelIdentifier));
+		SubmodelDescriptorIdMatcher matcher = new SubmodelDescriptorIdMatcher(decodedSmIdentifier);
+
+		//use encoded aasIdentifier here, because it is decoded in getAssetAdministrationShellDescriptorById()!
 		return getAssetAdministrationShellDescriptorById(aasIdentifier)
 				.map(AssetAdministrationShellDescriptor::getSubmodelDescriptors).stream().flatMap(List::stream)
 				.filter(matcher::matches).findFirst();
@@ -121,10 +135,13 @@ public class RegistryServiceImpl implements RegistryService {
 	@Override
 	public boolean registerSubmodelDescriptor(@NotNull @NonNull String aasIdentifier,
 			@NotNull @NonNull SubmodelDescriptor submodel) {
+
+		String decodedAasIdentifier = new String(Base64.getUrlDecoder().decode(aasIdentifier));
+
 		Objects.requireNonNull(submodel.getIdentification(), SUBMODEL_ID_IS_NULL);
-		Result result = atomicRepoAccess.storeAssetAdministrationSubmodel(aasIdentifier, submodel);
+		Result result = atomicRepoAccess.storeAssetAdministrationSubmodel(decodedAasIdentifier, submodel);
 		if (result == Result.UPDATED) {
-			RegistryEvent evt = RegistryEvent.builder().id(aasIdentifier).submodelId(submodel.getIdentification())
+			RegistryEvent evt = RegistryEvent.builder().id(decodedAasIdentifier).submodelId(submodel.getIdentification())
 					.type(EventType.SUBMODEL_REGISTERED).submodelDescriptor(submodel).build();
 			listener.onEvent(evt);
 			return true;
@@ -135,9 +152,13 @@ public class RegistryServiceImpl implements RegistryService {
 	@Override
 	public boolean unregisterSubmodelDescriptorById(@NotNull @NonNull String aasIdentifier,
 			@NotNull @NonNull String subModelId) {
-		Result result = atomicRepoAccess.removeAssetAdministrationSubmodel(aasIdentifier, subModelId);
+
+		String decodedAasIdentifier = new String(Base64.getUrlDecoder().decode(aasIdentifier));
+		String decodedSmIdentifier = new String(Base64.getUrlDecoder().decode(subModelId));
+
+		Result result = atomicRepoAccess.removeAssetAdministrationSubmodel(decodedAasIdentifier, decodedSmIdentifier);
 		if (result == Result.UPDATED) {
-			RegistryEvent evt = RegistryEvent.builder().id(aasIdentifier).submodelId(subModelId)
+			RegistryEvent evt = RegistryEvent.builder().id(decodedAasIdentifier).submodelId(decodedSmIdentifier)
 					.type(EventType.SUBMODEL_UNREGISTERED).build();
 			listener.onEvent(evt);
 			return true;
