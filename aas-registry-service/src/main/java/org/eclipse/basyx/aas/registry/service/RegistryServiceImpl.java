@@ -1,5 +1,6 @@
 package org.eclipse.basyx.aas.registry.service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -69,7 +70,7 @@ public class RegistryServiceImpl implements RegistryService {
 	public Optional<AssetAdministrationShellDescriptor> getAssetAdministrationShellDescriptorById(
 			@NotNull @NonNull String aasIdentifier) {
 
-		String decodedAasIdentifier = new String(Base64.getUrlDecoder().decode(aasIdentifier));
+		String decodedAasIdentifier = decodeId(aasIdentifier);
 
 		return aasDescriptorRepository.findById(decodedAasIdentifier);
 	}
@@ -88,7 +89,7 @@ public class RegistryServiceImpl implements RegistryService {
 	@Override
 	public boolean unregisterAssetAdministrationShellDescriptorById(@NotNull @NonNull String aasIdentifier) {
 
-		String decodedAasIdentifier = new String(Base64.getUrlDecoder().decode(aasIdentifier));
+		String decodedAasIdentifier = decodeId(aasIdentifier);
 
 		if (aasDescriptorRepository.existsById(decodedAasIdentifier)) {
 			aasDescriptorRepository.deleteById(decodedAasIdentifier);
@@ -103,7 +104,7 @@ public class RegistryServiceImpl implements RegistryService {
 	@Override
 	public Optional<List<SubmodelDescriptor>> getAllSubmodelDescriptors(@NotNull @NonNull String aasIdentifier) {
 
-		//String decodedAasIdentifier = new String(Base64.getUrlDecoder().decode(aasIdentifier));
+		//String decodedAasIdentifier = decodeId(aasIdentifier);
 
 		//use encoded aasIdentifier here, because it is decoded in getAssetAdministrationShellDescriptorById()!
 		Optional<AssetAdministrationShellDescriptor> descriptorOpt = getAssetAdministrationShellDescriptorById(
@@ -121,9 +122,9 @@ public class RegistryServiceImpl implements RegistryService {
 	public Optional<SubmodelDescriptor> getSubmodelDescriptorById(@NotNull @NonNull String aasIdentifier,
 			@NotNull @NonNull String submodelIdentifier) {
 
-		//String decodedAasIdentifier = new String(Base64.getUrlDecoder().decode(aasIdentifier));
+		//String decodedAasIdentifier = decodeId(aasIdentifier);
 
-		String decodedSmIdentifier = new String(Base64.getUrlDecoder().decode(submodelIdentifier));
+		String decodedSmIdentifier = decodeId(submodelIdentifier);
 		SubmodelDescriptorIdMatcher matcher = new SubmodelDescriptorIdMatcher(decodedSmIdentifier);
 
 		//use encoded aasIdentifier here, because it is decoded in getAssetAdministrationShellDescriptorById()!
@@ -136,7 +137,7 @@ public class RegistryServiceImpl implements RegistryService {
 	public boolean registerSubmodelDescriptor(@NotNull @NonNull String aasIdentifier,
 			@NotNull @NonNull SubmodelDescriptor submodel) {
 
-		String decodedAasIdentifier = new String(Base64.getUrlDecoder().decode(aasIdentifier));
+		String decodedAasIdentifier = decodeId(aasIdentifier);
 
 		Objects.requireNonNull(submodel.getIdentification(), SUBMODEL_ID_IS_NULL);
 		Result result = atomicRepoAccess.storeAssetAdministrationSubmodel(decodedAasIdentifier, submodel);
@@ -153,8 +154,8 @@ public class RegistryServiceImpl implements RegistryService {
 	public boolean unregisterSubmodelDescriptorById(@NotNull @NonNull String aasIdentifier,
 			@NotNull @NonNull String subModelId) {
 
-		String decodedAasIdentifier = new String(Base64.getUrlDecoder().decode(aasIdentifier));
-		String decodedSmIdentifier = new String(Base64.getUrlDecoder().decode(subModelId));
+		String decodedAasIdentifier = decodeId(aasIdentifier);
+		String decodedSmIdentifier = decodeId(subModelId);
 
 		Result result = atomicRepoAccess.removeAssetAdministrationSubmodel(decodedAasIdentifier, decodedSmIdentifier);
 		if (result == Result.UPDATED) {
@@ -188,5 +189,10 @@ public class RegistryServiceImpl implements RegistryService {
 		private boolean matches(SubmodelDescriptor descriptor) {
 			return Objects.equals(descriptor.getIdentification(), subModelIdentifier);
 		}
+	}
+
+	private String decodeId(String id) {
+		return id;
+		//return new String(Base64.getUrlDecoder().decode(id));
 	}
 }
