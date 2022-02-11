@@ -30,7 +30,13 @@ As reponse to a search query, the client will receive a list of the filtered *As
 
 ## Getting Started
 
-Here is some generated java code that describes the client usage:
+If you want to use path parameters in your request, make sure that they are URL encoded if they contain URL specific characters:
+
+```java
+URLEncoder.encode("My:Special/Identifier", StandardCharsets.UTF_8);
+```
+
+Here is some generated java code that describes the client usage. 
 
 ```java
 import org.eclipse.basyx.aas.registry.client.*;

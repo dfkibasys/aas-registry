@@ -10,7 +10,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/8152_1113_5012_0429"
 			]
@@ -31,7 +31,7 @@
 				"idShort": "Capabilities",
 				"identification": "https://test.de/ids/sm/1435_3180_6012_0689",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 					]
 				}
@@ -49,7 +49,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/6291_5170_6012_9120",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -71,7 +71,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/3332_1113_5012_4899"
 			]
@@ -92,7 +92,7 @@
 				"idShort": "Capabilities",
 				"identification": "https://test.de/ids/sm/4263_9080_6012_8626",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 					]
 				}
@@ -110,7 +110,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/5314_1110_6012_3213",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -132,7 +132,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/8125_0191_1112_1824"
 			]
@@ -153,7 +153,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/6520_7132_1112_3075",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -175,7 +175,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/3572_1113_5012_2487"
 			]
@@ -196,7 +196,7 @@
 				"idShort": "Capabilities",
 				"identification": "https://test.de/ids/sm/5175_4182_7012_5135",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 					]
 				}
@@ -214,7 +214,7 @@
 				"idShort": "ControlComponentInstance",
 				"identification": "https://test.de/ids/sm/9485_2152_8012_0976",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 					]
 				}
@@ -232,7 +232,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/7154_5170_6012_5128",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -254,7 +254,7 @@
 				"idShort": "Signals",
 				"identification": "https://test.de/ids/sm/7151_3182_7012_7596",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 					]
 				}
@@ -272,7 +272,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/0222_1113_5012_4427"
 			]
@@ -293,7 +293,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/9364_0110_6012_2117",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -315,7 +315,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/3422_1113_5012_0005"
 			]
@@ -336,7 +336,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/9014_1110_6012_1842",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -358,7 +358,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/8052_1113_5012_1023"
 			]
@@ -379,7 +379,7 @@
 				"idShort": "Capabilities",
 				"identification": "https://test.de/ids/sm/1435_3180_6012_0689",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 					]
 				}
@@ -397,7 +397,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/7024_1110_6012_7746",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -419,7 +419,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/0242_1113_5012_3428"
 			]
@@ -440,7 +440,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/7401_5170_6012_2623",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -462,7 +462,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/8482_1113_5012_4409"
 			]
@@ -483,7 +483,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/2184_5170_6012_8745",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -505,7 +505,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/2082_1113_5012_4886"
 			]
@@ -526,7 +526,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/1274_5170_6012_2788",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -548,7 +548,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/5472_1113_5012_2754"
 			]
@@ -569,7 +569,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/1144_5170_6012_4316",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -591,7 +591,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/9221_4191_1112_4976"
 			]
@@ -612,7 +612,7 @@
 				"idShort": "Capabilities",
 				"identification": "https://test.de/ids/sm/1435_3180_6012_0689",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 					]
 				}
@@ -630,7 +630,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/8165_6132_1112_4319",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -652,7 +652,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/9132_1113_5012_0244"
 			]
@@ -673,7 +673,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/4233_8020_6012_0953",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -695,7 +695,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/9072_1113_5012_4001"
 			]
@@ -716,7 +716,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/2102_5170_6012_2032",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -738,7 +738,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/3142_7132_1112_9303"
 			]
@@ -759,7 +759,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/5013_7132_1112_1389",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -781,7 +781,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/4564_3152_8012_5305"
 			]
@@ -802,7 +802,7 @@
 				"idShort": "Layout_I40",
 				"identification": "https://test.de/ids/sm/8391_8081_1112_0109",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 					]
 				}
@@ -820,7 +820,7 @@
 				"idShort": "Topology_I40",
 				"identification": "https://test.de/ids/sm/6301_0120_8012_5974",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 					]
 				}
@@ -838,7 +838,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/0142_1113_5012_2784"
 			]
@@ -859,7 +859,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/5414_1110_6012_8530",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -881,7 +881,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/9582_1113_5012_8716"
 			]
@@ -902,7 +902,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/1324_1110_6012_7891",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -924,7 +924,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/3372_1113_5012_9690"
 			]
@@ -945,7 +945,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/7124_1110_6012_4383",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -967,7 +967,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/9032_1113_5012_5735"
 			]
@@ -988,7 +988,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/4213_8020_6012_7967",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -1010,7 +1010,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/7092_1113_5012_4194"
 			]
@@ -1031,7 +1031,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/7005_5170_6012_5369",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -1053,7 +1053,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/6542_1113_5012_9769"
 			]
@@ -1074,7 +1074,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/4514_1110_6012_0882",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -1096,7 +1096,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/3432_1113_5012_7640"
 			]
@@ -1117,7 +1117,7 @@
 				"idShort": "Capabilities",
 				"identification": "https://test.de/ids/sm/4263_9080_6012_8626",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 					]
 				}
@@ -1135,7 +1135,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/4024_8020_6012_8167",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
@@ -1157,7 +1157,7 @@
 			}
 		],
 		"globalAssetId": {
-			"refType": "GlobalReference",
+			"type": "GlobalReference",
 			"value": [
 				"https://test.de/ids/asset/0352_1113_5012_8795"
 			]
@@ -1178,7 +1178,7 @@
 				"idShort": "Capabilities",
 				"identification": "https://test.de/ids/sm/1435_3180_6012_0689",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 					]
 				}
@@ -1196,7 +1196,7 @@
 				"idShort": "Identification",
 				"identification": "https://test.de/ids/sm/7491_5170_6012_5831",
 				"semanticId": {
-					"refType": "ModelReference",
+					"type": "ModelReference",
 					"keys": [
 						{
 							"type": "ConceptDescription",
