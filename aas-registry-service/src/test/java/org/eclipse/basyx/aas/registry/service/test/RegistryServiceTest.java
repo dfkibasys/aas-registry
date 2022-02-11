@@ -104,25 +104,6 @@ public class RegistryServiceTest {
 	}
 
 	@Test
-	public void whenExistsAssetAdministratationShellDescriptorAndUnavailable_thenFalse() {
-		boolean result = registry.existsAssetAdministrationShellDescriptorById("unknown");
-		assertThat(result).isFalse();
-		verifyNoEventSend();
-	}
-
-	@Test
-	public void whenExistsAssetAdministratationShellDescriptorAndAvailable_thenTrue() {
-		boolean result = registry.existsAssetAdministrationShellDescriptorById("1");
-		assertThat(result).isTrue();
-		verifyNoEventSend();
-	}
-
-	@Test
-	public void whenExistsAssetAdministratationShellDescriptorAndNullArg_thenNullPointer() {
-		assertNullPointerThrown(() -> registry.existsAssetAdministrationShellDescriptorById(null));
-	}
-
-	@Test
 	public void whenExistsSubmodelDescriptorByIdAndBothArgsNull_thenNullPointer() {
 		assertNullPointerThrown(() -> registry.existsSubmodelDescriptorById(null, null));
 	}

@@ -82,7 +82,6 @@
 							<generateModelDocumentation>false</generateModelDocumentation>
 							<generateApiDocumentation>false</generateApiDocumentation>
 							<generateSupportingFiles>true</generateSupportingFiles>
-							<templateDirectory>${project.basedir}/templates</templateDirectory>
 							<supportingFilesToGenerate>ApiClient.java,RFC3339DateFormat.java,ApiKeyAuth.java,Authentication.java,HttpBasicAuth.java,OAuth.java,OauthFlow.java</supportingFilesToGenerate>
 							<!-- See https://openapi-generator.tech/docs/generators/java/ -->
 							<configOptions>

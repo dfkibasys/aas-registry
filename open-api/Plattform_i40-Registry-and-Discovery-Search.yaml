@@ -26,13 +26,25 @@ components:
   schemas:
     Reference:
       discriminator:
-        propertyName: refType
+        propertyName: type
     GlobalReference:
-       x-java-class-annotations:
-          - '@com.fasterxml.jackson.annotation.JsonIgnoreProperties(value = "refType")'
+      required:
+      - value
+      - type
+      properties:
+        type:
+          type: string
+          default: GlobalReference
+          readOnly: true
     ModelReference:
-       x-java-class-annotations:
-          - '@com.fasterxml.jackson.annotation.JsonIgnoreProperties(value = "refType")'
+      required:
+      - keys
+      - type
+      properties:
+         type: 
+            type: string
+            default: ModelReference
+            readOnly: true
     ShellDescriptorSearchQuery:
       type: object
       properties:

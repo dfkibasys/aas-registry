@@ -4,18 +4,35 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.IntFunction;
+import java.util.function.IntUnaryOperator;
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 import org.eclipse.basyx.aas.registry.client.api.AasRegistryPaths;
+import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent.EventType;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
+import org.eclipse.basyx.aas.registry.model.GlobalReference;
+import org.eclipse.basyx.aas.registry.model.Key;
+import org.eclipse.basyx.aas.registry.model.KeyElements;
 import org.eclipse.basyx.aas.registry.model.Match;
+import org.eclipse.basyx.aas.registry.model.ModelReference;
 import org.eclipse.basyx.aas.registry.model.Page;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
@@ -46,6 +63,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
@@ -111,6 +129,66 @@ public class IntegrationTest {
 	public void setup() {
 		api.getApiClient().setBasePath("http://localhost:" + port);
 	}
+
+	@Test
+	public void whenWritingParallel_transactionManagementWorks() {
+		AssetAdministrationShellDescriptor descriptor = new AssetAdministrationShellDescriptor();
+		descriptor.setIdentification("descr");
+		api.postAssetAdministrationShellDescriptor(descriptor);
+		IntFunction<HttpStatus> op = idx -> writeSubModel(descriptor.getIdentification(), idx);
+		assertThat(IntStream.iterate(0, i -> i + 1).limit(300).parallel().mapToObj(op).filter(HttpStatus::isError)
+				.findAny()).isEmpty();
+		assertThat(
+				api.getAssetAdministrationShellDescriptorById(descriptor.getIdentification()).getSubmodelDescriptors())
+						.hasSize(300);
+	}
+
+	
+	private HttpStatus writeSubModel(String descriptorId, int idx) {
+		SubmodelDescriptor sm = new SubmodelDescriptor();
+		sm.setIdentification(idx + "");
+		if (idx % 2 == 0) {
+			sm.setSemanticId(new GlobalReference().value(List.of("a", "b")));
+		} else {
+			sm.setSemanticId(new ModelReference().keys(List.of(new Key().type(KeyElements.PROPERTY).value("aaa"))));
+		}
+		try {
+			return api.postSubmodelDescriptorWithHttpInfo(sm, descriptorId).getStatusCode();
+		} catch (HttpServerErrorException ex) {
+			return ex.getStatusCode();
+		} 
+	}
+	
+
+	
+	
+	@Test
+	public void whenUrlEncodingApplied_thenAccessIsWorking() {
+
+		String aasId = "http://eclipse.org/Asset Administration 23";
+		String smId = "http://eclipse.org/Submodel%?1";
+		
+		String aasIdEncoded = URLEncoder.encode(aasId, StandardCharsets.UTF_8);
+		String smIdEncoded = URLEncoder.encode(smId, StandardCharsets.UTF_8);
+		
+		AssetAdministrationShellDescriptor descr = new AssetAdministrationShellDescriptor();
+		descr.setIdentification(aasId);
+		descr.addSubmodelDescriptorsItem(new SubmodelDescriptor().identification(smId));
+		
+		api.postAssetAdministrationShellDescriptor(descr);
+		
+		assertThat(api.getAllSubmodelDescriptors(aasIdEncoded)).hasSize(1);
+		assertThat(api.getAssetAdministrationShellDescriptorByIdWithHttpInfo(aasIdEncoded).getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(api.getSubmodelDescriptorByIdWithHttpInfo(aasIdEncoded, smIdEncoded).getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(api.getSubmodelDescriptorByIdWithHttpInfo(aasIdEncoded, smIdEncoded).getStatusCode()).isEqualTo(HttpStatus.OK);
+		
+		assertThat(api.deleteSubmodelDescriptorByIdWithHttpInfo(aasIdEncoded, smIdEncoded).getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+		assertThat(api.getAllSubmodelDescriptors(aasIdEncoded)).isEmpty();
+		assertThat(api.deleteAssetAdministrationShellDescriptorByIdWithHttpInfo(aasIdEncoded).getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+		assertThat(api.getAllAssetAdministrationShellDescriptors()).isEmpty();
+		listener.reset();
+	}
+	
 
 	@Test
 	public void whenCreateAndDeleteDescriptors_thenAllDescriptorsAreRemoved()
@@ -242,7 +320,7 @@ public class IntegrationTest {
 			throws IOException, InterruptedException, TimeoutException {
 		whenSearchWithSortingByIdShort_thenReturnSorted(SortDirection.ASC);
 	}
-	
+
 	@Test
 	public void whenSearchWithSortingByIdNoSortOrder_thenReturnSortedAsc()
 			throws IOException, InterruptedException, TimeoutException {
@@ -276,9 +354,10 @@ public class IntegrationTest {
 		api.searchShellDescriptors(new ShellDescriptorSearchQuery());
 	}
 
-	
 	private void deleteAdminAssetShellDescriptor(String aasId) {
-		HttpStatus response = api.deleteAssetAdministrationShellDescriptorByIdWithHttpInfo(aasId).getStatusCode();
+		listener.reset();
+		
+		HttpStatus response = api.deleteAssetAdministrationShellDescriptorByIdWithHttpInfo(URLEncoder.encode(aasId, StandardCharsets.UTF_8)).getStatusCode();
 		assertThat(response).isEqualTo(HttpStatus.NO_CONTENT);
 		assertThatEventWasSend(RegistryEvent.builder().id(aasId).type(EventType.AAS_UNREGISTERED).build());
 	}
@@ -313,6 +392,15 @@ public class IntegrationTest {
 		@KafkaListener(topics = "aas-registry", groupId = "test")
 		public void receive(String message) {
 			messageQueue.offer(message);
+		}
+
+		public void reset() {
+			try {
+				while (messageQueue.poll(1, TimeUnit.SECONDS) != null)
+					;
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 		public void assertNoAdditionalMessage() {

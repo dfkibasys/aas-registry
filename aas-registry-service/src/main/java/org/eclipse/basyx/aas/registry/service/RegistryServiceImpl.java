@@ -1,9 +1,11 @@
 package org.eclipse.basyx.aas.registry.service;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -49,11 +51,6 @@ public class RegistryServiceImpl implements RegistryService {
 	private ElasticsearchOperations ops;
 
 	@Override
-	public boolean existsAssetAdministrationShellDescriptorById(@NotNull @NonNull String aasIdentifier) {
-		return aasDescriptorRepository.existsById(aasIdentifier);
-	}
-
-	@Override
 	public boolean existsSubmodelDescriptorById(@NotNull @NonNull String aasIdentifier,
 			@NotNull @NonNull String submodelIdentifier) {
 		SubmodelDescriptorIdMatcher matcher = new SubmodelDescriptorIdMatcher(submodelIdentifier);
@@ -95,8 +92,8 @@ public class RegistryServiceImpl implements RegistryService {
 
 		if (aasDescriptorRepository.existsById(decodedAasIdentifier)) {
 			aasDescriptorRepository.deleteById(decodedAasIdentifier);
-			RegistryEvent evt = RegistryEvent.builder().id(decodedAasIdentifier).type(RegistryEvent.EventType.AAS_UNREGISTERED)
-					.build();
+			RegistryEvent evt = RegistryEvent.builder().id(decodedAasIdentifier)
+					.type(RegistryEvent.EventType.AAS_UNREGISTERED).build();
 			listener.onEvent(evt);
 			return true;
 		}
@@ -105,12 +102,9 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Override
 	public Optional<List<SubmodelDescriptor>> getAllSubmodelDescriptors(@NotNull @NonNull String aasIdentifier) {
-
-		//String decodedAasIdentifier = decodeId(aasIdentifier);
-
-		//use encoded aasIdentifier here, because it is decoded in getAssetAdministrationShellDescriptorById()!
+		String decodedAasIdentifier = decodeId(aasIdentifier);
 		Optional<AssetAdministrationShellDescriptor> descriptorOpt = getAssetAdministrationShellDescriptorById(
-				aasIdentifier);
+				decodedAasIdentifier);
 
 		if (descriptorOpt.isEmpty()) {
 			return Optional.empty();
@@ -123,13 +117,11 @@ public class RegistryServiceImpl implements RegistryService {
 	@Override
 	public Optional<SubmodelDescriptor> getSubmodelDescriptorById(@NotNull @NonNull String aasIdentifier,
 			@NotNull @NonNull String submodelIdentifier) {
-
-		//String decodedAasIdentifier = decodeId(aasIdentifier);
-
 		String decodedSmIdentifier = decodeId(submodelIdentifier);
 		SubmodelDescriptorIdMatcher matcher = new SubmodelDescriptorIdMatcher(decodedSmIdentifier);
 
-		//use encoded aasIdentifier here, because it is decoded in getAssetAdministrationShellDescriptorById()!
+		// use encoded aasIdentifier here, because it is decoded in
+		// getAssetAdministrationShellDescriptorById()!
 		return getAssetAdministrationShellDescriptorById(aasIdentifier)
 				.map(AssetAdministrationShellDescriptor::getSubmodelDescriptors).stream().flatMap(List::stream)
 				.filter(matcher::matches).findFirst();
@@ -138,14 +130,14 @@ public class RegistryServiceImpl implements RegistryService {
 	@Override
 	public boolean registerSubmodelDescriptor(@NotNull @NonNull String aasIdentifier,
 			@NotNull @NonNull SubmodelDescriptor submodel) {
-
 		String decodedAasIdentifier = decodeId(aasIdentifier);
 
 		Objects.requireNonNull(submodel.getIdentification(), SUBMODEL_ID_IS_NULL);
 		Result result = atomicRepoAccess.storeAssetAdministrationSubmodel(decodedAasIdentifier, submodel);
 		if (result == Result.UPDATED) {
-			RegistryEvent evt = RegistryEvent.builder().id(decodedAasIdentifier).submodelId(submodel.getIdentification())
-					.type(EventType.SUBMODEL_REGISTERED).submodelDescriptor(submodel).build();
+			RegistryEvent evt = RegistryEvent.builder().id(decodedAasIdentifier)
+					.submodelId(submodel.getIdentification()).type(EventType.SUBMODEL_REGISTERED)
+					.submodelDescriptor(submodel).build();
 			listener.onEvent(evt);
 			return true;
 		}
@@ -178,7 +170,6 @@ public class RegistryServiceImpl implements RegistryService {
 		List<AssetAdministrationShellDescriptor> transformed = cutter.shrinkHits(hits);
 		return new ShellDescriptorSearchResponse().total(hits.getTotalHits()).hits(transformed);
 	}
-	
 
 	private static final class SubmodelDescriptorIdMatcher {
 
@@ -194,8 +185,6 @@ public class RegistryServiceImpl implements RegistryService {
 	}
 
 	private String decodeId(String id) {
-		//return id;
 		return URLDecoder.decode(id, StandardCharsets.UTF_8);
-		//return new String(Base64.getUrlDecoder().decode(id));
 	}
 }

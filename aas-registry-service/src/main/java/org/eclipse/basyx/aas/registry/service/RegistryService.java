@@ -9,8 +9,6 @@ import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 
 public interface RegistryService {
-
-    boolean existsAssetAdministrationShellDescriptorById(String aasIdentifier);
     
     boolean existsSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier);
 
