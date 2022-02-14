@@ -108,7 +108,9 @@ deploy-npm:
     - npm config set _auth $token
     - npm run build
     - npm publish
-
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == 'development'
 test:
   stage: test 
   services:
