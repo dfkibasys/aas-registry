@@ -9,10 +9,14 @@ variables:
   MAVEN_TARGET_PATHS: ${CI_PROJECT_DIR}/aas-registry-paths/target
   MAVEN_TARGET_CLIENT: ${CI_PROJECT_DIR}/aas-registry-client/target
   MAVEN_TARGET_SERVICE: ${CI_PROJECT_DIR}/aas-registry-service/target
+  CLIENT_OPENAPI_FOLDER: ${CI_PROJECT_DIR}/aas-registry-client/open-api
+  CLIENT_OPENAPI_FILE: ${CLIENT_OPENAPI_FOLDER}/Plattform_i40-Registry-and-discovery.yaml
   MAVEN_OPTS: "-Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository"
   MAVEN_CLI_OPTS: "-s ${CI_PROJECT_DIR}/.m2/settings.xml --batch-mode -Pgitlab"
   BUILD_ARTIFACT: aas-registry-service-0.1.0-SNAPSHOT.jar
   DOCKER_JAR: aas-registry-service.jar  
+  TYPESCRIPT_FOLDER: ${CI_PROJECT_DIR}/typescript
+  NPM_REPO: https://nexus.basys.dfki.dev/repository/npm-hosted/
 
 cache:
   paths:
@@ -21,7 +25,8 @@ cache:
 stages:
   - plugin
   - validate
-  - build
+  - build-java
+  - build-typescript
   - test
   - install
   - deploy
@@ -51,7 +56,7 @@ validate:
     - build-plugin
     
 compile:
-  stage: build
+  stage: build-java
   tags:
     - basys
     - maven
@@ -65,8 +70,45 @@ compile:
       - $MAVEN_TARGET_PATHS
       - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_SERVICE
+      - $CLIENT_OPENAPI_FOLDER
     expire_in: 3 hour    
     
+generate-typescript:
+  stage: build-typescript
+  tags: 
+    - basys
+    - maven
+  dependencies:
+    - compile
+  script:
+    - mkdir $TYPESCRIPT_FOLDER
+    - cd $TYPESCRIPT_FOLDER
+    - mvn dependency:get -Dartifact=io.swagger.codegen.v3:swagger-codegen-cli:3.0.31:jar -Ddest=generator.jar
+    - java -jar openapi-generator.jar generate -l typescript-fetch -i 
+    - java -jar openapi-generator.jar generate -l typescript-fetch -i ../${CLIENT_OPENAPI_FILE} -o . \
+      --additional-properties [ npmName=aas-registry-js-client npmVersion=0.3.0 \
+      npmRepository=${NPM_REPO} snapshot=true ]
+  artifacts:
+    paths:
+      - $TYPESCRIPT_FOLDER
+    expire_in: 3 hour
+  
+deploy-npm:
+  image: node:17.5-alpine
+  stage: deploy
+  tags:
+    - baysys
+  dependencies:
+    - generate-typescript
+  script:
+    - cd $TYPESCRIPT_FOLDER
+    - npm install 
+    - npm prune 
+    - token=$(echo -n '${MAVEN_REPO_USER}:${MAVEN_REPO_PASS}' | openssl base64)
+    - npm config set _auth $token
+    - npm run build
+    - npm publish
+
 test:
   stage: test 
   services:
