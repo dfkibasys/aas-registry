@@ -10,7 +10,7 @@ variables:
   MAVEN_TARGET_CLIENT: ${CI_PROJECT_DIR}/aas-registry-client/target
   MAVEN_TARGET_SERVICE: ${CI_PROJECT_DIR}/aas-registry-service/target
   CLIENT_OPENAPI_FOLDER: ${CI_PROJECT_DIR}/aas-registry-client/open-api
-  CLIENT_OPENAPI_FILE: ${CLIENT_OPENAPI_FOLDER}/Plattform_i40-Registry-and-discovery.yaml
+  CLIENT_OPENAPI_FILE: ${CLIENT_OPENAPI_FOLDER}/Plattform_i40-Registry-and-Discovery.yaml
   MAVEN_OPTS: "-Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository"
   MAVEN_CLI_OPTS: "-s ${CI_PROJECT_DIR}/.m2/settings.xml --batch-mode -Pgitlab"
   BUILD_ARTIFACT: aas-registry-service-0.1.0-SNAPSHOT.jar
@@ -83,6 +83,7 @@ generate-typescript:
   script:
     - mkdir $TYPESCRIPT_FOLDER
     - cd $TYPESCRIPT_FOLDER
+    - echo $CLIENT_OPENAPI_FILE
     - mvn dependency:get -Dartifact=io.swagger.codegen.v3:swagger-codegen-cli:3.0.31:jar -Ddest=openapi-generator.jar
     - java -jar openapi-generator.jar generate -l typescript-fetch -i $CLIENT_OPENAPI_FILE -o . \
       --additional-properties [ npmName=aas-registry-client-ts-fetch npmVersion=0.3.0 npmRepository=$NPM_REPO snapshot=true ]
