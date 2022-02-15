@@ -107,6 +107,8 @@ deploy-npm:
     - npm config set always-auth true
     - npm config set strict-ssl false
     - npm config set email basys-support@dfki.de
+    - npm add user
+    - npm whoami
     - npm run build
     - npm publish
   rules:
