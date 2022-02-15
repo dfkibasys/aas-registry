@@ -104,6 +104,7 @@ deploy-npm:
     - npm prune 
     - token=$(echo -n '${MAVEN_REPO_USER}:${MAVEN_REPO_PASS}' | base64)
     - npm config set _auth $token
+    - npm config set auth $token
     - npm config set always-auth true
     - npm config set registry $NPM_REPO
     - npm config set strict-ssl false
