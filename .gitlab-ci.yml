@@ -81,6 +81,7 @@ generate-typescript:
   dependencies:
     - compile
   script:
+    - mkdir $TYPESCRIPT_FOLDER
     - cd $TYPESCRIPT_FOLDER
     - mvn dependency:get -Dartifact=io.swagger.codegen.v3:swagger-codegen-cli:3.0.31:jar -Ddest=openapi-generator.jar
     - java -jar openapi-generator.jar generate -l typescript-fetch -i C:/Programming/repos/i40/basys/aas-registry/aas-registry-client/open-api/Plattform_i40-Registry-and-Discovery.yaml -o . \
