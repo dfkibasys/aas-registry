@@ -100,7 +100,7 @@ deploy-npm:
     - generate-typescript
   script:
     - cd $TYPESCRIPT_FOLDER
-    - npm install
+    - npm ci
     - npm prune 
     - TOKEN=$(echo -n '${MAVEN_REPO_USER}:${MAVEN_REPO_PASS}' | base64)
     - cat << EOF > .npmrc
