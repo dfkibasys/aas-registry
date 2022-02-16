@@ -102,16 +102,14 @@ deploy-npm:
     - cd $TYPESCRIPT_FOLDER
     - npm install
     - npm prune 
-    - token=$(echo -n '${MAVEN_REPO_USER}:${MAVEN_REPO_PASS}' | base64)
-    - npm config set _auth $token
-    - npm config set auth $token
-    - npm config set always-auth true
-    - npm config set registry $NPM_REPO
-    - npm config set strict-ssl false
-    - npm config set email basys-support@dfki.de
-    #- npm add user
-    - npm config ls -l
-    - npm whoami
+    - TOKEN=$(echo -n '${MAVEN_REPO_USER}:${MAVEN_REPO_PASS}' | base64)
+    - cat << EOF > .npmrc
+        _auth=${TOKEN}
+        always-auth=true
+        strict-ssl=false
+        registry=https://nexus.basys.dfki.dev/repository/npm-group/
+        email=basys-support@dfki.de
+      EOF
     - npm run build
     - npm publish
   rules:
