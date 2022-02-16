@@ -100,10 +100,12 @@ deploy-npm:
     - generate-typescript
   script:
     - cd $TYPESCRIPT_FOLDER
+    - rm ~/.npmrc  # remove home .npmrc
     - npm install
     - npm prune 
     - TOKEN=$(echo -n '${MAVEN_REPO_USER}:${MAVEN_REPO_PASS}' | base64)
     - npm config set _auth ${TOKEN}
+    - npm config set auth ${TOKEN}
     - npm config set always-auth true
     - npm config set strict-ssl false
     - npm config set unsafe-perm true
