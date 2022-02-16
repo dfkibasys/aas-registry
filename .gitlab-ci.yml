@@ -92,7 +92,7 @@ generate-typescript:
     expire_in: 3 hour
   
 deploy-npm:
-  image: node:14
+  image: node:14-alpine
   stage: deploy
   tags:
     - basys
@@ -104,7 +104,7 @@ deploy-npm:
     - npm prune 
     - TOKEN=$(echo -n '${MAVEN_REPO_USER}:${MAVEN_REPO_PASS}' | base64)
     - npm config set _auth ${TOKEN}
-    - export NPM_TOKEN="${TOKEN}"
+    - export NPM_TOKEN=${TOKEN}
     - npm config set always-auth true
     - npm config set strict-ssl false
     - npm config set unsafe-perm true
