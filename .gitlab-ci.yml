@@ -106,7 +106,7 @@ deploy-npm:
     - npm config set always-auth true
     - npm config set strict-ssl false
     - npm config set unsafe-perm true
-    - npm config set registry @basys:$NPM_REPO
+    - npm config set @basys:registry $NPM_REPO
     - npm config set email basys-support@dfki.de
     - npm install
     - npm prune 
