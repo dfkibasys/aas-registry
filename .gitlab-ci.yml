@@ -92,7 +92,7 @@ generate-typescript:
     expire_in: 3 hour
   
 deploy-npm:
-  image: node:12-alpine
+  image: node:14
   stage: deploy
   tags:
     - basys
