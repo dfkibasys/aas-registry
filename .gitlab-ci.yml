@@ -106,6 +106,7 @@ deploy-npm:
     - echo _auth=${TOKEN} > .npmrc
     - echo always-auth=true >> .npmrc
     - echo strict-ssl=false >> .npmrc
+    - echo unsafe-perm=true >> .npmrc
     - echo registry=https://nexus.basys.dfki.dev/repository/npm-group/ >> .npmrc
     - echo email=basys-support@dfki.de >> .npmrc
     - npm run build
