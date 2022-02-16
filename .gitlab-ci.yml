@@ -109,6 +109,7 @@ deploy-npm:
     - npm config set unsafe-perm true
     - npm config set registry https://nexus.basys.dfki.dev/repository/npm-group/
     - npm config set email basys-support@dfki.de
+    - npm config list -l
     - npm run build
     - npm publish
   rules:
