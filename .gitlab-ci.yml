@@ -92,7 +92,7 @@ generate-typescript:
     expire_in: 3 hour
   
 deploy-npm:
-  image: node:14-alpine
+  image: node:14
   stage: deploy
   tags:
     - basys
@@ -101,17 +101,16 @@ deploy-npm:
   script:
     - cd $TYPESCRIPT_FOLDER
     - TOKEN=$(echo -n '${MAVEN_REPO_USER}:${MAVEN_REPO_PASS}' | base64)
-    - export NPM_AUTH_TOKEN=$TOKEN
     - npm config set _auth ${TOKEN}    
     - npm config set always-auth true
     - npm config set strict-ssl false
-    - npm config set unsafe-perm true
     - npm config set @basys:registry $NPM_REPO
+    - npm config set registry $NPM_REPO
     - npm config set email basys-support@dfki.de
-    - npm install
+    - npm install  # check dependencies could be installed
     - npm prune 
-    - npm run build
-    - npm publish --access restricted
+    - npm run build  # build with tests
+    - npm publish  # deploy
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_COMMIT_BRANCH == 'development'
