@@ -92,7 +92,7 @@ generate-typescript:
     expire_in: 3 hour
   
 deploy-npm:
-  image: node:14
+  image: node:14-alpine
   stage: deploy
   tags:
     - basys
@@ -100,12 +100,12 @@ deploy-npm:
     - generate-typescript
   script:
     - cd $TYPESCRIPT_FOLDER
-    - TOKEN=$(echo -n ${MAVEN_REPO_USER}:${MAVEN_REPO_PASS} | base64)
-    - npm config set _auth ${TOKEN}    
-    - npm config set always-auth true
     - npm config set strict-ssl false
     - npm config set @basys:registry $NPM_REPO
     - npm config set email basys-support@dfki.de
+    - TOKEN=$(echo -n ${MAVEN_REPO_USER}:${MAVEN_REPO_PASS} | base64)
+    - npm config set _auth ${TOKEN}    
+    - npm config set always-auth true
     - npm install  # check dependencies could be installed
     - npm prune 
     - npm run build  # build with tests
@@ -114,73 +114,73 @@ deploy-npm:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_COMMIT_BRANCH == 'development'
 
-# test:
-#   stage: test 
-#   services:
-#      - name: docker:19.03.15-dind
-#        # explicitly disable tls to avoid docker startup interruption
-#        command: ["--tls=false"]
-#   tags:
-#     - basys
-#     - maven
-#   script:
-#     - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
-#   dependencies:
-#      - compile
+test:
+  stage: test 
+  services:
+     - name: docker:19.03.15-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
+  dependencies:
+     - compile
   
-# install:
-#   stage: install
-#   tags:
-#     - basys
-#     - maven
-#   script:
-#     - mvn $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
-#   dependencies:
-#      - compile
-#   artifacts:
-#     paths:
-#       - $MAVEN_TARGET_EVENTS
-#       - $MAVEN_TARGET_PATHS
-#       - $MAVEN_TARGET_CLIENT
-#       - $MAVEN_TARGET_SERVICE
-#     expire_in: 3 hour
+install:
+  stage: install
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
+  dependencies:
+     - compile
+  artifacts:
+    paths:
+      - $MAVEN_TARGET_EVENTS
+      - $MAVEN_TARGET_PATHS
+      - $MAVEN_TARGET_CLIENT
+      - $MAVEN_TARGET_SERVICE
+    expire_in: 3 hour
   
-# deploy:
-#   stage: deploy
-#   tags:
-#     - basys
-#     - maven
-#   rules:
-#     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-#     #- if: $CI_COMMIT_BRANCH == 'development'
-#   script:
-#     - mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
-#   dependencies:
-#     - compile
+deploy:
+  stage: deploy
+  tags:
+    - basys
+    - maven
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    #- if: $CI_COMMIT_BRANCH == 'development'
+  script:
+    - mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
+  dependencies:
+    - compile
       
-# docker:
-#   stage: publish
-#   image: docker:19.03.15
-#   variables:
-#     DOCKER_DRIVER: overlay2
-#     DOCKER_IMAGE_VERSION: 'dotaas-latest'
-#     DOCKER_IMAGE: '$DOCKER_REGISTRY_USER/$CI_PROJECT_NAME:$DOCKER_IMAGE_VERSION'
-#   services:
-#      - name: docker:19.03.15-dind
-#        # explicitly disable tls to avoid docker startup interruption
-#        command: ["--tls=false"]
-#   dependencies:
-#     - install
-#   tags:
-#     - basys
-#     - docker
-#   before_script:
-#     - docker info      
-#   script:
-#     - cd aas-registry-service
-#     - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
-#     - docker build -t "$DOCKER_IMAGE" .
-#     - docker push "$DOCKER_IMAGE"
-#   rules:
-#     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-#     - if: $CI_COMMIT_BRANCH == 'development'
+docker:
+  stage: publish
+  image: docker:19.03.15
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_IMAGE_VERSION: 'dotaas-latest'
+    DOCKER_IMAGE: '$DOCKER_REGISTRY_USER/$CI_PROJECT_NAME:$DOCKER_IMAGE_VERSION'
+  services:
+     - name: docker:19.03.15-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  dependencies:
+    - install
+  tags:
+    - basys
+    - docker
+  before_script:
+    - docker info      
+  script:
+    - cd aas-registry-service
+    - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
+    - docker build -t "$DOCKER_IMAGE" .
+    - docker push "$DOCKER_IMAGE"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == 'development'
