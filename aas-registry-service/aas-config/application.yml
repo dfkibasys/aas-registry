@@ -1,0 +1,5 @@
+---
+servlet:
+  headers:
+    general:
+      Access-Control-Allow-Origin: "*"

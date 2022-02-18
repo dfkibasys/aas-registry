@@ -30,3 +30,4 @@ build
 *.project
 
 */src/generated/
+/aas-registry-service/elasticsearch-data/

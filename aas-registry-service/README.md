@@ -17,6 +17,8 @@ To run the server from a docker-compose script locally, execute the following sh
 
 Now that your instances are running:
 - Check the installation from the started [portainer instance](http://localhost:9090)
+- Elastic-search needs some time to start up, so the registry server could start multiple times until elastisearch is ready to receive connections
+- Try to override settings in the [docker-compose-config/application.yml](docker-compose-config/application.yml) file
 - Open [http://localhost:8020/swagger-ui/](http://localhost:8020/swagger-ui/) or [http://localhost:8020/registry/shell-descriptors/](http://localhost:8020/registry/shell-descriptors/) to test the backend
 - If you want to test the application from your eclipse IDE, run "RegistryServiceDocker.launch"
 - Use *./docker-compose-down.sh* to tear down the components again
