@@ -14,8 +14,8 @@ server:
   port: 8080
   servlet:
     contextPath: /
-cors: 
-  mappings: []    
+servlet:
+  headers: []
 elasticsearch:
    url: ${ELASTICSEARCH_HOST_URL}
 spring:

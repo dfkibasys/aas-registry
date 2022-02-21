@@ -1,12 +1,14 @@
 ---
-cors:
-  mappings:
-    # If just the path is specified, defaults are used
+servlet:
+  headers:
     - path: /**
-      # allowCredentials: false
-      # allowedHeaders: []
-      # allowedMethods: []
-      # allowedOriginPatterns: []
-      # allowedOrigins: []
-      # exposedHeaders: []
-      # maxAge: -1
+      values:
+        Access-Control-Allow-Origin: "*"
+        Access-Control-Max-Age: 10000
+    - path: /registry/shell-descriptors/search
+      values:
+        Access-Control-Allow-Origin: "*"
+        Access-Control-Allow-Methods: POST,GET,OPTIONS
+        Access-Control-Allow-Headers: Accept, Content-Type
+      methods: 
+        - OPTIONS

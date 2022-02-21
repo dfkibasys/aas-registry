@@ -55,7 +55,7 @@ public class SearchRequestMapper {
 		BoolQueryBuilder bqBuilder = QueryBuilders.boolQuery();
 		MatchQueryBuilder matchBuilder = QueryBuilders.matchQuery(path, value);
 		bqBuilder.must(matchBuilder);
-		if (doBuildSubmodelNestedQuqery(path)) {
+		if (doBuildSubmodelNestedQuery(path)) {
 			NestedQueryBuilder nestedBuilder = QueryBuilders
 					.nestedQuery(AasRegistryPaths.submodelDescriptors().toString(), bqBuilder, ScoreMode.None);
 			InnerHitBuilder innerHitBuilder = new InnerHitBuilder();
@@ -97,7 +97,7 @@ public class SearchRequestMapper {
 		}
 	}
 
-	private static boolean doBuildSubmodelNestedQuqery(String key) {
+	private static boolean doBuildSubmodelNestedQuery(String key) {
 		return key.startsWith(AasRegistryPaths.submodelDescriptors().toString() + ".");
 	}
 

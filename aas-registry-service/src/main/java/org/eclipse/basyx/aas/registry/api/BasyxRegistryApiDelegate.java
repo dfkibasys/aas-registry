@@ -131,4 +131,10 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 		ShellDescriptorSearchResponse result = service.searchAssetAdministrationShellDescriptors(query);
 		return ResponseEntity.ok(result);
 	}
+	
+	@Override
+	public ResponseEntity<Void> deleteAllShellDescriptors() {
+		service.unregisterAllAssetAdministrationShellDescriptors();
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 }
