@@ -31,5 +31,6 @@ public interface RegistryService {
 
     ShellDescriptorSearchResponse searchAssetAdministrationShellDescriptors(ShellDescriptorSearchQuery query);
 
+	void unregisterAllAssetAdministrationShellDescriptors();
 	
 }

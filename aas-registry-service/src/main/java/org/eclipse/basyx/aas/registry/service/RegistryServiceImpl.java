@@ -22,8 +22,12 @@ import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescrip
 import org.eclipse.basyx.aas.registry.repository.AtomicElasticSearchRepoAccess;
 import org.eclipse.basyx.aas.registry.repository.SearchRequestMapper;
 import org.eclipse.basyx.aas.registry.repository.SearchResultMapper;
+import org.elasticsearch.index.query.MatchAllQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHitSupport;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.UpdateResponse.Result;
@@ -169,6 +173,30 @@ public class RegistryServiceImpl implements RegistryService {
 		SearchResultMapper cutter = new SearchResultMapper();
 		List<AssetAdministrationShellDescriptor> transformed = cutter.shrinkHits(hits);
 		return new ShellDescriptorSearchResponse().total(hits.getTotalHits()).hits(transformed);
+	}
+
+	@Override
+	public void unregisterAllAssetAdministrationShellDescriptors() {
+		List<String> descriptors = getAllIds();
+		aasDescriptorRepository.deleteAllById(descriptors);
+		// It could be that an element was deleted during get and delete operations by another client
+		// We ignore this for now and always fire events
+		// could be that we end up in multiple delete events, but that's also true for a single delete in the current version
+		// we would need to go more low-level and check the response code if we want to have just one event fired then
+		for (String eachId : descriptors) {
+			RegistryEvent evt = RegistryEvent.builder().id(eachId).type(RegistryEvent.EventType.AAS_UNREGISTERED)
+					.build();
+			listener.onEvent(evt);
+		}
+
+	}
+	
+	private List<String> getAllIds() {
+		MatchAllQueryBuilder matchAllBuilder = QueryBuilders.matchAllQuery();
+		NativeSearchQuery query = new NativeSearchQuery(matchAllBuilder);
+		query.setFields(List.of("identification"));
+		SearchHits<AssetAdministrationShellDescriptor> hits = ops.search(query, AssetAdministrationShellDescriptor.class);
+		return hits.get().map(SearchHit::getId).collect(Collectors.toList());
 	}
 
 	private static final class SubmodelDescriptorIdMatcher {

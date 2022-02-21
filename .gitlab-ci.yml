@@ -83,7 +83,7 @@ generate-typescript:
     - mkdir $TYPESCRIPT_FOLDER
     - cd $TYPESCRIPT_FOLDER
     - mvn dependency:get -Dartifact=io.swagger.codegen.v3:swagger-codegen-cli:3.0.31:jar -Ddest=openapi-generator.jar
-    - java -jar openapi-generator.jar generate -l typescript-fetch -i ../aas-registry-client/open-api/Plattform_i40-Registry-and-Discovery.yaml -o . --additional-properties [ npmName=aas-registry-client-ts-fetch npmVersion=0.3.0 npmRepository=$NPM_REPO snapshot=true ]
+    - java -jar openapi-generator.jar generate -l typescript-fetch -i ../aas-registry-client/open-api/Plattform_i40-Registry-and-Discovery.yaml -o . --additional-properties [ npmName=@basys/aas-registry-client-ts-fetch npmVersion=0.3.0 snapshot=true ]
     - rm openapi-generator.jar
     - rm -rf .swagger-codegen
   artifacts:
@@ -92,7 +92,7 @@ generate-typescript:
     expire_in: 3 hour
   
 deploy-npm:
-  image: node:17.5-alpine
+  image: node:14-alpine
   stage: deploy
   tags:
     - basys
@@ -100,20 +100,16 @@ deploy-npm:
     - generate-typescript
   script:
     - cd $TYPESCRIPT_FOLDER
-    - npm install
-    - npm prune 
-    - token=$(echo -n '${MAVEN_REPO_USER}:${MAVEN_REPO_PASS}' | base64)
-    - npm config set _auth $token
-    - npm config set auth $token
-    - npm config set always-auth true
-    - npm config set registry $NPM_REPO
     - npm config set strict-ssl false
+    - npm config set @basys:registry $NPM_REPO
     - npm config set email basys-support@dfki.de
-    #- npm add user
-    - npm config ls -l
-    - npm whoami
-    - npm run build
-    - npm publish
+    - TOKEN=$(echo -n ${MAVEN_REPO_USER}:${MAVEN_REPO_PASS} | base64)
+    - npm config set _auth ${TOKEN}    
+    - npm config set always-auth true
+    - npm install  # check dependencies could be installed
+    - npm prune 
+    - npm run build  # build with tests
+    - npm publish  # deploy
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_COMMIT_BRANCH == 'development'

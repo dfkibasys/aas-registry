@@ -51,7 +51,7 @@
 				<groupId>org.eclipse.basyx.aas.registry</groupId>
 				<artifactId>aas-registry-plugins</artifactId>
 				<executions>
-					 <execution>
+					<execution>
 						<id>search-api</id>
 						<goals>
 							<goal>yaml-overlay</goal>
@@ -59,9 +59,9 @@
 						<configuration>
 							<base>${project.basedir}/../${openapi.folder.name}/${openapi.base.name}</base>
 							<overlay>${project.basedir}/../${openapi.folder.name}/${openapi.search.name}</overlay>
-							<out>${openapi.search.result.file}</out>	
+							<out>${openapi.search.result.file}</out>
 						</configuration>
-					</execution> 
+					</execution>
 					<execution>
 						<id>elastic-annotations</id>
 						<goals>
@@ -70,7 +70,7 @@
 						<configuration>
 							<base>${openapi.search.result.file}</base>
 							<overlay>${openapi.elastics.file}</overlay>
-							<out>${openapi.result.file}</out>	
+							<out>${openapi.result.file}</out>
 						</configuration>
 					</execution>
 				</executions>
@@ -199,13 +199,17 @@
 			<artifactId>aas-registry-events</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-actuator</artifactId>
+		</dependency>
+		<dependency>
 			<!-- just to make it compile with events that has also this as provided 
 				ref and it is not transitive -->
 			<groupId>org.eclipse.basyx.aas.registry</groupId>
 			<artifactId>aas-registry-client</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- Test configuration -->	
+		<!-- Test configuration -->
 		<dependency>
 			<groupId>org.eclipse.basyx.aas.registry</groupId>
 			<artifactId>aas-registry-paths</artifactId>

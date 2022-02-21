@@ -1,3 +1,4 @@
+---
 springfox:
   documentation:
     open-api.v3.path: /api-docs
@@ -5,11 +6,16 @@ management:
   endpoints:
     web:
       exposure:
-        include: "health,metrics"
+        include: "health,metrics,beans"
+logging:
+  level:
+    root: INFO
 server:
   port: 8080
   servlet:
     contextPath: /
+servlet:
+  headers: []
 elasticsearch:
    url: ${ELASTICSEARCH_HOST_URL}
 spring:

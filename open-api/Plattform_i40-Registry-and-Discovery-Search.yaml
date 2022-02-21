@@ -4,11 +4,20 @@ info:
   title: DotAAS Part 2 | HTTP/REST | Registry and Discovery and Search
   version: Final-Draft + Search
 paths:
+  /registry/shell-descriptors:
+    delete:
+      tags: [Registry and Discovery Interface]
+      summary: Deletes all Asset Administration Shell Descriptors
+      operationId: DeleteAllShellDescriptors
+      responses:
+        '204':
+          description: No content
+      x-semanticIds: ['https://admin-shell.io/aas/API/GetAllAssetAdministrationShellDescriptors/1/0/RC02']
   /registry/shell-descriptors/search:
     post:
       operationId: SearchShellDescriptors
       tags:
-        - Registry and Discovery Interface
+        - Registry and Discovery Interface  
       requestBody:
         content:
           application/json:
