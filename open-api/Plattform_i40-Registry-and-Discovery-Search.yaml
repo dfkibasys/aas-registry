@@ -8,7 +8,7 @@ paths:
     post:
       operationId: SearchShellDescriptors
       tags:
-        - Registry and Discovery Interface
+        - Registry and Discovery Interface  
       requestBody:
         content:
           application/json:
@@ -22,7 +22,28 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/ShellDescriptorSearchResponse'
+#    options:
+#      operationId: SearchShellDescriptorsOptions
+#      responses:
+#        200:
+#          $ref: '#/components/responses/Cors200'
 components:
+  responses:
+    Cors200: 
+      description: Default response for CORS method
+      headers:
+        Access-Control-Allow-Headers:
+          schema:
+            type: "string"
+        Access-Control-Allow-Methods:
+          schema:
+            type: "string"
+        Access-Control-Allow-Credentials:
+          schema:
+            type: "string"
+        Access-Control-Allow-Origin:
+          schema:
+            type: "string"
   schemas:
     Reference:
       discriminator:

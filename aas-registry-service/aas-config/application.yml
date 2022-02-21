@@ -1,5 +1,12 @@
 ---
-servlet:
-  headers:
-    general:
-      Access-Control-Allow-Origin: "*"
+cors:
+  mappings:
+    # If just the path is specified, defaults are used
+    - path: /**
+      # allowCredentials: false
+      # allowedHeaders: []
+      # allowedMethods: []
+      # allowedOriginPatterns: []
+      # allowedOrigins: []
+      # exposedHeaders: []
+      # maxAge: -1
