@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -20,6 +22,7 @@ import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebSe
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.validation.annotation.Validated;
 
 import lombok.Data;
 
@@ -31,7 +34,7 @@ public class ServletHeaderConfiguration {
 	private List<HeaderDefinition> headers;
 
 	@Bean
-	public Filter headerFilter(AnnotationConfigServletWebServerApplicationContext context) {
+	public Filter headerFilter() {
 		return new AllMappingsHeaders(headers);
 	}
 
@@ -41,7 +44,7 @@ public class ServletHeaderConfiguration {
 
 		private final List<HeaderDefinition> headerDefs;
 
-		private final Map<String, Map<String, String>> resolvedHeadersByPath = new HashMap<>();
+		private final Map<CacheKey, Map<String, String>> resolvedHeadersByPath = new HashMap<>();
 
 		public AllMappingsHeaders(List<HeaderDefinition> headerDefs) {
 			this.headerDefs = headerDefs;
@@ -70,7 +73,8 @@ public class ServletHeaderConfiguration {
 			HttpServletResponse httpResponse = (HttpServletResponse) response;
 			String path = httpRequest.getServletPath();
 			String method = httpRequest.getMethod();
-			Map<String, String> resolved = resolvedHeadersByPath.computeIfAbsent(path, p -> resolveHeaders(p, method));
+			CacheKey cacheKey = new CacheKey(path, method);
+			Map<String, String> resolved = resolvedHeadersByPath.computeIfAbsent(cacheKey, key -> resolveHeaders(path, method));
 			resolved.forEach(httpResponse::addHeader);
 			chain.doFilter(request, httpResponse);
 		}
@@ -108,6 +112,16 @@ public class ServletHeaderConfiguration {
 		}
 	}
 
+	@Data
+	private static final class CacheKey {
+		
+		private final String path;
+		
+		private final String method;		
+		
+	}
+	
+	
 	@Data
 	private static final class HeaderDefinition {
 

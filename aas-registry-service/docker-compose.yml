@@ -14,8 +14,6 @@ volumes:
   elasticsearch-data:
     driver: local
   aas-config:
-    driver: local
-
 services:  
   portainer:
     image: portainer/portainer:latest
@@ -101,10 +99,10 @@ services:
       - kafka
     restart: always
     volumes:
-      - aas-config:/etc/config/aas-registry
+      - ./aas-config:/etc/config/aas-registry/
     environment:
       ELASTICSEARCH_HOST_URL: elasticsearch:9200 
       KAFKA_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:29092
-      SPRING_CONFIG_LOCATION: file:///etc/config/aas-registry/application.yml,classpath:/application.yml
+      SPRING_CONFIG_LOCATION: classpath:/application.yml,file:/etc/config/aas-registry/application.yml
     networks:
       - basyx

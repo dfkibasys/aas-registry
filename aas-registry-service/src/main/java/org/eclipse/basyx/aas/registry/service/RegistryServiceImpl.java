@@ -38,6 +38,8 @@ import lombok.NonNull;
 @Service
 public class RegistryServiceImpl implements RegistryService {
 
+	private static final int MAX_RESULTS = 30;
+
 	private static final String SUBMODEL_ID_IS_NULL = "Submodel id is null!";
 
 	private static final String AAS_ID_IS_NULL = "Aas id is null!";
@@ -177,25 +179,33 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Override
 	public void unregisterAllAssetAdministrationShellDescriptors() {
-		List<String> descriptors = getAllIds();
-		aasDescriptorRepository.deleteAllById(descriptors);
-		// It could be that an element was deleted during get and delete operations by another client
-		// We ignore this for now and always fire events
-		// could be that we end up in multiple delete events, but that's also true for a single delete in the current version
-		// we would need to go more low-level and check the response code if we want to have just one event fired then
-		for (String eachId : descriptors) {
-			RegistryEvent evt = RegistryEvent.builder().id(eachId).type(RegistryEvent.EventType.AAS_UNREGISTERED)
-					.build();
-			listener.onEvent(evt);
-		}
+		List<String> descriptors;
+		do {
+			descriptors = getAllIds(MAX_RESULTS);
 
+			aasDescriptorRepository.deleteAllById(descriptors);
+			// It could be that an element was deleted during get and delete operations by
+			// another client
+			// We ignore this for now and always fire events
+			// could be that we end up in multiple delete events, but that's also true for a
+			// single delete in the current version
+			// we would need to go more low-level and check the response code if we want to
+			// have just one event fired then
+			for (String eachId : descriptors) {
+				RegistryEvent evt = RegistryEvent.builder().id(eachId).type(RegistryEvent.EventType.AAS_UNREGISTERED)
+						.build();
+				listener.onEvent(evt);
+			}
+		} while (descriptors.size() == MAX_RESULTS);
 	}
-	
-	private List<String> getAllIds() {
+
+	private List<String> getAllIds(int maxValues) {
 		MatchAllQueryBuilder matchAllBuilder = QueryBuilders.matchAllQuery();
 		NativeSearchQuery query = new NativeSearchQuery(matchAllBuilder);
+		query.setMaxResults(maxValues);
 		query.setFields(List.of("identification"));
-		SearchHits<AssetAdministrationShellDescriptor> hits = ops.search(query, AssetAdministrationShellDescriptor.class);
+		SearchHits<AssetAdministrationShellDescriptor> hits = ops.search(query,
+				AssetAdministrationShellDescriptor.class);
 		return hits.get().map(SearchHit::getId).collect(Collectors.toList());
 	}
 
