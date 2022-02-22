@@ -10,12 +10,7 @@ import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
 import org.eclipse.basyx.aas.registry.model.SortDirection;
 import org.eclipse.basyx.aas.registry.model.Sorting;
 import org.eclipse.basyx.aas.registry.model.SortingPath;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.InnerHitBuilder;
-import org.elasticsearch.index.query.MatchAllQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.NestedQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -54,6 +49,7 @@ public class SearchRequestMapper {
 	private static NativeSearchQuery createMatchByFilter(@NotNull String path, @NotNull String value) {
 		BoolQueryBuilder bqBuilder = QueryBuilders.boolQuery();
 		MatchQueryBuilder matchBuilder = QueryBuilders.matchQuery(path, value);
+		matchBuilder.operator(Operator.AND);
 		bqBuilder.must(matchBuilder);
 		if (doBuildSubmodelNestedQuery(path)) {
 			NestedQueryBuilder nestedBuilder = QueryBuilders
