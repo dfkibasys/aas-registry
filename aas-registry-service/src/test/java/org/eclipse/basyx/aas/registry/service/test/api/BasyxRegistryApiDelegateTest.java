@@ -284,6 +284,14 @@ public class BasyxRegistryApiDelegateTest {
 		assertThat(entry.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(entry.getBody().getHits()).isEmpty();
 	}
+	
+	@Test
+	public void whenDeleteAllShellDescritors_thenReturnNoContent() {
+		ResponseEntity<Void> entry = controller.deleteAllShellDescriptors();
+		assertThat(entry.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+		assertThat(entry.getBody()).isNull();
+	}
+	
 
 	@Test
 	public void whenSearchForAasDescriptor_thenReturnResult() {

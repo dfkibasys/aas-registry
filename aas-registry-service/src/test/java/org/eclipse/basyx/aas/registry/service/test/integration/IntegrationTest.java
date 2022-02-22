@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -77,6 +78,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(SpringRunner.class)
 public class IntegrationTest {
 
+	private static final int DELETE_ALL_TEST_INSTANCE_COUNT = 50;
+
 	private static final DockerImageName KAFKA_TEST_IMAGE = DockerImageName.parse("confluentinc/cp-kafka:6.2.1");
 
 	private static final DockerImageName ELASTICSEARCH_TEST_IMAGE = DockerImageName
@@ -143,7 +146,6 @@ public class IntegrationTest {
 						.hasSize(300);
 	}
 
-	
 	private HttpStatus writeSubModel(String descriptorId, int idx) {
 		SubmodelDescriptor sm = new SubmodelDescriptor();
 		sm.setIdentification(idx + "");
@@ -156,39 +158,73 @@ public class IntegrationTest {
 			return api.postSubmodelDescriptorWithHttpInfo(sm, descriptorId).getStatusCode();
 		} catch (HttpServerErrorException ex) {
 			return ex.getStatusCode();
-		} 
+		}
 	}
-	
 
-	
-	
 	@Test
 	public void whenUrlEncodingApplied_thenAccessIsWorking() {
 
 		String aasId = "http://eclipse.org/Asset Administration 23";
 		String smId = "http://eclipse.org/Submodel%?1";
-		
+
 		String aasIdEncoded = URLEncoder.encode(aasId, StandardCharsets.UTF_8);
 		String smIdEncoded = URLEncoder.encode(smId, StandardCharsets.UTF_8);
-		
+
 		AssetAdministrationShellDescriptor descr = new AssetAdministrationShellDescriptor();
 		descr.setIdentification(aasId);
 		descr.addSubmodelDescriptorsItem(new SubmodelDescriptor().identification(smId));
-		
+
 		api.postAssetAdministrationShellDescriptor(descr);
-		
+
 		assertThat(api.getAllSubmodelDescriptors(aasIdEncoded)).hasSize(1);
-		assertThat(api.getAssetAdministrationShellDescriptorByIdWithHttpInfo(aasIdEncoded).getStatusCode()).isEqualTo(HttpStatus.OK);
-		assertThat(api.getSubmodelDescriptorByIdWithHttpInfo(aasIdEncoded, smIdEncoded).getStatusCode()).isEqualTo(HttpStatus.OK);
-		assertThat(api.getSubmodelDescriptorByIdWithHttpInfo(aasIdEncoded, smIdEncoded).getStatusCode()).isEqualTo(HttpStatus.OK);
-		
-		assertThat(api.deleteSubmodelDescriptorByIdWithHttpInfo(aasIdEncoded, smIdEncoded).getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+		assertThat(api.getAssetAdministrationShellDescriptorByIdWithHttpInfo(aasIdEncoded).getStatusCode())
+				.isEqualTo(HttpStatus.OK);
+		assertThat(api.getSubmodelDescriptorByIdWithHttpInfo(aasIdEncoded, smIdEncoded).getStatusCode())
+				.isEqualTo(HttpStatus.OK);
+		assertThat(api.getSubmodelDescriptorByIdWithHttpInfo(aasIdEncoded, smIdEncoded).getStatusCode())
+				.isEqualTo(HttpStatus.OK);
+
+		assertThat(api.deleteSubmodelDescriptorByIdWithHttpInfo(aasIdEncoded, smIdEncoded).getStatusCode())
+				.isEqualTo(HttpStatus.NO_CONTENT);
 		assertThat(api.getAllSubmodelDescriptors(aasIdEncoded)).isEmpty();
-		assertThat(api.deleteAssetAdministrationShellDescriptorByIdWithHttpInfo(aasIdEncoded).getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+		assertThat(api.deleteAssetAdministrationShellDescriptorByIdWithHttpInfo(aasIdEncoded).getStatusCode())
+				.isEqualTo(HttpStatus.NO_CONTENT);
 		assertThat(api.getAllAssetAdministrationShellDescriptors()).isEmpty();
 		listener.reset();
 	}
-	
+
+	@Test
+	public void whenDeleteAll_thenAllDescriptorsAreRemoved() {
+
+		for (int i = 0; i < DELETE_ALL_TEST_INSTANCE_COUNT; i++) {
+			AssetAdministrationShellDescriptor descr = new AssetAdministrationShellDescriptor();
+			String id = "id_" + i;
+			descr.setIdentification(id);
+			ResponseEntity<AssetAdministrationShellDescriptor> response = api
+					.postAssetAdministrationShellDescriptorWithHttpInfo(descr);
+			assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+			assertThatEventWasSend(
+					RegistryEvent.builder().id(id).aasDescriptor(descr).type(EventType.AAS_REGISTERED).build());
+		}
+
+		List<AssetAdministrationShellDescriptor> all = api.getAllAssetAdministrationShellDescriptors();
+		assertThat(all.size()).isEqualTo(DELETE_ALL_TEST_INSTANCE_COUNT);
+
+		api.deleteAllShellDescriptors();
+
+		all = api.getAllAssetAdministrationShellDescriptors();
+		assertThat(all).isEmpty();
+
+		HashSet<RegistryEvent> events = new HashSet<>();
+		// we do not have a specific order, so read all events first
+		for (int i = 0; i < DELETE_ALL_TEST_INSTANCE_COUNT; i++) {
+			events.add(listener.poll());
+		}
+		for (int i = 0; i < DELETE_ALL_TEST_INSTANCE_COUNT; i++) {
+			assertThat(events.remove(RegistryEvent.builder().id("id_" + i).type(EventType.AAS_UNREGISTERED).build())).isTrue();
+		}
+		listener.assertNoAdditionalMessage();
+	}
 
 	@Test
 	public void whenCreateAndDeleteDescriptors_thenAllDescriptorsAreRemoved()
@@ -356,8 +392,9 @@ public class IntegrationTest {
 
 	private void deleteAdminAssetShellDescriptor(String aasId) {
 		listener.reset();
-		
-		HttpStatus response = api.deleteAssetAdministrationShellDescriptorByIdWithHttpInfo(URLEncoder.encode(aasId, StandardCharsets.UTF_8)).getStatusCode();
+
+		HttpStatus response = api.deleteAssetAdministrationShellDescriptorByIdWithHttpInfo(
+				URLEncoder.encode(aasId, StandardCharsets.UTF_8)).getStatusCode();
 		assertThat(response).isEqualTo(HttpStatus.NO_CONTENT);
 		assertThatEventWasSend(RegistryEvent.builder().id(aasId).type(EventType.AAS_UNREGISTERED).build());
 	}

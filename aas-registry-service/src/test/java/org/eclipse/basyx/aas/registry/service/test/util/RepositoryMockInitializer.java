@@ -3,12 +3,15 @@ package org.eclipse.basyx.aas.registry.service.test.util;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -26,6 +29,7 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -62,8 +66,8 @@ public class RepositoryMockInitializer extends TestWatcher {
 	}
 
 	public void initialize(List<AssetAdministrationShellDescriptor> content) throws IOException {
-		repoContent = content.stream()
-				.collect(Collectors.toMap(AssetAdministrationShellDescriptor::getIdentification, Function.identity()));
+		repoContent = content.stream().collect(Collectors.toMap(AssetAdministrationShellDescriptor::getIdentification,
+				Function.identity()));
 
 		prepareFindAll();
 		prepareFindById();
@@ -80,6 +84,23 @@ public class RepositoryMockInitializer extends TestWatcher {
 		Mockito.when(
 				repoAccess.storeAssetAdministrationSubmodel(Mockito.anyString(), Mockito.any(SubmodelDescriptor.class)))
 				.thenAnswer(this::answerStoreAssetAdminstrationSubmodel);
+		Mockito.when(repoAccess.getAllIds(Mockito.anyInt())).thenAnswer(this::answerWithAllIds);
+		Mockito.doAnswer(this::deleteAllById).when(repo).deleteAllById(Mockito.anyIterable());
+	}
+	
+	private Void deleteAllById(InvocationOnMock invocation) {
+		List<String> itemIds = invocation.getArgument(0);
+		itemIds.forEach(repoContent::remove);
+		return null;
+	}
+
+	private List<String> answerWithAllIds(InvocationOnMock invocation) {
+		int count = invocation.getArgument(0);
+		// the list order is not relevant for us
+		List<String> content = new LinkedList<>(repoContent.keySet());
+		int listSize = content.size();
+		int size =  listSize > count ? count : listSize;
+		return content.subList(0, size);
 	}
 
 	private Result answerStoreAssetAdminstrationSubmodel(InvocationOnMock invocation) {
@@ -168,7 +189,7 @@ public class RepositoryMockInitializer extends TestWatcher {
 	@SuppressWarnings("unchecked")
 	private SearchHits<AssetAdministrationShellDescriptor> answerSearchBySubmodelId(InvocationOnMock invocation) {
 		Object value = getValueAndAssertCorrectPath(invocation.getArgument(0));
-	    
+
 		SearchHits<AssetAdministrationShellDescriptor> hits = Mockito.mock(SearchHits.class);
 		for (AssetAdministrationShellDescriptor descr : repoContent.values()) {
 			for (SubmodelDescriptor sDescr : Optional.ofNullable(descr.getSubmodelDescriptors())
@@ -192,7 +213,7 @@ public class RepositoryMockInitializer extends TestWatcher {
 		Mockito.when(hits.get()).thenAnswer(i -> toReturn.stream());
 		Mockito.when(hits.stream()).thenAnswer(i -> toReturn.stream());
 		Mockito.when(hits.getSearchHits()).thenAnswer(i -> toReturn);
-		
+
 	}
 
 	private Object getValueAndAssertCorrectPath(NativeSearchQuery nsQuery) {

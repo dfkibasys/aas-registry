@@ -27,7 +27,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHitSupport;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.UpdateResponse.Result;
@@ -181,8 +180,8 @@ public class RegistryServiceImpl implements RegistryService {
 	public void unregisterAllAssetAdministrationShellDescriptors() {
 		List<String> descriptors;
 		do {
-			descriptors = getAllIds(MAX_RESULTS);
 
+			descriptors = atomicRepoAccess.getAllIds(MAX_RESULTS);
 			aasDescriptorRepository.deleteAllById(descriptors);
 			// It could be that an element was deleted during get and delete operations by
 			// another client
@@ -199,15 +198,6 @@ public class RegistryServiceImpl implements RegistryService {
 		} while (descriptors.size() == MAX_RESULTS);
 	}
 
-	private List<String> getAllIds(int maxValues) {
-		MatchAllQueryBuilder matchAllBuilder = QueryBuilders.matchAllQuery();
-		NativeSearchQuery query = new NativeSearchQuery(matchAllBuilder);
-		query.setMaxResults(maxValues);
-		query.setFields(List.of("identification"));
-		SearchHits<AssetAdministrationShellDescriptor> hits = ops.search(query,
-				AssetAdministrationShellDescriptor.class);
-		return hits.get().map(SearchHit::getId).collect(Collectors.toList());
-	}
 
 	private static final class SubmodelDescriptorIdMatcher {
 

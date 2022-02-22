@@ -357,6 +357,18 @@ public class RegistryServiceTest {
 		assertThat(result.getHits().size()).isZero();
 	}
 
+	@Test
+	public void whenDeleteAllShellDescritors_thenEventsAreSendAndDescriptorsRemoved() {
+		List<AssetAdministrationShellDescriptor> oldState = registry.getAllAssetAdministrationShellDescriptors();
+		assertThat(oldState).isNotEmpty();		
+		registry.unregisterAllAssetAdministrationShellDescriptors();
+		// we have just 2 elements thus it is just invoked once
+		Mockito.verify(repo, Mockito.times(1)).deleteAllById(Mockito.anyIterable());
+		List<AssetAdministrationShellDescriptor> newState = registry.getAllAssetAdministrationShellDescriptors();
+		assertThat(newState).isEmpty();		
+	}
+	
+	
 	private void assertNullPointerThrown(ThrowingCallable callable) {
 		Throwable th = Assertions.catchThrowable(callable);
 		assertThat(th).isInstanceOf(NullPointerException.class);

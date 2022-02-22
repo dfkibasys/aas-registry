@@ -1,8 +1,9 @@
 package org.eclipse.basyx.aas.registry.repository;
 
-import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
@@ -10,23 +11,20 @@ import org.eclipse.basyx.aas.registry.configuration.ElasticConfiguration.Elastic
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.action.admin.cluster.storedscripts.PutStoredScriptRequest;
-import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.bytes.BytesReference;
-import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.MatchAllQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.dao.UncategorizedDataAccessException;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.RefreshPolicy;
 import org.springframework.data.elasticsearch.core.ScriptType;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.convert.ElasticsearchConverter;
 import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.data.elasticsearch.core.query.UpdateResponse;
 import org.springframework.data.elasticsearch.core.query.UpdateResponse.Result;
@@ -79,6 +77,17 @@ public class PainlessAtomicElasticSearchRepoAccess implements AtomicElasticSearc
 		}
 	}
 
+	@Override
+	public List<String> getAllIds(int maxValues) {
+		MatchAllQueryBuilder matchAllBuilder = QueryBuilders.matchAllQuery();
+		NativeSearchQuery query = new NativeSearchQuery(matchAllBuilder);
+		query.setMaxResults(maxValues);
+		query.setFields(List.of("identification"));
+		SearchHits<AssetAdministrationShellDescriptor> hits = ops.search(query,
+				AssetAdministrationShellDescriptor.class);
+		return hits.get().map(SearchHit::getId).collect(Collectors.toList());
+	}
+	
 	// assert that the api was called wrong -> aas id was not available
 	// we do not want to use upserts for now
 	private Result assertNotFound(UncategorizedDataAccessException ex) {
@@ -91,5 +100,4 @@ public class PainlessAtomicElasticSearchRepoAccess implements AtomicElasticSearc
 		}
 		throw ex;
 	}
-
 }

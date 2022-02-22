@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -18,11 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.validation.annotation.Validated;
 
 import lombok.Data;
 
@@ -35,10 +31,10 @@ public class ServletHeaderConfiguration {
 
 	@Bean
 	public Filter headerFilter() {
-		return new AllMappingsHeaders(headers);
+		return new MappingsHeaderApplier(headers);
 	}
 
-	private static final class AllMappingsHeaders implements Filter {
+	public static final class MappingsHeaderApplier implements Filter {
 
 		private AntPathMatcher matcher = new AntPathMatcher();
 
@@ -46,7 +42,7 @@ public class ServletHeaderConfiguration {
 
 		private final Map<CacheKey, Map<String, String>> resolvedHeadersByPath = new HashMap<>();
 
-		public AllMappingsHeaders(List<HeaderDefinition> headerDefs) {
+		public MappingsHeaderApplier(List<HeaderDefinition> headerDefs) {
 			this.headerDefs = headerDefs;
 		}
 
@@ -123,7 +119,7 @@ public class ServletHeaderConfiguration {
 	
 	
 	@Data
-	private static final class HeaderDefinition {
+	public static final class HeaderDefinition {
 
 		private String path;
 
