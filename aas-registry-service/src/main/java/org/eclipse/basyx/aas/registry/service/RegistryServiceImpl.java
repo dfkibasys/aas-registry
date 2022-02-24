@@ -2,15 +2,13 @@ package org.eclipse.basyx.aas.registry.service;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.validation.constraints.NotNull;
 
+import com.google.common.base.Charsets;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent.EventType;
 import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
@@ -213,6 +211,7 @@ public class RegistryServiceImpl implements RegistryService {
 	}
 
 	private String decodeId(String id) {
-		return URLDecoder.decode(id, StandardCharsets.UTF_8);
+		return new String(Base64.getUrlDecoder().decode(id), Charsets.UTF_8);
+		//return URLDecoder.decode(id, StandardCharsets.UTF_8);
 	}
 }

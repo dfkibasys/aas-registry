@@ -1,14 +1,12 @@
 package org.eclipse.basyx.aas.registry.compatibility;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.basyx.aas.metamodel.map.descriptor.AASDescriptor;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registration.api.IAASRegistry;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import org.eclipse.basyx.aas.registry.client.RegistryAndDiscoveryClient;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.submodel.metamodel.api.identifier.IIdentifier;
 import org.eclipse.basyx.vab.exception.provider.ProviderException;
@@ -18,21 +16,11 @@ import org.springframework.web.client.RestClientException;
 
 public class DotAASRegistryProxy implements IAASRegistry {
 
-	private RegistryAndDiscoveryInterfaceApi client;
+	private RegistryAndDiscoveryClient client;
 
 	public DotAASRegistryProxy(String registryUrl)
 	{
-		this.client = new RegistryAndDiscoveryInterfaceApi();
-		this.client.getApiClient().setBasePath(registryUrl);
-	}
-
-	public DotAASRegistryProxy(RegistryAndDiscoveryInterfaceApi client)
-	{
-		this.client = client;
-	}
-
-	public RegistryAndDiscoveryInterfaceApi getClient() {
-		return client;
+		this.client = new RegistryAndDiscoveryClient(registryUrl);
 	}
 
 	@Override
@@ -47,12 +35,11 @@ public class DotAASRegistryProxy implements IAASRegistry {
 
 	@Override
 	public void register(IIdentifier aasIdentifier, SubmodelDescriptor submodelDescriptor) throws ProviderException {
-		String aasId = encodeId(aasIdentifier.getId());
 		org.eclipse.basyx.aas.registry.model.SubmodelDescriptor toPost = DescriptorConversions.toDotaasSubmodelDescriptor(submodelDescriptor);
 		try {
-			client.postSubmodelDescriptor(toPost, aasId);
+			client.postSubmodelDescriptor(toPost, aasIdentifier.getId());
 		} catch (NotFound ex) {
-			throw new ProviderException("Could not find aasDescriptor: " + aasId, ex);
+			throw new ProviderException("Could not find aasDescriptor: " + aasIdentifier.getId(), ex);
 		} catch (RestClientException ex) {
 			throw new ProviderException(ex);
 		}
@@ -60,9 +47,8 @@ public class DotAASRegistryProxy implements IAASRegistry {
 
 	@Override
 	public void delete(IIdentifier aasIdentifier) throws ProviderException {
-		String aasId = encodeId(aasIdentifier.getId());
 		try {
-			client.deleteAssetAdministrationShellDescriptorByIdWithHttpInfo(aasId);
+			client.deleteAssetAdministrationShellDescriptorByIdWithHttpInfo(aasIdentifier.getId());
 		} catch (RestClientException ex) {
 			throw new ProviderException(ex);
 		}
@@ -70,10 +56,8 @@ public class DotAASRegistryProxy implements IAASRegistry {
 
 	@Override
 	public void delete(IIdentifier aasIdentifier, IIdentifier submodelIdentifier) throws ProviderException {
-		String aasId = encodeId(aasIdentifier.getId());
-		String submodelId = encodeId(submodelIdentifier.getId());
 		try {
-			client.deleteSubmodelDescriptorByIdWithHttpInfo(aasId, submodelId);
+			client.deleteSubmodelDescriptorByIdWithHttpInfo(aasIdentifier.getId(), submodelIdentifier.getId());
 		} catch (RestClientException ex) {
 			throw new ProviderException(ex);
 		}
@@ -81,9 +65,8 @@ public class DotAASRegistryProxy implements IAASRegistry {
 
 	@Override
 	public AASDescriptor lookupAAS(IIdentifier aasIdentifier) throws ProviderException {
-		String aasId = encodeId(aasIdentifier.getId());
 		try {
-			AssetAdministrationShellDescriptor response = client.getAssetAdministrationShellDescriptorById(aasId);
+			AssetAdministrationShellDescriptor response = client.getAssetAdministrationShellDescriptorById(aasIdentifier.getId());
 			return DescriptorConversions.toBasyxAASDescriptor(response);
 		} catch (NotFound ex) {
 			throw new ResourceNotFoundException(ex);
@@ -104,13 +87,12 @@ public class DotAASRegistryProxy implements IAASRegistry {
 
 	@Override
 	public List<SubmodelDescriptor> lookupSubmodels(IIdentifier aasIdentifier) throws ProviderException {
-		String aasId = encodeId(aasIdentifier.getId());
 		try {
 			List<org.eclipse.basyx.aas.registry.model.SubmodelDescriptor> response = client
-					.getAllSubmodelDescriptors(aasId);
+					.getAllSubmodelDescriptors(aasIdentifier.getId());
 			return response.stream().map(DescriptorConversions::toBasyxSubmodelDescriptor).collect(Collectors.toList());
 		} catch (NotFound ex) {
-			throw new ResourceNotFoundException(String.format("Could not retrieve AAS %s", aasId));
+			throw new ResourceNotFoundException(String.format("Could not retrieve AAS %s", aasIdentifier.getId()));
 		} catch (RestClientException ex) {
 			throw new ProviderException(ex);
 		}
@@ -119,21 +101,16 @@ public class DotAASRegistryProxy implements IAASRegistry {
 	@Override
 	public SubmodelDescriptor lookupSubmodel(IIdentifier aasIdentifier, IIdentifier submodelIdentifier)
 			throws ProviderException {
-		String aasId = encodeId(aasIdentifier.getId());
-		String submodelId = encodeId(submodelIdentifier.getId());
 		try {
-			org.eclipse.basyx.aas.registry.model.SubmodelDescriptor response = client.getSubmodelDescriptorById(aasId,
-					submodelId);
+			org.eclipse.basyx.aas.registry.model.SubmodelDescriptor response = client.getSubmodelDescriptorById(aasIdentifier.getId(),
+					submodelIdentifier.getId());
 			return DescriptorConversions.toBasyxSubmodelDescriptor(response);
 		} catch (NotFound ex) {
 			throw new ResourceNotFoundException(
-					String.format("Could not retrieve AAS %s or submodel %s", aasId, submodelId));
+					String.format("Could not retrieve AAS %s or submodel %s", aasIdentifier.getId(), submodelIdentifier.getId()));
 		}  catch (RestClientException ex) {
 			throw new ProviderException(ex);
 		}
 	}
 
-	private String encodeId(String id) {
-		return URLEncoder.encode(id, StandardCharsets.UTF_8);
-	}
 }
