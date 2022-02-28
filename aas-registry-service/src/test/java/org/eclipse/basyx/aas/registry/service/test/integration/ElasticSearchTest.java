@@ -32,9 +32,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(SpringRunner.class)
 public class ElasticSearchTest {
 
-	private static final String ID_2_2 = "2.2";
+	private static final String ID_2_2 = "identification_2.2";
 
-	private static final String ID_2 = "2";
+	private static final String ID_2 = "identification_2";
 
 	private static final String ID_SHORT1B = "short1b";
 
@@ -44,9 +44,9 @@ public class ElasticSearchTest {
 
 	private static final String IDSHORT_1 = "short1";
 
-	private static final String ID_1_1 = "1.1";
+	private static final String ID_1_1 = "identification_1.1";
 
-	private static final String ID_1 = "1";
+	private static final String ID_1 = "identification_1";
 
 	private static final DockerImageName ELASTICSEARCH_TEST_IMAGE = DockerImageName
 			.parse("docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2");

@@ -1,33 +1,33 @@
 [
 	{
-		"idShort": "2",
-		"identification": "2",
+		"idShort": "identification_2",
+		"identification": "identification_2",
 		"administration": {
 			"revision": "2.22221" 
 		},
 		"description": [
 			{
 				"language": "de-DE",
-				"text": "2"
+				"text": "identification_2"
 			}
 		]
 	},
 	{
-		"idShort": "5",
-		"identification": "5",
+		"idShort": "identification_5",
+		"identification": "identification_5",
 		"administration": {
-			"revision": "1.1" 
+			"revision": "identification_1.1" 
 		},
 		"description": [
 			{
 				"language": "de-DE",
-				"text": "5"
+				"text": "identification_5"
 			}
 		],
 		"submodelDescriptors": [
 			{
-				"idShort": "sm0",
-				"identification": "submodel0",
+				"idShort": "submodel_0",
+				"identification": "submodel_0",
 				"description": [
 					{
 						"language": "de-DE",
@@ -36,7 +36,7 @@
 				]
 			},
 			{
-				"idShort": "sm1",
+				"idShort": "submodel_1",
 				"identification": "submodel1",
 				"description": [
 					{
@@ -46,7 +46,7 @@
 				]
 			},
 			{
-				"idShort": "sm3",
+				"idShort": "sm2",
 				"identification": "submodel2",
 				"description": [
 					{
@@ -56,7 +56,7 @@
 				]
 			},
 			{
-				"idShort": "sm4",
+				"idShort": "sm3",
 				"identification": "submodel3",
 				"description": [
 					{
@@ -68,28 +68,28 @@
 		]
 	},	
 	{
-		"idShort": "7",
-		"identification": "6",
+		"idShort": "identification_7",
+		"identification": "identification_6",
 		"administration": {
-			"revision": "2.1" 
+			"revision": "identification_2.1" 
 		},
 		"description": [
 			{
 				"language": "de-DE",
-				"text": "7"
+				"text": "identification_7"
 			}
 		]
 	},
 	{
-		"idShort": "7",
-		"identification": "7",
+		"idShort": "identification_7",
+		"identification": "identification_7",
 		"administration": {
-			"revision": "2.2" 
+			"revision": "identification_2.2" 
 		},
 		"description": [
 			{
 				"language": "de-DE",
-				"text": "7"
+				"text": "identification_7"
 			}
 		]
 	}

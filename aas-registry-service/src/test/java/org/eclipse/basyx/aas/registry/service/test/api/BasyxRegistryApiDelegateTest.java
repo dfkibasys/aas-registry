@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 import org.eclipse.basyx.aas.registry.api.BasyxRegistryApiDelegate;
@@ -40,19 +42,19 @@ import org.springframework.test.context.junit4.SpringRunner;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class BasyxRegistryApiDelegateTest {
 
-	private static final String ID_3 = "3";
+	private static final String ID_3 = "identification_3";
 
-	private static final String ID_2_1 = "2.1";
+	private static final String ID_2_1 = "identification_2.1";
 
-	private static final String ID_1 = "1";
+	private static final String ID_1 = "identification_1";
 
 	private static final String ID_2_4 = "2.4";
 
 	private static final String ID_UNKNOWN = "unknown";
 
-	private static final String ID_2 = "2";
+	private static final String ID_2 = "identification_2";
 
-	private static final String ID_2_3 = "2.3";
+	private static final String ID_2_3 = "identification_2.3";
 
 	@MockBean
 	private AssetAdministrationShellDescriptorRepository repo;
@@ -85,19 +87,19 @@ public class BasyxRegistryApiDelegateTest {
 
 	@Test
 	public void whenDeleteAssetAdministrationShellDescriptorById_thenNoContent() {
-		ResponseEntity<Void> response = controller.deleteAssetAdministrationShellDescriptorById(ID_1);
+		ResponseEntity<Void> response = controller.deleteAssetAdministrationShellDescriptorById(encode(ID_1));
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 	}
 
 	@Test
 	public void whenDeleteSubmodelDescriptorById_thenNoContent() {
-		ResponseEntity<Void> response = controller.deleteSubmodelDescriptorById(ID_2, ID_2_1);
+		ResponseEntity<Void> response = controller.deleteSubmodelDescriptorById(encode(ID_2), encode(ID_2_1));
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 	}
 
 	@Test
 	public void whenDeleteSubmodelDescriptorByIdUnknownAasId_thenNoContent() {
-		ResponseEntity<Void> response = controller.deleteSubmodelDescriptorById(ID_UNKNOWN, ID_2_1);
+		ResponseEntity<Void> response = controller.deleteSubmodelDescriptorById(encode(ID_UNKNOWN), encode(ID_2_1));
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 	}
 
@@ -123,14 +125,14 @@ public class BasyxRegistryApiDelegateTest {
 
 	@Test
 	public void whenGetAllSubmodelDescriptorsUnknownDescriptor_thenNotFound() {
-		ResponseEntity<List<SubmodelDescriptor>> response = controller.getAllSubmodelDescriptors(ID_UNKNOWN);
+		ResponseEntity<List<SubmodelDescriptor>> response = controller.getAllSubmodelDescriptors(encode(ID_UNKNOWN));
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 	}
 
 	@Test
 	public void whenGetAllSubmodelDescriptorsKnownDescriptor_thenOk() throws IOException {
 		List<SubmodelDescriptor> expected = testResourcesLoader.loadSubmodelList();
-		ResponseEntity<List<SubmodelDescriptor>> response = controller.getAllSubmodelDescriptors(ID_2);
+		ResponseEntity<List<SubmodelDescriptor>> response = controller.getAllSubmodelDescriptors(encode(ID_2));
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(response.getBody()).containsExactlyInAnyOrderElementsOf(expected);
 	}
@@ -143,7 +145,7 @@ public class BasyxRegistryApiDelegateTest {
 	@Test
 	public void whenGetAssetAdministrationShellDescriptorByIdUnknown_thenNotFound() {
 		ResponseEntity<AssetAdministrationShellDescriptor> response = controller
-				.getAssetAdministrationShellDescriptorById(ID_UNKNOWN);
+				.getAssetAdministrationShellDescriptorById(encode(ID_UNKNOWN));
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 	}
 
@@ -151,7 +153,7 @@ public class BasyxRegistryApiDelegateTest {
 	public void whenGetAssetAdministrationShellDescriptorById_thenOk() throws IOException {
 		AssetAdministrationShellDescriptor expected = testResourcesLoader.loadAssetAdminShellDescriptor();
 		ResponseEntity<AssetAdministrationShellDescriptor> response = controller
-				.getAssetAdministrationShellDescriptorById(ID_2);
+				.getAssetAdministrationShellDescriptorById(encode(ID_2));
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(response.getBody()).isEqualTo(expected);
 	}
@@ -164,14 +166,16 @@ public class BasyxRegistryApiDelegateTest {
 	@Test
 	public void whenGetSubmodelDescriptorById_thenOk() throws IOException {
 		SubmodelDescriptor expected = testResourcesLoader.loadSubmodel();
-		ResponseEntity<SubmodelDescriptor> response = controller.getSubmodelDescriptorById(ID_2, ID_2_1);
+		ResponseEntity<SubmodelDescriptor> response = controller.getSubmodelDescriptorById(encode(ID_2), encode(ID_2_1));
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(response.getBody()).isEqualTo(expected);
 	}
+	
+	
 
 	@Test
 	public void whenGetSubmodelDescriptorByIdUnknown_thenNotFound() {
-		ResponseEntity<SubmodelDescriptor> response = controller.getSubmodelDescriptorById(ID_UNKNOWN, ID_UNKNOWN);
+		ResponseEntity<SubmodelDescriptor> response = controller.getSubmodelDescriptorById(encode(ID_UNKNOWN), encode(ID_UNKNOWN));
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 	}
 
@@ -183,10 +187,10 @@ public class BasyxRegistryApiDelegateTest {
 	@Test
 	public void whenPostSubmodelDescriptor_thenCreated() throws IOException {
 		SubmodelDescriptor input = testResourcesLoader.loadSubmodel("input");
-		ResponseEntity<SubmodelDescriptor> response = controller.postSubmodelDescriptor(ID_2, input);
+		ResponseEntity<SubmodelDescriptor> response = controller.postSubmodelDescriptor(encode(ID_2), input);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assertThat(response.getBody()).isEqualTo(input);
-		ResponseEntity<List<SubmodelDescriptor>> all = controller.getAllSubmodelDescriptors(ID_2);
+		ResponseEntity<List<SubmodelDescriptor>> all = controller.getAllSubmodelDescriptors(encode(ID_2));
 		List<SubmodelDescriptor> expected = testResourcesLoader.loadSubmodelList();
 		assertThat(all.getBody()).isEqualTo(expected);
 	}
@@ -195,7 +199,7 @@ public class BasyxRegistryApiDelegateTest {
 	public void whenPostSubmodelDescriptorUnknownAasId_thenNotFound() throws IOException {
 		SubmodelDescriptor input = new SubmodelDescriptor();
 		input.setIdentification("4.3");
-		ResponseEntity<SubmodelDescriptor> response = controller.postSubmodelDescriptor(ID_UNKNOWN, input);
+		ResponseEntity<SubmodelDescriptor> response = controller.postSubmodelDescriptor(encode(ID_UNKNOWN), input);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 		assertThat(response.getBody()).isNull();
 	}
@@ -203,11 +207,11 @@ public class BasyxRegistryApiDelegateTest {
 	@Test
 	public void whenPutAssetAdministrationShellDescriptorById_thenNoContent() throws IOException {
 		AssetAdministrationShellDescriptor descriptor = testResourcesLoader.loadAssetAdminShellDescriptor();
-		ResponseEntity<Void> response = controller.putAssetAdministrationShellDescriptorById(ID_3, descriptor);
+		ResponseEntity<Void> response = controller.putAssetAdministrationShellDescriptorById(encode(ID_3), descriptor);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
 		ResponseEntity<AssetAdministrationShellDescriptor> stored = controller
-				.getAssetAdministrationShellDescriptorById(ID_3);
+				.getAssetAdministrationShellDescriptorById(encode(ID_3));
 		assertThat(descriptor).isEqualTo(stored.getBody());
 	}
 
@@ -215,10 +219,10 @@ public class BasyxRegistryApiDelegateTest {
 	public void whenPutSubmodelDescriptorDescriptorById_thenNoContent() throws IOException {
 		SubmodelDescriptor input = new SubmodelDescriptor();
 		input.setIdentification(ID_2_3);
-		ResponseEntity<Void> response = controller.putSubmodelDescriptorById(ID_2, ID_2_3, input);
+		ResponseEntity<Void> response = controller.putSubmodelDescriptorById(encode(ID_2), encode(ID_2_3), input);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-		ResponseEntity<SubmodelDescriptor> stored = controller.getSubmodelDescriptorById(ID_2, ID_2_3);
+		ResponseEntity<SubmodelDescriptor> stored = controller.getSubmodelDescriptorById(encode(ID_2), encode(ID_2_3));
 		assertThat(input).isEqualTo(stored.getBody());
 	}
 
@@ -226,7 +230,7 @@ public class BasyxRegistryApiDelegateTest {
 	public void whenPutSubmodelDescriptorDescriptorByIdUnknownParent_thenNotFound() throws IOException {
 		SubmodelDescriptor input = new SubmodelDescriptor();
 		input.setIdentification(ID_2_3);
-		ResponseEntity<Void> response = controller.putSubmodelDescriptorById(ID_UNKNOWN, ID_2_3, input);
+		ResponseEntity<Void> response = controller.putSubmodelDescriptorById(encode(ID_UNKNOWN), encode(ID_2_3), input);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 	}
 
@@ -234,7 +238,7 @@ public class BasyxRegistryApiDelegateTest {
 	public void whenPutSubmodelDescriptorDescriptorByIdDifferentIds_thenBadRequest() throws IOException {
 		SubmodelDescriptor input = new SubmodelDescriptor();
 		input.setIdentification(ID_2_3);
-		ResponseEntity<Void> response = controller.putSubmodelDescriptorById(ID_2, ID_2_4, input);
+		ResponseEntity<Void> response = controller.putSubmodelDescriptorById(encode(ID_2), encode(ID_2_4), input);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 	}
 
@@ -242,7 +246,7 @@ public class BasyxRegistryApiDelegateTest {
 	public void whenPutAssetAdministrationShellDescriptorByIdDifferentIds_thenBadRequest() throws IOException {
 		AssetAdministrationShellDescriptor input = new AssetAdministrationShellDescriptor();
 		input.setIdentification(ID_2);
-		ResponseEntity<Void> response = controller.putAssetAdministrationShellDescriptorById(ID_3, input);
+		ResponseEntity<Void> response = controller.putAssetAdministrationShellDescriptorById(encode(ID_3), input);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 	}
 
@@ -310,5 +314,10 @@ public class BasyxRegistryApiDelegateTest {
 		List<AssetAdministrationShellDescriptor> result = entry.getBody().getHits();
 		assertThat(result.size()).isEqualTo(1);
 		assertThat(result.get(0)).isEqualTo(input);
+	}
+	
+
+	private String encode(String id) {
+		return Base64.getUrlEncoder().encodeToString(id.getBytes(StandardCharsets.UTF_8));
 	}
 }

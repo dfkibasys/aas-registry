@@ -1,9 +1,9 @@
 {
-	"id": "2",
-	"submodelId": "2.2",
+	"id": "identification_2",
+	"submodelId": "identification_2.2",
 	"type": "SUBMODEL_REGISTERED",
 	"submodelDescriptor": {
-		"identification": "2.2",
+		"identification": "identification_2.2",
 		"description": [
 			{
 				"language": "de-DE",

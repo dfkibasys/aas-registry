@@ -1,18 +1,18 @@
 {
-	"idShort": "5",
-	"identification": "5",
+	"idShort": "identification_5",
+	"identification": "identification_5",
 	"administration": {
-		"revision": "1.1"
+		"revision": "identification_1.1"
 	},
 	"description": [
 		{
 			"language": "de-DE",
-			"text": "5"
+			"text": "identification_5"
 		}
 	],
 	"submodelDescriptors": [
 		{
-			"idShort": "sm4",
+			"idShort": "sm3",
 			"identification": "submodel3",
 			"description": [
 				{

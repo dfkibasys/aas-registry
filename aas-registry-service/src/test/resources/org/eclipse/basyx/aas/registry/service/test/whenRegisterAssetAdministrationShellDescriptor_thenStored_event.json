@@ -1,11 +1,11 @@
 {
-	"id": "new",
+	"id": "identification_new",
 	"type": "AAS_REGISTERED",
 	"aasDescriptor": {
-		"identification": "new",
+		"identification": "identification_new",
 		"submodelDescriptors": [
 			{
-				"identification": "new.1"
+				"identification": "identification_new.1"
 			}
 		]
 	}
