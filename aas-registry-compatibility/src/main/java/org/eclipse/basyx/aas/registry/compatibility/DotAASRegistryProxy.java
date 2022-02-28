@@ -19,7 +19,8 @@ public class DotAASRegistryProxy implements IAASRegistry {
 	private RegistryAndDiscoveryInterfaceApi client;
 
 	public DotAASRegistryProxy(String registryUrl) {
-		this.client = new RegistryAndDiscoveryInterfaceApi(registryUrl);
+		this.client = new RegistryAndDiscoveryInterfaceApi();
+		this.client.getApiClient().setBasePath(registryUrl);
 	}
 
 	@Override
