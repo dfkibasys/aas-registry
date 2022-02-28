@@ -34,13 +34,7 @@ public class {{classname}} {
     public {{classname}}() {
         this(new ApiClient());
     }
-    
-    @Autowired
-    public {{classname}}(String basePath) {
-        this(new ApiClient());
-        getApiClient().setBasePath(basePath);
-    }
-    
+
     @Autowired
     public {{classname}}(ApiClient apiClient) {
         this.{{localVariablePrefix}}apiClient = apiClient;
