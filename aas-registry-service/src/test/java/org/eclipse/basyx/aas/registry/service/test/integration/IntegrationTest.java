@@ -4,23 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.IntFunction;
-import java.util.function.IntUnaryOperator;
-import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -162,38 +153,6 @@ public class IntegrationTest {
 	}
 
 	@Test
-	public void whenUrlEncodingApplied_thenAccessIsWorking() {
-
-		String aasId = "http://eclipse.org/Asset Administration 23";
-		String smId = "http://eclipse.org/Submodel%?1";
-
-		String aasIdEncoded = URLEncoder.encode(aasId, StandardCharsets.UTF_8);
-		String smIdEncoded = URLEncoder.encode(smId, StandardCharsets.UTF_8);
-
-		AssetAdministrationShellDescriptor descr = new AssetAdministrationShellDescriptor();
-		descr.setIdentification(aasId);
-		descr.addSubmodelDescriptorsItem(new SubmodelDescriptor().identification(smId));
-
-		api.postAssetAdministrationShellDescriptor(descr);
-
-		assertThat(api.getAllSubmodelDescriptors(aasIdEncoded)).hasSize(1);
-		assertThat(api.getAssetAdministrationShellDescriptorByIdWithHttpInfo(aasIdEncoded).getStatusCode())
-				.isEqualTo(HttpStatus.OK);
-		assertThat(api.getSubmodelDescriptorByIdWithHttpInfo(aasIdEncoded, smIdEncoded).getStatusCode())
-				.isEqualTo(HttpStatus.OK);
-		assertThat(api.getSubmodelDescriptorByIdWithHttpInfo(aasIdEncoded, smIdEncoded).getStatusCode())
-				.isEqualTo(HttpStatus.OK);
-
-		assertThat(api.deleteSubmodelDescriptorByIdWithHttpInfo(aasIdEncoded, smIdEncoded).getStatusCode())
-				.isEqualTo(HttpStatus.NO_CONTENT);
-		assertThat(api.getAllSubmodelDescriptors(aasIdEncoded)).isEmpty();
-		assertThat(api.deleteAssetAdministrationShellDescriptorByIdWithHttpInfo(aasIdEncoded).getStatusCode())
-				.isEqualTo(HttpStatus.NO_CONTENT);
-		assertThat(api.getAllAssetAdministrationShellDescriptors()).isEmpty();
-		listener.reset();
-	}
-
-	@Test
 	public void whenDeleteAll_thenAllDescriptorsAreRemoved() {
 
 		for (int i = 0; i < DELETE_ALL_TEST_INSTANCE_COUNT; i++) {
@@ -251,7 +210,7 @@ public class IntegrationTest {
 		assertThat(all).asList().containsExactlyInAnyOrderElementsOf(deployed);
 
 		SubmodelDescriptor toRegister = resourceLoader.loadSubmodel("toregister");
-		String aasId = "1";
+		String aasId = "identification_1";
 		ResponseEntity<SubmodelDescriptor> response = api.postSubmodelDescriptorWithHttpInfo(toRegister, aasId);
 		assertThatEventWasSend(RegistryEvent.builder().id(aasId).submodelId(toRegister.getIdentification())
 				.submodelDescriptor(toRegister).type(EventType.SUBMODEL_REGISTERED).build());
@@ -306,7 +265,7 @@ public class IntegrationTest {
 		initialize();
 		AssetAdministrationShellDescriptor expected = resourceLoader.loadAssetAdminShellDescriptor();
 		String path = AasRegistryPaths.submodelDescriptors().idShort();
-		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery().match(new Match().path(path).value("sm4"));
+		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery().match(new Match().path(path).value("sm3"));
 		ResponseEntity<ShellDescriptorSearchResponse> response = api.searchShellDescriptorsWithHttpInfo(query);
 
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

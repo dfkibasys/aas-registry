@@ -43,6 +43,26 @@ import org.springframework.test.context.junit4.SpringRunner;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class RegistryServiceTest {
 
+	private static final String IDENTIFICATION_2_3 = "identification_2.3";
+
+	private static final String IDENTIFICATION_2_2 = "identification_2.2";
+
+	private static final String IDENTIFICATION_NEW = "identification_new";
+
+	private static final String IDENTIFICATION_NEW_1 = "identification_new.1";
+
+	private static final String IDENTIFICATION_2_1 = "identification_2.1";
+
+	private static final String _2_UNKNOWN = "2.unknown";
+
+	private static final String UNKNOWN_1 = "unknown.1";
+
+	private static final String UNKNOWN = "unknown";
+
+	private static final String IDENTIFICATION_1 = "identification_1";
+
+	private static final String IDENTIFICATION_2 = "identification_2";
+
 	@MockBean
 	private AssetAdministrationShellDescriptorRepository repo;
 
@@ -83,21 +103,21 @@ public class RegistryServiceTest {
 
 	@Test
 	public void whenGetAllSubmodelDescriptorsAndNotSet_thenEmptyList() throws IOException {
-		Optional<List<SubmodelDescriptor>> found = registry.getAllSubmodelDescriptors("1");
+		Optional<List<SubmodelDescriptor>> found = registry.getAllSubmodelDescriptors(IDENTIFICATION_1);
 		assertThat(found).isPresent().get().asList().isEmpty();
 		verifyNoEventSend();
 	}
 
 	@Test
 	public void whenGetAllSubmodelDescriptorsAndNotPresent_thenEmptyOptional() throws IOException {
-		Optional<List<SubmodelDescriptor>> result = registry.getAllSubmodelDescriptors("unknown");
+		Optional<List<SubmodelDescriptor>> result = registry.getAllSubmodelDescriptors(UNKNOWN);
 		assertThat(result).isEmpty();
 		verifyNoEventSend();
 	}
 
 	@Test
 	public void whenGetAllSubmodelDescriptors_thenGot2Elements() throws IOException {
-		Optional<List<SubmodelDescriptor>> found = registry.getAllSubmodelDescriptors("2");
+		Optional<List<SubmodelDescriptor>> found = registry.getAllSubmodelDescriptors(IDENTIFICATION_2);
 		List<SubmodelDescriptor> expected = testResourcesLoader.loadSubmodelList();
 		assertThat(found).isPresent().get().asList().containsExactlyInAnyOrderElementsOf(expected);
 		verifyNoEventSend();
@@ -110,26 +130,26 @@ public class RegistryServiceTest {
 
 	@Test
 	public void whenExistsSubmodelDescriptorByIdAndSubmodelIdIsNull_thenNullPointer() {
-		assertNullPointerThrown(() -> registry.existsSubmodelDescriptorById("2", null));
+		assertNullPointerThrown(() -> registry.existsSubmodelDescriptorById(IDENTIFICATION_2, null));
 	}
 
 	@Test
 	public void whenExistsSubmodelDescriptorByIdAndDescriptorIdIsNotAvailable_thenFalse() {
-		boolean result = registry.existsSubmodelDescriptorById("unknown", "unknown.1");
+		boolean result = registry.existsSubmodelDescriptorById(UNKNOWN, UNKNOWN_1);
 		assertThat(result).isFalse();
 		verifyNoEventSend();
 	}
 
 	@Test
 	public void whenExistsSubmodelDescriptorByIdAndSubmodelIdIsNotAvailable_thenFalse() {
-		boolean result = registry.existsSubmodelDescriptorById("2", "2.unknown");
+		boolean result = registry.existsSubmodelDescriptorById(IDENTIFICATION_2, _2_UNKNOWN);
 		assertThat(result).isFalse();
 		verifyNoEventSend();
 	}
 
 	@Test
 	public void whenExistsSubmodelDescriptorByIdAndAvailable_thenTrue() {
-		boolean result = registry.existsSubmodelDescriptorById("2", "2.1");
+		boolean result = registry.existsSubmodelDescriptorById(IDENTIFICATION_2, IDENTIFICATION_2_1);
 		assertThat(result).isTrue();
 		verifyNoEventSend();
 	}
@@ -141,22 +161,22 @@ public class RegistryServiceTest {
 
 	@Test
 	public void whenGetSubmodelDescriptorByIdAndSubmodelIdIsNull_thenNullPointer() {
-		assertNullPointerThrown(() -> registry.getSubmodelDescriptorById("2", null));
+		assertNullPointerThrown(() -> registry.getSubmodelDescriptorById(IDENTIFICATION_2, null));
 	}
 
 	@Test
 	public void whenGetSubmodelDescriptorByIdAndDescriptorIdIsNotAvailable_thenEmpty() {
-		whenGetSubmodelDescriptorById_thenEmpty("unknown", "unknown.1");
+		whenGetSubmodelDescriptorById_thenEmpty(UNKNOWN, UNKNOWN_1);
 	}
 
 	@Test
 	public void whenGetSubmodelDescriptorByIdAndSubmodelIdIsNotAvailable_thenEmpty() {
-		whenGetSubmodelDescriptorById_thenEmpty("2", "2.unknown");
+		whenGetSubmodelDescriptorById_thenEmpty(IDENTIFICATION_2, _2_UNKNOWN);
 	}
 
 	@Test
 	public void whenGetSubmodelDescriptorByIdAndSubmodelIdIsAvailable_thenGotResult() throws IOException {
-		Optional<SubmodelDescriptor> result = registry.getSubmodelDescriptorById("2", "2.1");
+		Optional<SubmodelDescriptor> result = registry.getSubmodelDescriptorById(IDENTIFICATION_2, IDENTIFICATION_2_1);
 		SubmodelDescriptor expected = testResourcesLoader.loadSubmodel();
 		assertThat(result).isPresent().get().isEqualTo(expected);
 		verifyNoEventSend();
@@ -170,14 +190,14 @@ public class RegistryServiceTest {
 	@Test
 	public void whenGetAssetAdminstrationShellDescritorByIdAndUnknown_thenEmptyOptional() {
 		Optional<AssetAdministrationShellDescriptor> result = registry
-				.getAssetAdministrationShellDescriptorById("unknown");
+				.getAssetAdministrationShellDescriptorById(UNKNOWN);
 		assertThat(result).isEmpty();
 		verifyNoEventSend();
 	}
 
 	@Test
 	public void whenGetAssetAdminstrationShellDescritorByIdAndAvailable_thenGotResult() throws IOException {
-		Optional<AssetAdministrationShellDescriptor> result = registry.getAssetAdministrationShellDescriptorById("1");
+		Optional<AssetAdministrationShellDescriptor> result = registry.getAssetAdministrationShellDescriptorById(IDENTIFICATION_1);
 		AssetAdministrationShellDescriptor expected = testResourcesLoader.loadAssetAdminShellDescriptor();
 		assertThat(result).isPresent().get().isEqualTo(expected);
 		verifyNoEventSend();
@@ -200,8 +220,8 @@ public class RegistryServiceTest {
 		List<AssetAdministrationShellDescriptor> expected = testResourcesLoader.loadShellDescriptorList();
 		assertThat(initialState).isNotEqualTo(expected);
 		AssetAdministrationShellDescriptor testResource = RegistryTestObjects
-				.newAssetAdministrationShellDescriptor("new");
-		SubmodelDescriptor subModel = RegistryTestObjects.newSubmodelDescriptor("new.1");
+				.newAssetAdministrationShellDescriptor(IDENTIFICATION_NEW);
+		SubmodelDescriptor subModel = RegistryTestObjects.newSubmodelDescriptor(IDENTIFICATION_NEW_1);
 		testResource.setSubmodelDescriptors(Collections.singletonList(subModel));
 		AssetAdministrationShellDescriptor stored = registry.registerAssetAdministrationShellDescriptor(testResource);
 		assertThat(stored).isEqualTo(testResource);
@@ -224,7 +244,7 @@ public class RegistryServiceTest {
 			throws IOException {
 		List<AssetAdministrationShellDescriptor> initialState = registry.getAllAssetAdministrationShellDescriptors();
 		List<AssetAdministrationShellDescriptor> expected = testResourcesLoader.loadShellDescriptorList();
-		boolean success = registry.unregisterAssetAdministrationShellDescriptorById("2");
+		boolean success = registry.unregisterAssetAdministrationShellDescriptorById(IDENTIFICATION_2);
 		assertThat(success).isTrue();
 		List<AssetAdministrationShellDescriptor> currentState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(currentState).asList().isNotEqualTo(initialState).containsExactlyInAnyOrderElementsOf(expected);
@@ -235,7 +255,7 @@ public class RegistryServiceTest {
 	public void whenUnregisterAssetAdministrationShellDescriptorByIdAndIdUnknon_thenReturnFalsAndNoChanges()
 			throws IOException {
 		List<AssetAdministrationShellDescriptor> initialState = registry.getAllAssetAdministrationShellDescriptors();
-		boolean success = registry.unregisterAssetAdministrationShellDescriptorById("unknown");
+		boolean success = registry.unregisterAssetAdministrationShellDescriptorById(UNKNOWN);
 		assertThat(success).isFalse();
 		List<AssetAdministrationShellDescriptor> currentState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(currentState).asList().containsExactlyInAnyOrderElementsOf(initialState);
@@ -249,20 +269,20 @@ public class RegistryServiceTest {
 
 	@Test
 	public void whenRegisterSubmodelDescriptorNullModel_thenNullPointer() {
-		assertNullPointerThrown(() -> registry.registerSubmodelDescriptor("1", null));
+		assertNullPointerThrown(() -> registry.registerSubmodelDescriptor(IDENTIFICATION_1, null));
 	}
 
 	@Test
 	public void whenRegisterSubmodelDescriptorNullId_thenNullPointer() {
 		SubmodelDescriptor descriptor = RegistryTestObjects.newSubmodelDescriptor(null);
-		assertNullPointerThrown(() -> registry.registerSubmodelDescriptor("1", descriptor));
+		assertNullPointerThrown(() -> registry.registerSubmodelDescriptor(IDENTIFICATION_1, descriptor));
 	}
 
 	@Test
 	public void whenRegisterSubmodelDescriptorUnknownId_thenDoNothingAndReturnEmpty() {
 		List<AssetAdministrationShellDescriptor> initialState = registry.getAllAssetAdministrationShellDescriptors();
 		SubmodelDescriptor ignored = RegistryTestObjects.newSubmodelDescriptor("ignored");
-		boolean success = registry.registerSubmodelDescriptor("unknown", ignored);
+		boolean success = registry.registerSubmodelDescriptor(UNKNOWN, ignored);
 		assertThat(success).isFalse();
 		List<AssetAdministrationShellDescriptor> currentState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(currentState).isEqualTo(initialState);
@@ -274,8 +294,8 @@ public class RegistryServiceTest {
 		List<AssetAdministrationShellDescriptor> initialState = registry.getAllAssetAdministrationShellDescriptors();
 		List<AssetAdministrationShellDescriptor> expected = testResourcesLoader.loadShellDescriptorList();
 		assertThat(initialState).isNotEqualTo(expected);
-		SubmodelDescriptor toAdd = RegistryTestObjects.newSubmodelDescriptorWithDescription("2.2", "Overridden");
-		boolean success = registry.registerSubmodelDescriptor("2", toAdd);
+		SubmodelDescriptor toAdd = RegistryTestObjects.newSubmodelDescriptorWithDescription(IDENTIFICATION_2_2, "Overridden");
+		boolean success = registry.registerSubmodelDescriptor(IDENTIFICATION_2, toAdd);
 		assertThat(success).isTrue();
 		List<AssetAdministrationShellDescriptor> newState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(newState).asList().isNotEqualTo(initialState).containsExactlyInAnyOrderElementsOf(expected);
@@ -287,8 +307,8 @@ public class RegistryServiceTest {
 		List<AssetAdministrationShellDescriptor> initialState = registry.getAllAssetAdministrationShellDescriptors();
 		List<AssetAdministrationShellDescriptor> expected = testResourcesLoader.loadShellDescriptorList();
 		assertThat(initialState).isNotEqualTo(expected);
-		SubmodelDescriptor toAdd = RegistryTestObjects.newSubmodelDescriptor("2.3");
-		boolean success = registry.registerSubmodelDescriptor("2", toAdd);
+		SubmodelDescriptor toAdd = RegistryTestObjects.newSubmodelDescriptor(IDENTIFICATION_2_3);
+		boolean success = registry.registerSubmodelDescriptor(IDENTIFICATION_2, toAdd);
 		assertThat(success).isTrue();
 		List<AssetAdministrationShellDescriptor> newState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(newState).asList().isNotEqualTo(initialState).containsExactlyInAnyOrderElementsOf(expected);
@@ -297,12 +317,12 @@ public class RegistryServiceTest {
 
 	@Test
 	public void whenUnregisterSubmodelDescriptorNullAdminShell_thenNullPointer() {
-		assertNullPointerThrown(() -> registry.unregisterSubmodelDescriptorById(null, "2.1"));
+		assertNullPointerThrown(() -> registry.unregisterSubmodelDescriptorById(null, IDENTIFICATION_2_1));
 	}
 
 	@Test
 	public void whenUnregisterSubmodelDescriptorNullSubmodelId_thenNullPointer() {
-		assertNullPointerThrown(() -> registry.unregisterSubmodelDescriptorById("2", null));
+		assertNullPointerThrown(() -> registry.unregisterSubmodelDescriptorById(IDENTIFICATION_2, null));
 	}
 
 	@Test
@@ -310,7 +330,7 @@ public class RegistryServiceTest {
 		List<AssetAdministrationShellDescriptor> initialState = registry.getAllAssetAdministrationShellDescriptors();
 		List<AssetAdministrationShellDescriptor> expected = testResourcesLoader.loadShellDescriptorList();
 		assertThat(initialState).isNotEqualTo(expected);
-		boolean success = registry.unregisterSubmodelDescriptorById("2", "2.1");
+		boolean success = registry.unregisterSubmodelDescriptorById(IDENTIFICATION_2, IDENTIFICATION_2_1);
 		assertThat(success).isTrue();
 		List<AssetAdministrationShellDescriptor> newState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(newState).asList().isNotEqualTo(initialState).containsExactlyInAnyOrderElementsOf(expected);
@@ -320,7 +340,7 @@ public class RegistryServiceTest {
 	@Test
 	public void whenUnregisterSubmodelDescriptorAndShellWasNotPresent_thenReturnFalse() throws IOException {
 		List<AssetAdministrationShellDescriptor> initialState = registry.getAllAssetAdministrationShellDescriptors();
-		boolean success = registry.unregisterSubmodelDescriptorById("unknown", "unknown.1");
+		boolean success = registry.unregisterSubmodelDescriptorById(UNKNOWN, UNKNOWN_1);
 		assertThat(success).isFalse();
 		List<AssetAdministrationShellDescriptor> newState = registry.getAllAssetAdministrationShellDescriptors();
 		assertThat(newState).asList().containsExactlyInAnyOrderElementsOf(initialState);
@@ -330,7 +350,7 @@ public class RegistryServiceTest {
 	@Test
 	public void whenUnregisterSubmodelDescriptorAndSubmodelWasNotPresent_thenReturnTrue() throws IOException {
 		List<AssetAdministrationShellDescriptor> initialState = registry.getAllAssetAdministrationShellDescriptors();
-		boolean success = registry.unregisterSubmodelDescriptorById("2", "2.unknown");
+		boolean success = registry.unregisterSubmodelDescriptorById(IDENTIFICATION_2, _2_UNKNOWN);
 		// returning true makes this method idempotent
 		assertThat(success).isFalse();
 		List<AssetAdministrationShellDescriptor> newState = registry.getAllAssetAdministrationShellDescriptors();
@@ -341,7 +361,7 @@ public class RegistryServiceTest {
 	@Test
 	public void whenSearchBySubModel_thenReturnDescriptorList() throws IOException {
 		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
-				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value("2.1"));
+				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value(IDENTIFICATION_2_1));
 		ShellDescriptorSearchResponse result = registry.searchAssetAdministrationShellDescriptors(query);
 		AssetAdministrationShellDescriptor descriptor = testResourcesLoader.loadAssetAdminShellDescriptor();
 		assertThat(result.getTotal()).isEqualTo(1);
@@ -351,7 +371,7 @@ public class RegistryServiceTest {
 	@Test
 	public void whenSearchBySubModelAndNotFound_thenReturnEmptyList() {
 		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
-				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value("unknown"));
+				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value(UNKNOWN));
 		ShellDescriptorSearchResponse result = registry.searchAssetAdministrationShellDescriptors(query);
 		assertThat(result.getTotal()).isZero();
 		assertThat(result.getHits().size()).isZero();

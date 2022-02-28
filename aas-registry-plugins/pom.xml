@@ -37,11 +37,6 @@
 			<artifactId>spring-data-elasticsearch</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.swagger.codegen.v3</groupId>
-			<artifactId>swagger-codegen-maven-plugin</artifactId>
-			<version>${swagger.codegen.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
