@@ -79,8 +79,8 @@
 							<generateModels>true</generateModels>
 							<generateApis>true</generateApis>
 							<generateApiTests>false</generateApiTests>
-							<generateModelDocumentation>false</generateModelDocumentation>
-							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateModelDocumentation>true</generateModelDocumentation>
+							<generateApiDocumentation>true</generateApiDocumentation>
 							<generateSupportingFiles>true</generateSupportingFiles>
 							<templateDirectory>${project.basedir}/templates</templateDirectory>
 							<supportingFilesToGenerate>ApiClient.java,RFC3339DateFormat.java,ApiKeyAuth.java,Authentication.java,HttpBasicAuth.java,OAuth.java,OauthFlow.java</supportingFilesToGenerate>

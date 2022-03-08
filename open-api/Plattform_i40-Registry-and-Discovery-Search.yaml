@@ -22,7 +22,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ShellDescriptorSearchQuery'
+              $ref: '#/components/schemas/ShellDescriptorSearchRequest'
         required: true
       responses:
         "200":
@@ -54,24 +54,52 @@ components:
             type: string
             default: ModelReference
             readOnly: true
-    ShellDescriptorSearchQuery:
+    ShellDescriptorSearchRequest:
       type: object
       properties:
         page:
-           $ref: '#/components/schemas/Page'
+          $ref: '#/components/schemas/Page'
         sortBy: 
-           $ref: '#/components/schemas/Sorting'
-        match:
-         $ref: '#/components/schemas/Match'
-    Match:
-       required:
-          - path
-          - value
-       properties:
-          path:
-            type: string
-          value:
-            type: string
+          $ref: '#/components/schemas/Sorting'
+        query:
+           $ref: '#/components/schemas/BaseQuery'
+    BaseQuery:
+      discriminator:
+        propertyName: type
+      required:
+        - path
+        - value
+      properties:
+        path:
+          type: string
+        value:
+          type: string
+    RegExQuery:
+      allOf: 
+        - $ref: '#/components/schemas/BaseQuery'
+        - type: object
+          required:
+            - path
+            - value
+            - type
+          properties:
+            type: 
+              type: string
+              default: RegExp
+              readOnly: true
+    MatchQuery:
+      allOf: 
+        - $ref: '#/components/schemas/BaseQuery'
+        - type: object
+          required:
+            - path
+            - value
+            - type
+          properties:
+            type: 
+              type: string
+              default: Match
+              readOnly: true
     Page:
        type: object
        required:

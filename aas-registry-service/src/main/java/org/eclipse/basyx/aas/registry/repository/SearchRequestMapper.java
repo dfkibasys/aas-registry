@@ -4,9 +4,10 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.lucene.search.join.ScoreMode;
 import org.eclipse.basyx.aas.registry.client.api.AasRegistryPaths;
-import org.eclipse.basyx.aas.registry.model.Match;
+import org.eclipse.basyx.aas.registry.model.BaseQuery;
 import org.eclipse.basyx.aas.registry.model.Page;
-import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.RegExQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchRequest;
 import org.eclipse.basyx.aas.registry.model.SortDirection;
 import org.eclipse.basyx.aas.registry.model.Sorting;
 import org.eclipse.basyx.aas.registry.model.SortingPath;
@@ -17,6 +18,7 @@ import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RegexpQueryBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -29,21 +31,23 @@ public class SearchRequestMapper {
 
 	private static final int MAX_INNER_HITS = 100;
 
-	public static NativeSearchQuery mapSearchQuery(ShellDescriptorSearchQuery query) {
-		NativeSearchQuery nQuery = createSearchQuery(query.getMatch());		
-		Sort sort = getSort(query);
+	public static NativeSearchQuery mapSearchQuery(ShellDescriptorSearchRequest request) {
+		NativeSearchQuery nQuery = createSearchQuery(request.getQuery());		
+		Sort sort = getSort(request);
 		if (sort != null) {
 			nQuery.addSort(sort);
 		}
-		applyPageable(query, nQuery, sort);
+		applyPageable(request, nQuery, sort);
 		return nQuery;
 	}
 
-	private static NativeSearchQuery createSearchQuery(Match match) {
-		if (match == null) {
+	private static NativeSearchQuery createSearchQuery(BaseQuery query) {
+		if (query == null) {
 			return createMatchAllQuery();
+		} else if (query instanceof RegExQuery){
+			return createRegExp(query.getPath(), query.getValue());
 		} else {
-			return createMatchByFilter(match.getPath(), match.getValue());
+			return createMatchByFilter(query.getPath(), query.getValue());
 		}
 	}
 	
@@ -52,6 +56,23 @@ public class SearchRequestMapper {
 		return new NativeSearchQuery(matchAllBuilder);
 	}
 
+	private static NativeSearchQuery createRegExp(@NotNull String path, @NotNull String value) {
+		BoolQueryBuilder bqBuilder = QueryBuilders.boolQuery();
+		RegexpQueryBuilder regexpBuilder = QueryBuilders.regexpQuery(path, value);
+		bqBuilder.must(regexpBuilder);
+		if (doBuildSubmodelNestedQuery(path)) {
+			NestedQueryBuilder nestedBuilder = QueryBuilders
+					.nestedQuery(AasRegistryPaths.submodelDescriptors().toString(), bqBuilder, ScoreMode.None);
+			InnerHitBuilder innerHitBuilder = new InnerHitBuilder();
+			innerHitBuilder.setSize(MAX_INNER_HITS);
+			nestedBuilder.innerHit(innerHitBuilder);
+			return new NativeSearchQuery(nestedBuilder);
+		} else {
+			return new NativeSearchQuery(bqBuilder);
+		}
+	}
+
+	
 	private static NativeSearchQuery createMatchByFilter(@NotNull String path, @NotNull String value) {
 		BoolQueryBuilder bqBuilder = QueryBuilders.boolQuery();
 		MatchQueryBuilder matchBuilder = QueryBuilders.matchQuery(path, value);
@@ -69,7 +90,7 @@ public class SearchRequestMapper {
 		}
 	}
 
-	private static Sort getSort(ShellDescriptorSearchQuery query) {
+	private static Sort getSort(ShellDescriptorSearchRequest query) {
 		Sorting sorting = query.getSortBy();
 		if (sorting != null) {
 			SortDirection sortDirection = sorting.getDirection();
@@ -85,7 +106,7 @@ public class SearchRequestMapper {
 		return null;
 	}
 
-	private static void applyPageable(ShellDescriptorSearchQuery query, NativeSearchQuery nQuery, Sort sort) {
+	private static void applyPageable(ShellDescriptorSearchRequest query, NativeSearchQuery nQuery, Sort sort) {
 		Page page = query.getPage();
 		if (page != null) {
 			int idx = page.getIndex();

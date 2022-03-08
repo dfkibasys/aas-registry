@@ -13,8 +13,9 @@ import org.eclipse.basyx.aas.registry.api.RegistryApiController;
 import org.eclipse.basyx.aas.registry.client.api.AasRegistryPaths;
 import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.eclipse.basyx.aas.registry.model.Match;
-import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.MatchQuery;
+import org.eclipse.basyx.aas.registry.model.RegExQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchRequest;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
@@ -282,9 +283,9 @@ public class BasyxRegistryApiDelegateTest {
 
 	@Test
 	public void whenSearchForUnknownAasDescriptor_thenReturnEmptyList() {
-		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
-				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value("unknown"));
-		ResponseEntity<ShellDescriptorSearchResponse> entry = controller.searchShellDescriptors(query);
+		ShellDescriptorSearchRequest request = new ShellDescriptorSearchRequest()
+				.query(new MatchQuery().path(AasRegistryPaths.submodelDescriptors().identification()).value("unknown"));
+		ResponseEntity<ShellDescriptorSearchResponse> entry = controller.searchShellDescriptors(request);
 		assertThat(entry.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(entry.getBody().getHits()).isEmpty();
 	}
@@ -298,7 +299,7 @@ public class BasyxRegistryApiDelegateTest {
 	
 
 	@Test
-	public void whenSearchForAasDescriptor_thenReturnResult() {
+	public void whenMatchSearchForAasDescriptor_thenReturnResult() {
 		AssetAdministrationShellDescriptor input = new AssetAdministrationShellDescriptor();
 		input.setIdentification(ID_2);
 		input.submodelDescriptors(List.of(new SubmodelDescriptor().identification(ID_2_1)));
@@ -307,9 +308,28 @@ public class BasyxRegistryApiDelegateTest {
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assertThat(response.getBody()).isEqualTo(input);
 
-		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
-				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value(ID_2_1));
-		ResponseEntity<ShellDescriptorSearchResponse> entry = controller.searchShellDescriptors(query);
+		ShellDescriptorSearchRequest request = new ShellDescriptorSearchRequest()
+				.query(new MatchQuery().path(AasRegistryPaths.submodelDescriptors().identification()).value(ID_2_1));
+		ResponseEntity<ShellDescriptorSearchResponse> entry = controller.searchShellDescriptors(request);
+		assertThat(entry.getStatusCode()).isEqualTo(HttpStatus.OK);
+		List<AssetAdministrationShellDescriptor> result = entry.getBody().getHits();
+		assertThat(result.size()).isEqualTo(1);
+		assertThat(result.get(0)).isEqualTo(input);
+	}
+	
+	@Test
+	public void whenRegexSearchForAasDescriptor_thenReturnResult() {
+		AssetAdministrationShellDescriptor input = new AssetAdministrationShellDescriptor();
+		input.setIdentification(ID_2);
+		input.submodelDescriptors(List.of(new SubmodelDescriptor().identification(ID_2_1).idShort(ID_2_1)));
+		ResponseEntity<AssetAdministrationShellDescriptor> response = controller
+				.postAssetAdministrationShellDescriptor(input);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+		assertThat(response.getBody()).isEqualTo(input);
+
+		ShellDescriptorSearchRequest request = new ShellDescriptorSearchRequest()
+				.query(new RegExQuery().path(AasRegistryPaths.submodelDescriptors().idShort()).value(".*_2.1"));
+		ResponseEntity<ShellDescriptorSearchResponse> entry = controller.searchShellDescriptors(request);
 		assertThat(entry.getStatusCode()).isEqualTo(HttpStatus.OK);
 		List<AssetAdministrationShellDescriptor> result = entry.getBody().getHits();
 		assertThat(result.size()).isEqualTo(1);
