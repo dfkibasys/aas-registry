@@ -1,7 +1,5 @@
 package org.eclipse.basyx.aas.registry.service;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -15,7 +13,7 @@ import org.eclipse.basyx.aas.registry.events.RegistryEvent;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent.EventType;
 import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchRequest;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
@@ -150,8 +148,8 @@ public class RegistryServiceImpl implements RegistryService {
 	}
 
 	@Override
-	public ShellDescriptorSearchResponse searchAssetAdministrationShellDescriptors(ShellDescriptorSearchQuery query) {
-		NativeSearchQuery nQuery = SearchRequestMapper.mapSearchQuery(query);
+	public ShellDescriptorSearchResponse searchAssetAdministrationShellDescriptors(ShellDescriptorSearchRequest request) {
+		NativeSearchQuery nQuery = SearchRequestMapper.mapSearchQuery(request);
 		SearchHits<AssetAdministrationShellDescriptor> hits = ops.search(nQuery,
 				AssetAdministrationShellDescriptor.class);
 		SearchResultMapper cutter = new SearchResultMapper();

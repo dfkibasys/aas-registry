@@ -1,4 +1,4 @@
-# Match
+# BaseQuery
 
 ## Properties
 Name | Type | Description | Notes

@@ -23,10 +23,11 @@ import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.GlobalReference;
 import org.eclipse.basyx.aas.registry.model.Key;
 import org.eclipse.basyx.aas.registry.model.KeyElements;
-import org.eclipse.basyx.aas.registry.model.Match;
+import org.eclipse.basyx.aas.registry.model.MatchQuery;
 import org.eclipse.basyx.aas.registry.model.ModelReference;
 import org.eclipse.basyx.aas.registry.model.Page;
-import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.RegExQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchRequest;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SortDirection;
 import org.eclipse.basyx.aas.registry.model.Sorting;
@@ -261,18 +262,33 @@ public class IntegrationTest {
 	}
 
 	@Test
-	public void whenSearchBySubmodelDescriptorId_thenGotResult() throws Exception {
+	public void whenMatchSearchBySubmodelDescriptorId_thenGotResult() throws Exception {
 		initialize();
 		AssetAdministrationShellDescriptor expected = resourceLoader.loadAssetAdminShellDescriptor();
 		String path = AasRegistryPaths.submodelDescriptors().idShort();
-		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery().match(new Match().path(path).value("sm3"));
-		ResponseEntity<ShellDescriptorSearchResponse> response = api.searchShellDescriptorsWithHttpInfo(query);
+		ShellDescriptorSearchRequest request = new ShellDescriptorSearchRequest().query(new MatchQuery().path(path).value("sm3"));
+		ResponseEntity<ShellDescriptorSearchResponse> response = api.searchShellDescriptorsWithHttpInfo(request);
 
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		List<AssetAdministrationShellDescriptor> result = response.getBody().getHits();
 		assertThat(result.size()).isEqualTo(1);
 		assertThat(result.get(0)).isEqualTo(expected);
 	}
+	
+	@Test
+	public void whenRegexSearchBySubmodelDescriptorShortId_thenGotResult() throws Exception {
+		initialize();
+		AssetAdministrationShellDescriptor expected = resourceLoader.loadAssetAdminShellDescriptor();
+		String path = AasRegistryPaths.submodelDescriptors().idShort();
+		ShellDescriptorSearchRequest request = new ShellDescriptorSearchRequest().query(new RegExQuery().path(path).value("[st]{1}.*3"));
+		ResponseEntity<ShellDescriptorSearchResponse> response = api.searchShellDescriptorsWithHttpInfo(request);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		List<AssetAdministrationShellDescriptor> result = response.getBody().getHits();
+		assertThat(result.size()).isEqualTo(1);
+		assertThat(result.get(0)).isEqualTo(expected);
+	}
+	
 
 	@Test
 	public void whenUsePagination_thenUseRefetching() throws IOException, InterruptedException, TimeoutException {
@@ -287,10 +303,10 @@ public class IntegrationTest {
 	}
 
 	private void assertResultByPage(int from, List<AssetAdministrationShellDescriptor> expected) {
-		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery().sortBy(new Sorting()
+		ShellDescriptorSearchRequest request = new ShellDescriptorSearchRequest().sortBy(new Sorting()
 				.addPathItem(SortingPath.IDSHORT).addPathItem(SortingPath.IDENTIFICATION).direction(SortDirection.ASC))
 				.page(new Page().index(from).size(2));
-		ShellDescriptorSearchResponse response = api.searchShellDescriptors(query);
+		ShellDescriptorSearchResponse response = api.searchShellDescriptors(request);
 		int total = 5;
 		assertThat(response.getTotal()).isEqualTo(total);
 		List<AssetAdministrationShellDescriptor> hits = response.getHits();
@@ -333,10 +349,10 @@ public class IntegrationTest {
 		initialize();
 		List<AssetAdministrationShellDescriptor> expected = resourceLoader.loadShellDescriptorList();
 		String path = AasRegistryPaths.description().language();
-		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery().match(new Match().path(path).value("de-DE"))
+		ShellDescriptorSearchRequest request = new ShellDescriptorSearchRequest().query(new MatchQuery().path(path).value("de-DE"))
 				.sortBy(new Sorting().addPathItem(SortingPath.IDSHORT).addPathItem(SortingPath.ADMINISTRATION_REVISION)
 						.direction(direction));
-		ResponseEntity<ShellDescriptorSearchResponse> response = api.searchShellDescriptorsWithHttpInfo(query);
+		ResponseEntity<ShellDescriptorSearchResponse> response = api.searchShellDescriptorsWithHttpInfo(request);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		List<AssetAdministrationShellDescriptor> result = response.getBody().getHits();
 		Assert.assertEquals(expected.toString(), result.toString());
@@ -346,7 +362,7 @@ public class IntegrationTest {
 	@Test
 	public void whenIllegalArguments_thenResult() throws IOException, InterruptedException, TimeoutException {
 		initialize();
-		api.searchShellDescriptors(new ShellDescriptorSearchQuery());
+		api.searchShellDescriptors(new ShellDescriptorSearchRequest());
 	}
 
 	private void deleteAdminAssetShellDescriptor(String aasId) {

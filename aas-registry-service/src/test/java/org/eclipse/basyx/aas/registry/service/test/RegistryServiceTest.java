@@ -8,14 +8,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.RegEx;
+
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.eclipse.basyx.aas.registry.client.api.AasRegistryPaths;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent;
 import org.eclipse.basyx.aas.registry.events.RegistryEventListener;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.eclipse.basyx.aas.registry.model.Match;
-import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.MatchQuery;
+import org.eclipse.basyx.aas.registry.model.RegExQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchRequest;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.repository.AssetAdministrationShellDescriptorRepository;
@@ -359,19 +362,39 @@ public class RegistryServiceTest {
 	}
 
 	@Test
-	public void whenSearchBySubModel_thenReturnDescriptorList() throws IOException {
-		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
-				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value(IDENTIFICATION_2_1));
+	public void whenMatchSearchBySubModel_thenReturnDescriptorList() throws IOException {
+		ShellDescriptorSearchRequest request = new ShellDescriptorSearchRequest()
+				.query(new MatchQuery().path(AasRegistryPaths.submodelDescriptors().identification()).value(IDENTIFICATION_2_1));
+		ShellDescriptorSearchResponse result = registry.searchAssetAdministrationShellDescriptors(request);
+		AssetAdministrationShellDescriptor descriptor = testResourcesLoader.loadAssetAdminShellDescriptor();
+		assertThat(result.getTotal()).isEqualTo(1);
+		
+		assertThat(result.getHits().get(0)).isEqualTo(descriptor);
+	}
+
+	@Test
+	public void whenMatchSearchBySubModelAndNotFound_thenReturnEmptyList() {
+		ShellDescriptorSearchRequest query = new ShellDescriptorSearchRequest()
+				.query(new MatchQuery().path(AasRegistryPaths.submodelDescriptors().identification()).value(UNKNOWN));
 		ShellDescriptorSearchResponse result = registry.searchAssetAdministrationShellDescriptors(query);
+		assertThat(result.getTotal()).isZero();
+		assertThat(result.getHits().size()).isZero();
+	}
+	
+	@Test
+	public void whenRegexSearchBySubModel_thenReturnDescriptorList() throws IOException {
+		ShellDescriptorSearchRequest request = new ShellDescriptorSearchRequest()
+				.query(new RegExQuery().path(AasRegistryPaths.submodelDescriptors().idShort()).value("ROBOT_.*_24"));
+		ShellDescriptorSearchResponse result = registry.searchAssetAdministrationShellDescriptors(request);
 		AssetAdministrationShellDescriptor descriptor = testResourcesLoader.loadAssetAdminShellDescriptor();
 		assertThat(result.getTotal()).isEqualTo(1);
 		assertThat(result.getHits().get(0)).isEqualTo(descriptor);
 	}
 
 	@Test
-	public void whenSearchBySubModelAndNotFound_thenReturnEmptyList() {
-		ShellDescriptorSearchQuery query = new ShellDescriptorSearchQuery()
-				.match(new Match().path(AasRegistryPaths.submodelDescriptors().identification()).value(UNKNOWN));
+	public void whenRegexSearchBySubModelAndNotFound_thenReturnEmptyList() {
+		ShellDescriptorSearchRequest query = new ShellDescriptorSearchRequest()
+				.query(new RegExQuery().path(AasRegistryPaths.submodelDescriptors().idShort()).value(".*_333_*"));
 		ShellDescriptorSearchResponse result = registry.searchAssetAdministrationShellDescriptors(query);
 		assertThat(result.getTotal()).isZero();
 		assertThat(result.getHits().size()).isZero();
