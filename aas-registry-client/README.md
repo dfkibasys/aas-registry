@@ -21,20 +21,20 @@ If you also want to use the search API we highly recommend that you also include
 The search API does not only provide concrete filtering but also similarity matches like words in a longer string. This code, for example, is a match for submodels that contain the word *robot* in their description: 
 
 ```java
-new Match().path(AasRegistryPaths.submodelDescriptors().description().text()).value("robot");
+new ShellDescriptorQuery().queryType(QueryTypeEnum.MATCH).path(AasRegistryPaths.submodelDescriptors().description().text()).value("robot");
 ```
 
-We do not support regular expressions right now. This request is just directly mapped to an [ElasticSearch Match query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html) on the server-site.
+The request is directly mapped to an [ElasticSearch Match query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html) on server-site. We also support [these regular expessions](https://www.elastic.co/guide/en/elasticsearch/reference/current/regexp-syntax.html#regexp-optional-operators). A query can be created like this:
+
+```java
+new ShellDescriptorQuery().queryType(QueryTypeEnum.REGEX).path(AasRegistryPaths.submodelDescriptors().description().text()).value("r[ob]{3}t");
+```
 
 As reponse to a search query, the client will receive a list of the filtered *AssetAdministrationShellDescriptors*. If you have enabled pagination, the list will only contain a subset of all results. By addressing an attribute of a submodel descriptor, the matching descriptors are shrunk so that they contain only matching submodels.
 
 ## Getting Started
 
-If you want to use path parameters in your request, make sure that they are URL encoded if they contain URL specific characters:
-
-```java
-URLEncoder.encode("My:Special/Identifier", StandardCharsets.UTF_8);
-```
+Path parameters in the request are automatically base64-URL-ecoded if you use the java client api. Ensure that you encode it if you use different clients.```
 
 Here is some generated java code that describes the client usage. 
 
@@ -52,7 +52,7 @@ public class RegistryAndDiscoveryInterfaceApiExample {
     public static void main(String[] args) {
         
         RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
-        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id
         try {
             apiInstance.deleteAllAssetLinksById(aasIdentifier);
         } catch (ApiException e) {
@@ -74,7 +74,7 @@ public class RegistryAndDiscoveryInterfaceApiExample {
     public static void main(String[] args) {
         
         RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
-        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id 
         try {
             apiInstance.deleteAssetAdministrationShellDescriptorById(aasIdentifier);
         } catch (ApiException e) {
@@ -96,8 +96,8 @@ public class RegistryAndDiscoveryInterfaceApiExample {
     public static void main(String[] args) {
         
         RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
-        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id (BASE64-URL-encoded)
-        String submodelIdentifier = "submodelIdentifier_example"; // String | The Submodel’s unique id (BASE64-URL-encoded)
+        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id 
+        String submodelIdentifier = "submodelIdentifier_example"; // String | The Submodel’s unique id 
         try {
             apiInstance.deleteSubmodelDescriptorById(aasIdentifier, submodelIdentifier);
         } catch (ApiException e) {
@@ -164,7 +164,7 @@ public class RegistryAndDiscoveryInterfaceApiExample {
     public static void main(String[] args) {
         
         RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
-        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id 
         try {
             List<IdentifierKeyValuePair> result = apiInstance.getAllAssetLinksById(aasIdentifier);
             System.out.println(result);
@@ -187,7 +187,7 @@ public class RegistryAndDiscoveryInterfaceApiExample {
     public static void main(String[] args) {
         
         RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
-        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id
         try {
             List<SubmodelDescriptor> result = apiInstance.getAllSubmodelDescriptors(aasIdentifier);
             System.out.println(result);
@@ -210,7 +210,7 @@ public class RegistryAndDiscoveryInterfaceApiExample {
     public static void main(String[] args) {
         
         RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
-        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id
         try {
             AssetAdministrationShellDescriptor result = apiInstance.getAssetAdministrationShellDescriptorById(aasIdentifier);
             System.out.println(result);
@@ -233,8 +233,8 @@ public class RegistryAndDiscoveryInterfaceApiExample {
     public static void main(String[] args) {
         
         RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
-        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id (BASE64-URL-encoded)
-        String submodelIdentifier = "submodelIdentifier_example"; // String | The Submodel’s unique id (BASE64-URL-encoded)
+        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id
+        String submodelIdentifier = "submodelIdentifier_example"; // String | The Submodel’s unique id
         try {
             SubmodelDescriptor result = apiInstance.getSubmodelDescriptorById(aasIdentifier, submodelIdentifier);
             System.out.println(result);
@@ -258,7 +258,7 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         
         RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
         List<IdentifierKeyValuePair> body = Arrays.asList(new IdentifierKeyValuePair()); // List<IdentifierKeyValuePair> | Asset identifier key-value-pairs
-        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id
         try {
             List<IdentifierKeyValuePair> result = apiInstance.postAllAssetLinksById(body, aasIdentifier);
             System.out.println(result);
@@ -305,7 +305,7 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         
         RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
         SubmodelDescriptor body = new SubmodelDescriptor(); // SubmodelDescriptor | Submodel Descriptor object
-        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id
         try {
             SubmodelDescriptor result = apiInstance.postSubmodelDescriptor(body, aasIdentifier);
             System.out.println(result);
@@ -329,7 +329,7 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         
         RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
         AssetAdministrationShellDescriptor body = new AssetAdministrationShellDescriptor(); // AssetAdministrationShellDescriptor | Asset Administration Shell Descriptor object
-        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id
         try {
             apiInstance.putAssetAdministrationShellDescriptorById(body, aasIdentifier);
         } catch (ApiException e) {
@@ -352,8 +352,8 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         
         RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
         SubmodelDescriptor body = new SubmodelDescriptor(); // SubmodelDescriptor | Submodel Descriptor object
-        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id (BASE64-URL-encoded)
-        String submodelIdentifier = "submodelIdentifier_example"; // String | The Submodel’s unique id (BASE64-URL-encoded)
+        String aasIdentifier = "aasIdentifier_example"; // String | The Asset Administration Shell’s unique id
+        String submodelIdentifier = "submodelIdentifier_example"; // String | The Submodel’s unique id
         try {
             apiInstance.putSubmodelDescriptorById(body, aasIdentifier, submodelIdentifier);
         } catch (ApiException e) {
@@ -380,7 +380,8 @@ public class RegistryAndDiscoveryInterfaceApiExample {
 		
 		// filter by submodels with only german (de-DE) description
 		String path = AasRegistryPaths.submodelDescriptors().description().language();
-		body.setMatch(new Match().path(path).value("de-DE"));
+		
+		body.setQuery(new ShellDescriptorQuery().queryType(QueryTypeEnum.MATCH).path(path).value("de-DE"));
 		// add optional pagination
 		body.setPage(new Page().index(0).size(10));
 		// optionally sort by identification
@@ -431,13 +432,15 @@ Class | Method | HTTP request | Description
  - [Key](docs/Key.md)
  - [KeyElements](docs/KeyElements.md)
  - [LangString](docs/LangString.md)
- - [Match](docs/Match.md)
+ - [MatchQuery](docs/Match.md)
  - [ModelReference](docs/ModelReference.md)
  - [OneOfReference](docs/OneOfReference.md)
  - [Page](docs/Page.md)
  - [ProtocolInformation](docs/ProtocolInformation.md)
  - [Reference](docs/Reference.md)
- - [ShellDescriptorSearchQuery](docs/ShellDescriptorSearchQuery.md)
+ - [RegExQuery](docs/RegExQuery.md)
+ - [ShellDescriptorQuery](docs/ShellDescriptorQuery.md)
+ - [ShellDescriptorSearchRequest](docs/ShellDescriptorSearchRequest.md)
  - [ShellDescriptorSearchResponse](docs/ShellDescriptorSearchResponse.md)
  - [SortDirection](docs/SortDirection.md)
  - [Sorting](docs/Sorting.md)

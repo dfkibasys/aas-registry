@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.SerializationUtils;
@@ -23,6 +24,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.RegexpQueryBuilder;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.mockito.Mockito;
@@ -185,35 +187,100 @@ public class RepositoryMockInitializer extends TestWatcher {
 
 	@SuppressWarnings("unchecked")
 	private SearchHits<AssetAdministrationShellDescriptor> answerSearchBySubmodelId(InvocationOnMock invocation) {
-		Object value = getValueAndAssertCorrectPath(invocation.getArgument(0));
+		QueryBuilder builder = getQueryBuilder(invocation.getArgument(0));
+		SearchHitMatcher<?> matcher = newSearchHitMatcher(builder);
+		return matcher.search();
+	}
+	
+	private SearchHitMatcher<?> newSearchHitMatcher(QueryBuilder builder) {
+		if (builder instanceof MatchQueryBuilder) {
+			MatchQueryBuilder mqBuilder = (MatchQueryBuilder) builder; 
+			assert AasRegistryPaths.submodelDescriptors().identification().equals(mqBuilder.fieldName());
+			return new MatchSearchHitMatcher(repoContent, (String) mqBuilder.value());
+		} else {
+			RegexpQueryBuilder regexBuilder = (RegexpQueryBuilder) builder;
+			assert AasRegistryPaths.submodelDescriptors().idShort().equals(regexBuilder.fieldName());
+			return new RegexSearchHitMatcher(repoContent, regexBuilder.value());
+		}
+	}
 
-		SearchHits<AssetAdministrationShellDescriptor> hits = Mockito.mock(SearchHits.class);
-		for (AssetAdministrationShellDescriptor descr : repoContent.values()) {
-			for (SubmodelDescriptor sDescr : Optional.ofNullable(descr.getSubmodelDescriptors())
-					.orElseGet(Collections::emptyList)) {
-				if (Objects.equals(sDescr.getIdentification(), value)) {
-					SearchHit<AssetAdministrationShellDescriptor> hit = Mockito.mock(SearchHit.class);
-					mockHitList(hits, List.of(hit));
-					Mockito.when(hit.getContent()).thenReturn(descr);
-					Mockito.when(hits.getTotalHits()).thenReturn(1L);
-					return hits;
+	private static abstract class SearchHitMatcher<T extends Object> {
+		
+		private final Map<String, AssetAdministrationShellDescriptor> content;
+		private final Function<SubmodelDescriptor, String> valueResolver;
+		private final T query;
+		
+		protected SearchHitMatcher(Map<String, AssetAdministrationShellDescriptor> content, Function<SubmodelDescriptor, String> valueResolver, T query) {
+			this.content = content;
+			this.valueResolver = valueResolver;
+			this.query = query;
+		}
+		
+		@SuppressWarnings("unchecked")
+		public SearchHits<AssetAdministrationShellDescriptor> search() {
+			SearchHits<AssetAdministrationShellDescriptor> hits = Mockito.mock(SearchHits.class);
+			for (AssetAdministrationShellDescriptor descr : content.values()) {
+				for (SubmodelDescriptor sDescr : Optional.ofNullable(descr.getSubmodelDescriptors())
+						.orElseGet(Collections::emptyList)) {
+					String value = valueResolver.apply(sDescr);
+					if (matches(query, value)) {
+						// we keep it quite simple here. 
+						// assume that we will have just one hit per descriptor submodels
+						// and also just one in all submodels
+						SearchHit<AssetAdministrationShellDescriptor> hit = Mockito.mock(SearchHit.class);					
+						mockHitList(hits, List.of(hit));
+						Mockito.when(hit.getContent()).thenReturn(descr);
+						Mockito.when(hits.getTotalHits()).thenReturn(1L);
+						return hits;
+					}
 				}
 			}
+			Mockito.when(hits.getTotalHits()).thenReturn(0L);
+			mockHitList(hits, List.of());
+			return hits;		
 		}
-		Mockito.when(hits.getTotalHits()).thenReturn(0L);
-		mockHitList(hits, List.of());
-		return hits;
+		
+		private void mockHitList(SearchHits<AssetAdministrationShellDescriptor> hits,
+				List<SearchHit<AssetAdministrationShellDescriptor>> toReturn) {
+			Mockito.when(hits.get()).thenAnswer(i -> toReturn.stream());
+			Mockito.when(hits.stream()).thenAnswer(i -> toReturn.stream());
+			Mockito.when(hits.getSearchHits()).thenAnswer(i -> toReturn);
+
+		}
+		
+		protected abstract boolean matches(T query, String value);
+		
+	}
+	
+	private final static class RegexSearchHitMatcher extends SearchHitMatcher<String> {
+
+		private static final Map<String, Pattern> PATTERN_CACHE = new HashMap<>();		
+		
+		protected RegexSearchHitMatcher(Map<String, AssetAdministrationShellDescriptor> content, String query) {
+			super(content, SubmodelDescriptor::getIdShort, query);
+		}
+
+		@Override
+		protected boolean matches(String query, String value) {
+			Pattern pattern = PATTERN_CACHE.computeIfAbsent(query, Pattern::compile);
+			return pattern.matcher(value).matches();
+		} 
+		
+	}
+	
+	private final static class MatchSearchHitMatcher extends SearchHitMatcher<Object> {
+
+		public MatchSearchHitMatcher(Map<String, AssetAdministrationShellDescriptor> content, Object value) {
+			super(content, SubmodelDescriptor::getIdentification, value);
+		}
+
+		@Override
+		protected boolean matches(Object query, String value) {
+			return query.equals(value);
+		}
 	}
 
-	private void mockHitList(SearchHits<AssetAdministrationShellDescriptor> hits,
-			List<SearchHit<AssetAdministrationShellDescriptor>> toReturn) {
-		Mockito.when(hits.get()).thenAnswer(i -> toReturn.stream());
-		Mockito.when(hits.stream()).thenAnswer(i -> toReturn.stream());
-		Mockito.when(hits.getSearchHits()).thenAnswer(i -> toReturn);
-
-	}
-
-	private Object getValueAndAssertCorrectPath(NativeSearchQuery nsQuery) {
+	private QueryBuilder getQueryBuilder(NativeSearchQuery nsQuery) {
 		QueryBuilder builder = nsQuery.getQuery();
 		BoolQueryBuilder bBuilder;
 		if (builder instanceof NestedQueryBuilder) {
@@ -222,12 +289,23 @@ public class RepositoryMockInitializer extends TestWatcher {
 		} else {
 			bBuilder = (BoolQueryBuilder) builder;
 		}
-		MatchQueryBuilder mBuilder = (MatchQueryBuilder) bBuilder.must().get(0);
-		// for the test we expect that it is a submodel id request because we do not
-		// want complex logic in our mock
-		String path = mBuilder.fieldName();
-		assert AasRegistryPaths.submodelDescriptors().identification().equals(path);
-		return mBuilder.value();
+		
+		return bBuilder.must().get(0);
+	}
+	
+
+	private Object assertCorrectPathAndGetValue(QueryBuilder builder) {
+		// match always to identification and regexp to idshort
+		// this is just the assumption based on our testcases
+		if (builder instanceof MatchQueryBuilder) {
+			MatchQueryBuilder mqBuilder = (MatchQueryBuilder) builder;
+			
+			return mqBuilder.value();
+		} else {
+			RegexpQueryBuilder rqBuilder = (RegexpQueryBuilder) builder;
+			assert AasRegistryPaths.submodelDescriptors().idShort().equals(rqBuilder.fieldName());
+			return rqBuilder.value();
+		}
 	}
 
 	private void prepareFindById() {
