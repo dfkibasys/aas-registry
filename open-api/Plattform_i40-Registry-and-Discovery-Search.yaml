@@ -22,14 +22,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ShellDescriptorSearchQuery'
+              $ref: '#/components/schemas/ShellDescriptorSearchRequest'
         required: true
       responses:
         "200":
           description: Search response
           content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/ShellDescriptorSearchResponse'
 components:
   schemas:
@@ -54,24 +54,28 @@ components:
             type: string
             default: ModelReference
             readOnly: true
-    ShellDescriptorSearchQuery:
+    ShellDescriptorSearchRequest:
       type: object
       properties:
         page:
-           $ref: '#/components/schemas/Page'
+          $ref: '#/components/schemas/Page'
         sortBy: 
-           $ref: '#/components/schemas/Sorting'
-        match:
-         $ref: '#/components/schemas/Match'
-    Match:
-       required:
-          - path
-          - value
-       properties:
-          path:
-            type: string
-          value:
-            type: string
+          $ref: '#/components/schemas/Sorting'
+        query:
+          $ref: '#/components/schemas/ShellDescriptorQuery'
+    ShellDescriptorQuery:      
+      required:
+        - queryType
+        - path
+        - value
+      properties:
+        path:
+          type: string
+        value:
+          type: string
+        queryType:
+          type: string
+          enum: ['match', 'regex']
     Page:
        type: object
        required:
@@ -83,7 +87,7 @@ components:
              minimum: 0
           size: 
              type: integer
-             minimum: 0
+             minimum: 1
              maximum: 10000 
     Sorting:
       type: object

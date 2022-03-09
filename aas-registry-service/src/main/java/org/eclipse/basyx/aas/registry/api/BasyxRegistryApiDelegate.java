@@ -7,7 +7,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchQuery;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchRequest;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.service.RegistryService;
@@ -127,7 +127,7 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 	}
 
 	@Override
-	public ResponseEntity<ShellDescriptorSearchResponse> searchShellDescriptors(ShellDescriptorSearchQuery query) {
+	public ResponseEntity<ShellDescriptorSearchResponse> searchShellDescriptors(ShellDescriptorSearchRequest query) {
 		ShellDescriptorSearchResponse result = service.searchAssetAdministrationShellDescriptors(query);
 		return ResponseEntity.ok(result);
 	}
