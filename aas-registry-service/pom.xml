@@ -103,7 +103,7 @@
 								<oas3>true</oas3>
 								<useSpringController>true</useSpringController>
 								<modelPackage>org.eclipse.basyx.aas.registry.model</modelPackage>
-								<configPackage>org.eclipse.basys.aas.registry.configuration</configPackage>
+								<configPackage>org.eclipse.basyx.aas.registry.configuration</configPackage>
 								<apiPackage>org.eclipse.basyx.aas.registry.api</apiPackage>
 								<invokerPackage>org.eclipse.basyx.aas.registry</invokerPackage>
 								<delegatePattern>true</delegatePattern>
