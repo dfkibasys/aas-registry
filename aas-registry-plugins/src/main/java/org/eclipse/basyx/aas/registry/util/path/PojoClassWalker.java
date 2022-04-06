@@ -15,6 +15,7 @@ import org.eclipse.basyx.aas.registry.util.path.PojoClassVisitor.PojoRelation;
 import org.eclipse.basyx.aas.registry.util.path.PojoClassVisitor.PojoRelation.PojoRelationBuilder;
 import org.eclipse.basyx.aas.registry.util.path.PojoClassVisitor.PojoRelation.PojoRelationType;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 import lombok.RequiredArgsConstructor;
@@ -47,11 +48,10 @@ class PojoClassWalker {
 		String methodName = field.getName();
 		String fieldName = getModelPropertyOrFieldName(field);
 
-		PojoRelation.PojoRelationBuilder builder = PojoRelation.builder().methodName(methodName).fieldName(fieldName)
-				.isRootRelation(subjectcls == root).subject(subjectcls.getSimpleName());
+		PojoRelation.PojoRelationBuilder builder = PojoRelation.builder().methodName(methodName).fieldName(fieldName).isRootRelation(subjectcls == root).subject(subjectcls.getSimpleName());
 		String newPath = generateNewPath(path, fieldName);
 		Class<?> type = getFieldTypeAndAssignRange(field, builder);
-				
+
 		if (type.isPrimitive() || type.equals(String.class) || Enum.class.isAssignableFrom(type)) {
 			walkPrimitiveRelation(builder);
 		} else {
@@ -109,16 +109,11 @@ class PojoClassWalker {
 			getFields(cls.getSuperclass(), fields);
 		}
 	}
-	
+
 	private String getModelPropertyOrFieldName(Field eachField) {
-		org.springframework.data.elasticsearch.annotations.Field elasticField = eachField
-				.getDeclaredAnnotation(org.springframework.data.elasticsearch.annotations.Field.class);
-		if (elasticField != null) {
-			String name = elasticField.name();
-			if (!StringUtils.isEmpty(name)) {
-				return name;
-			}
-			name = elasticField.value();
+		JsonProperty jsonProp = eachField.getDeclaredAnnotation(JsonProperty.class);
+		if (jsonProp != null) {
+			String name = jsonProp.value();
 			if (!StringUtils.isEmpty(name)) {
 				return name;
 			}

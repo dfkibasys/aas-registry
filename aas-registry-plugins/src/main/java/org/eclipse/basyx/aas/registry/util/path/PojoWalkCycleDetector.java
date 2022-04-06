@@ -4,7 +4,6 @@ import java.util.HashSet;
 
 class PojoWalkCycleDetector extends PojoClassVisitorDelegate {
 
-
 	private HashSet<String> typeNames = new HashSet<>();
 
 	public PojoWalkCycleDetector(PojoClassVisitor visitor) {

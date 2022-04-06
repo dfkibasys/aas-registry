@@ -16,12 +16,12 @@ class PojoClassVisitorDelegate implements PojoClassVisitor {
 			eachVisitor.startRelation(relation);
 		}
 	}
-	
+
 	@Override
 	public void endRelation(PojoRelation relation) {
 		for (PojoClassVisitor eachVisitor : visitors) {
 			eachVisitor.endRelation(relation);
-		}	
+		}
 	}
 
 	@Override
@@ -41,12 +41,12 @@ class PojoClassVisitorDelegate implements PojoClassVisitor {
 		}
 		return doContinue;
 	}
-	
+
 	@Override
 	public void endType() {
 		for (PojoClassVisitor eachVisitor : visitors) {
 			eachVisitor.endType();
-		}		
+		}
 	}
 
 	@Override

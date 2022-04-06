@@ -13,11 +13,11 @@ interface PojoClassVisitor {
 	void startRelation(PojoRelation relation);
 
 	void endRelation(PojoRelation relation);
-	
+
 	void onSubTypeRelation(String parent, List<String> subTypes);
 
 	boolean startType(String name, boolean isRoot);
-	
+
 	void endType();
 
 	void stop();
@@ -39,11 +39,11 @@ interface PojoClassVisitor {
 		enum PojoRelationType {
 			FUNCTIONAL, LIST, MAP
 		}
-		
+
 		public boolean isPrimitive() {
 			return range == null;
 		}
-		
+
 		public boolean isComplex() {
 			return range != null;
 		}

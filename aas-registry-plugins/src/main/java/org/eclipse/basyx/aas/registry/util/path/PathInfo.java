@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,13 +18,30 @@ import lombok.experimental.UtilityClass;
 @Data
 public class PathInfo {
 
-	private GenerationTarget target;
+	private GenerationTarget pathsTarget;
+
+	private GenerationTarget processorTarget;
+
+	private String inputClassPackageName;
 
 	private Set<ConstantInfo> constants;
 
 	private ModelInfo rootModel;
 
+	private Set<PrimitiveRange> primitiveRanges;
+
 	private Set<ModelInfo> models;
+
+	private Set<ModelInfo> allModels;
+
+	@Data
+	@AllArgsConstructor
+	private static class PrimitiveRange {
+
+		private boolean functional;
+
+		private String range;
+	}
 
 	@Getter
 	@Setter
@@ -49,24 +67,35 @@ public class PathInfo {
 
 		private String methodName;
 
+		private String attributeNameUpperFirst;
+
 		private String attributeName;
 
 		private String attributeNameUpper;
 
-		RelationInfo(String methodName, String attributeName) {
+		private boolean listRange;
+
+		RelationInfo(String methodName, String attributeName, boolean isListRange) {
 			this.methodName = methodName;
-			this.attributeName = attributeName;
+			this.attributeNameUpperFirst = toUpperFirst(attributeName);
+			this.listRange = isListRange;
 			this.attributeNameUpper = ConstantGenerator.generateConstant(attributeName);
 		}
 
+		private String toUpperFirst(String name) {
+			if (name.length() < 1) {
+				return name;
+			}
+			return "" + Character.toUpperCase(name.charAt(0)) + name.substring(1);
+		}
 	}
 
 	@ToString
 	@EqualsAndHashCode(callSuper = true)
 	public static class PrimitiveRangeRelationInfo extends RelationInfo {
 
-		public PrimitiveRangeRelationInfo(String methodName, String attributeName) {
-			super(methodName, attributeName);
+		public PrimitiveRangeRelationInfo(String methodName, String attributeName, boolean isListRange) {
+			super(methodName, attributeName, isListRange);
 		}
 	}
 
@@ -77,8 +106,8 @@ public class PathInfo {
 
 		private String modelName;
 
-		public ComplexRangeRelationInfo(String methodName, String attributeName, String rangeName) {
-			super(methodName, attributeName);
+		public ComplexRangeRelationInfo(String methodName, String attributeName, String rangeName, boolean isListRange) {
+			super(methodName, attributeName, isListRange);
 			this.modelName = rangeName;
 		}
 
@@ -106,6 +135,8 @@ public class PathInfo {
 
 		private List<ComplexRangeRelationInfo> complexRangeRelations = new LinkedList<>();
 
+		private PathInfo info; // backpointer for global access in templates
+
 		public ModelInfo(String name) {
 			this.name = name;
 		}
@@ -114,7 +145,7 @@ public class PathInfo {
 
 	@UtilityClass
 	private static class ConstantGenerator {
-		
+
 		public String generateConstant(String name) {
 			StringBuilder builder = new StringBuilder();
 			for (int i = 0, len = name.length(); i < len; i++) {

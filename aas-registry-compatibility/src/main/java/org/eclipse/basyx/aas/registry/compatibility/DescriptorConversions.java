@@ -38,8 +38,7 @@ public class DescriptorConversions {
 		AssetAdministrationShellDescriptor result = new AssetAdministrationShellDescriptor();
 
 		Optional.ofNullable(basyxDescriptor.getIdShort()).ifPresent(result::setIdShort);
-		Optional.ofNullable(basyxDescriptor.getIdentifier()).map(IIdentifier::getId)
-				.ifPresent(result::setIdentification);
+		Optional.ofNullable(basyxDescriptor.getIdentifier()).map(IIdentifier::getId).ifPresent(result::setIdentification);
 		assignEndpoints(basyxDescriptor.getEndpoints(), InterfaceType.AAS, result);
 		assignGlobalReference(basyxDescriptor, result);
 		assignSubmodelDescriptors(basyxDescriptor.getSubmodelDescriptors(), result);
@@ -47,36 +46,28 @@ public class DescriptorConversions {
 		return result;
 	}
 
-	private static void assignEndpoints(Collection<Map<String, Object>> endpoints, InterfaceType iType,
-			Descriptor target) {
+	private static void assignEndpoints(Collection<Map<String, Object>> endpoints, InterfaceType iType, Descriptor target) {
 		for (Map<String, Object> eachEndpoint : endpoints) {
 			String address = (String) eachEndpoint.get(AssetAdministrationShell.ADDRESS);
 			String type = (String) eachEndpoint.get(AssetAdministrationShell.TYPE);
 			if (address != null && type != null) {
-				ProtocolInformation protocolInfo = new ProtocolInformation().endpointAddress(address)
-						.endpointProtocol(type);
-				Endpoint endpoint = new Endpoint()._interface(iType.getInterfaceName())
-						.protocolInformation(protocolInfo);
+				ProtocolInformation protocolInfo = new ProtocolInformation().endpointAddress(address).endpointProtocol(type);
+				Endpoint endpoint = new Endpoint()._interface(iType.getInterfaceName()).protocolInformation(protocolInfo);
 				target.addEndpointsItem(endpoint);
 			}
 		}
 	}
 
-	private static void assignSubmodelDescriptors(Collection<SubmodelDescriptor> submodelDescriptors,
-			AssetAdministrationShellDescriptor result) {
-		Comparator<SubmodelDescriptor> comparator = Comparator
-				.nullsFirst(Comparator.comparing(SubmodelDescriptor::getIdShort));
-		submodelDescriptors.stream().sorted(comparator).map(DescriptorConversions::toDotaasSubmodelDescriptor)
-				.forEach(result::addSubmodelDescriptorsItem);
+	private static void assignSubmodelDescriptors(Collection<SubmodelDescriptor> submodelDescriptors, AssetAdministrationShellDescriptor result) {
+		Comparator<SubmodelDescriptor> comparator = Comparator.nullsFirst(Comparator.comparing(SubmodelDescriptor::getIdShort));
+		submodelDescriptors.stream().sorted(comparator).map(DescriptorConversions::toDotaasSubmodelDescriptor).forEach(result::addSubmodelDescriptorsItem);
 	}
 
-	public static org.eclipse.basyx.aas.registry.model.SubmodelDescriptor toDotaasSubmodelDescriptor(
-			SubmodelDescriptor basyxDescriptor) {
+	public static org.eclipse.basyx.aas.registry.model.SubmodelDescriptor toDotaasSubmodelDescriptor(SubmodelDescriptor basyxDescriptor) {
 		org.eclipse.basyx.aas.registry.model.SubmodelDescriptor result = new org.eclipse.basyx.aas.registry.model.SubmodelDescriptor();
 
 		Optional.ofNullable(basyxDescriptor.getIdShort()).ifPresent(result::setIdShort);
-		Optional.ofNullable(basyxDescriptor.getIdentifier()).map(IIdentifier::getId)
-				.ifPresent(result::setIdentification);
+		Optional.ofNullable(basyxDescriptor.getIdentifier()).map(IIdentifier::getId).ifPresent(result::setIdentification);
 
 		assignEndpoints(basyxDescriptor.getEndpoints(), InterfaceType.SUBMODEL, result);
 		assignSemanticId(basyxDescriptor.getSemanticId(), result);
@@ -84,8 +75,7 @@ public class DescriptorConversions {
 		return result;
 	}
 
-	private static void assignSemanticId(IReference semanticId,
-			org.eclipse.basyx.aas.registry.model.SubmodelDescriptor target) {
+	private static void assignSemanticId(IReference semanticId, org.eclipse.basyx.aas.registry.model.SubmodelDescriptor target) {
 		ModelReference semanticRef = new ModelReference();
 		target.setSemanticId(semanticRef);
 		List<IKey> keys = semanticId.getKeys();
@@ -103,10 +93,10 @@ public class DescriptorConversions {
 
 	private static org.eclipse.basyx.aas.registry.model.KeyElements toDotaasKeyElement(KeyElements key) {
 		switch (key) {
-			//case SUBMODEL:
-			//	return org.eclipse.basyx.aas.registry.model.KeyElements.SUBMODEL;
-			default:
-				return org.eclipse.basyx.aas.registry.model.KeyElements.CONCEPTDESCRIPTION;
+		// case SUBMODEL:
+		// return org.eclipse.basyx.aas.registry.model.KeyElements.SUBMODEL;
+		default:
+			return org.eclipse.basyx.aas.registry.model.KeyElements.CONCEPTDESCRIPTION;
 		}
 	}
 
@@ -122,8 +112,7 @@ public class DescriptorConversions {
 		Asset resultAsset = (Asset) result.getAsset();
 		resultAsset.setIdentification(IdentifierType.CUSTOM, ref.getValue().get(0));
 
-		Optional.ofNullable(dotaasDescriptor.getSubmodelDescriptors()).map(List::stream).orElseGet(Stream::empty)
-				.map(DescriptorConversions::toBasyxSubmodelDescriptor).forEach(result::addSubmodelDescriptor);
+		Optional.ofNullable(dotaasDescriptor.getSubmodelDescriptors()).map(List::stream).orElseGet(Stream::empty).map(DescriptorConversions::toBasyxSubmodelDescriptor).forEach(result::addSubmodelDescriptor);
 
 		return result;
 	}
@@ -139,18 +128,13 @@ public class DescriptorConversions {
 		return info.getEndpointAddress();
 	}
 
-	public static SubmodelDescriptor toBasyxSubmodelDescriptor(
-			org.eclipse.basyx.aas.registry.model.SubmodelDescriptor dotaasDescriptor) {
+	public static SubmodelDescriptor toBasyxSubmodelDescriptor(org.eclipse.basyx.aas.registry.model.SubmodelDescriptor dotaasDescriptor) {
 
 		String address = getEndpointAddress(dotaasDescriptor.getEndpoints());
-		SubmodelDescriptor result = new SubmodelDescriptor(dotaasDescriptor.getIdShort(),
-				new Identifier(IdentifierType.CUSTOM, dotaasDescriptor.getIdentification()), address);
+		SubmodelDescriptor result = new SubmodelDescriptor(dotaasDescriptor.getIdShort(), new Identifier(IdentifierType.CUSTOM, dotaasDescriptor.getIdentification()), address);
 
-		Optional.ofNullable(dotaasDescriptor.getSemanticId()).filter(ModelReference.class::isInstance)
-				.map(ModelReference.class::cast).map(ModelReference::getKeys).map(List::iterator)
-				.filter(Iterator::hasNext).map(Iterator::next).map(org.eclipse.basyx.aas.registry.model.Key::getValue)
-				.map(DescriptorConversions::toCustomKey).filter(Objects::nonNull).map(Reference::new)
-				.ifPresent(result::setSemanticId);
+		Optional.ofNullable(dotaasDescriptor.getSemanticId()).filter(ModelReference.class::isInstance).map(ModelReference.class::cast).map(ModelReference::getKeys).map(List::iterator).filter(Iterator::hasNext).map(Iterator::next)
+				.map(org.eclipse.basyx.aas.registry.model.Key::getValue).map(DescriptorConversions::toCustomKey).filter(Objects::nonNull).map(Reference::new).ifPresent(result::setSemanticId);
 
 		return result;
 	}
@@ -162,11 +146,9 @@ public class DescriptorConversions {
 		return new Key(KeyElements.SUBMODEL, false, value, IdentifierType.CUSTOM);
 	}
 
-	private static void assignGlobalReference(AASDescriptor basyxDescriptor,
-			AssetAdministrationShellDescriptor result) {
+	private static void assignGlobalReference(AASDescriptor basyxDescriptor, AssetAdministrationShellDescriptor result) {
 		GlobalReference assetRef = new GlobalReference();
-		Optional.of(basyxDescriptor.getAsset()).map(IAsset::getIdentification).map(IIdentifier::getId)
-				.ifPresent(assetRef::addValueItem);
+		Optional.of(basyxDescriptor.getAsset()).map(IAsset::getIdentification).map(IIdentifier::getId).ifPresent(assetRef::addValueItem);
 		result.setGlobalAssetId(assetRef);
 	}
 
