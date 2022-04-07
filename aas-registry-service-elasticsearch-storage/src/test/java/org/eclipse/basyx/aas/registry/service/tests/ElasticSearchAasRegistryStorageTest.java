@@ -9,7 +9,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.utility.DockerImageName;
 
-@TestPropertySource(properties = { "registry.type=elasticsearch" })
+@TestPropertySource(properties = { "registry.type=elasticsearch", "logging.level.root=INFO"})
 @ContextConfiguration(classes = { ElasticSearchConfiguration.class })
 public class ElasticSearchAasRegistryStorageTest extends AasRegistryStorageTest {
 
