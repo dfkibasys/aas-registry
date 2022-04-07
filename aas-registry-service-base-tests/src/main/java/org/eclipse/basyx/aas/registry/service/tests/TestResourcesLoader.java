@@ -73,14 +73,14 @@ public class TestResourcesLoader extends TestName {
 
 	private String getTestRepositoryPath() {
 		String repoPath = getMethodName() + "_repo" + JSON_FILE_ENDING;
-		String basedOnTestClass = basedOnClassInTest(repoPath);
+		String basedOnTestClass = basedOnPackageName(repoPath);
 		if (getClass().getResource(basedOnTestClass) != null) {
 			return repoPath;
 		}
 		return "default_repository.json";
 	}
 
-	private String basedOnClassInTest(String relativePath) {
+	private String basedOnPackageName(String relativePath) {
 		return "/" + packageName.replace('.', '/') + "/" + relativePath;
 	}
 
@@ -90,7 +90,7 @@ public class TestResourcesLoader extends TestName {
 	}
 
 	private <T> T load(String path, ObjectReader reader) throws IOException {
-		path = basedOnClassInTest(path);
+		path = basedOnPackageName(path);
 		try (InputStream in = getClass().getResourceAsStream(path)) {
 			try (BufferedInputStream bIn = new BufferedInputStream(in)) {
 				return reader.readValue(bIn);
