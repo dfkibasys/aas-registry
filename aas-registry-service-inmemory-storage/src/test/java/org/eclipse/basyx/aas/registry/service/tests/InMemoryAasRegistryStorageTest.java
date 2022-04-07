@@ -4,7 +4,7 @@ import org.eclipse.basyx.aas.registry.service.configuration.InMemoryAasStorageCo
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
-@TestPropertySource(properties = { "registry.type=inMemory", , "logging.level.root=INFO" })
+@TestPropertySource(properties = { "registry.type=inMemory" })
 @ContextConfiguration(classes = { InMemoryAasStorageConfiguration.class })
 public class InMemoryAasRegistryStorageTest extends AasRegistryStorageTest {
 

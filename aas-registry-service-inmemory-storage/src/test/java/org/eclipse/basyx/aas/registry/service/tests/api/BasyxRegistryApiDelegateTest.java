@@ -40,7 +40,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = { BasyxRegistryApiDelegate.class, RegistryApiController.class, InMemoryAasStorageConfiguration.class })
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@TestPropertySource(properties = { "registry.type=inMemory", , "logging.level.root=INFO" })
+@TestPropertySource(properties = { "registry.type=inMemory" })
 public class BasyxRegistryApiDelegateTest {
 
 	private static final String ID_3 = "identification_3";
