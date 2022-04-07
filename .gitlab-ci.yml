@@ -128,19 +128,18 @@ deploy-npm:
 
 test:
   stage: test 
-  image: dfkibasys/docker-temurin11jdk:20.10.12
   services:
-     - name: docker:20.10.12-dind
+     - name: docker:19.03.15-dind
        # explicitly disable tls to avoid docker startup interruption
        command: ["--tls=false"]
   tags:
     - basys
     - maven
   script:
-    - chmod 775 ./mvnw
     - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
   dependencies:
      - compile
+
   
 install:
   stage: install
