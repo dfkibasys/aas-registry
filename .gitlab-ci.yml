@@ -138,7 +138,6 @@ test:
     - basys
     - maven
   script:
-    - cd aas-registry-service-elasticsearch-storage
     - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
   dependencies:
      - compile
