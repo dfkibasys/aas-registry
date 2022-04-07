@@ -145,11 +145,20 @@ deploy-npm:
   
 install:
   stage: install
+  image: dfkibasys/docker-temurin11jdk:20.10.12
+  variables:
+    DOCKER_DRIVER: overlay2  
+  services:
+    - name: docker:20.10.12-dind
+      command: ["--tls=false"]
+  before_script:
+    - docker info
   tags:
     - basys
     - maven
   script:
-    - mvn $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
+    - chmod 775 ./mvnw
+    - ./mvnw $MAVEN_CLI_OPTS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD spring-boot:build-image -pl modules/server -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
   dependencies:
      - compile
   artifacts:
@@ -167,25 +176,24 @@ install:
       - $MAVEN_TARGET_SERVICE_RELEASES
     expire_in: 3 hour
 
-deploy:
-  stage: deploy
-  image: dfkibasys/docker-temurin11jdk:20.10.12
-  variables:
-    DOCKER_DRIVER: overlay2
-  services:
-    - name: docker:20.10.12-dind
-      command: ["--tls=false"]
-  tags:
-    - basys
-    - docker
-  dependencies:
-    - compile
-  script:
-    - chmod 775 ./mvnw
-    - ./mvnw $MAVEN_CLI_OPTS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD spring-boot:build-image -pl modules/server -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true    
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $CI_COMMIT_BRANCH == 'develop'
+# deploy:
+#   stage: deploy
+#   variables:
+#     DOCKER_DRIVER: overlay2
+#   services:
+#     - name: docker:20.10.12-dind
+#       command: ["--tls=false"]
+#   before_script:
+#     - docker info
+#   script:
+#     - chmod 775 ./mvnw
+#     - ./mvnw $MAVEN_CLI_OPTS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD spring-boot:build-image -pl modules/server
+  #only:
+  #  - master
+  #  - develop
+
+#    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+#    - if: $CI_COMMIT_BRANCH == 'develop'
       
 # docker:
 #   stage: publish
