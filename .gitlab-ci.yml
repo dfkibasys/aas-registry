@@ -15,6 +15,7 @@ variables:
   MAVEN_TARGET_SERVICE_INMEMORY_STORAGE: ${CI_PROJECT_DIR}/aas-registry-service-inmemory-storage/target
   MAVEN_TARGET_SERVICE_KAFKA_EVENTS: ${CI_PROJECT_DIR}/aas-registry-service-kafka-events/target
   MAVEN_TARGET_SERVICE_RELEASES: ${CI_PROJECT_DIR}/aas-registry-service-releases/target
+  MAVEN_TARGET_COMPATIBILITY: ${CI_PROJECT_DIR}/aas-registry-compatibility/target
   CLIENT_OPENAPI_FOLDER: ${CI_PROJECT_DIR}/aas-registry-client/open-api
   CLIENT_OPENAPI_FILE: ${CLIENT_OPENAPI_FOLDER}/Plattform_i40-Registry-and-Discovery.yaml
   MAVEN_OPTS: "-Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository"
@@ -81,6 +82,7 @@ compile:
       - $MAVEN_TARGET_SERVICE_INMEMORY_STORAGE
       - $MAVEN_TARGET_SERVICE_KAFKA_EVENTS
       - $MAVEN_TARGET_SERVICE_RELEASES
+      - $MAVEN_TARGET_COMPATIBILITY
       - $CLIENT_OPENAPI_FOLDER
     expire_in: 3 hour    
     
@@ -126,19 +128,19 @@ deploy-npm:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_COMMIT_BRANCH == 'development'
 
-test:
-  stage: test 
-  services:
-     - name: docker:20.10.12-dind
-       # explicitly disable tls to avoid docker startup interruption
-       command: ["--tls=false"]
-  tags:
-    - basys
-    - maven
-  script:
-    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dorg.slf4j.simpleLogger.defaultLogLevel=ERROR
-  dependencies:
-     - compile
+# test:
+#   stage: test 
+#   services:
+#      - name: docker:20.10.12-dind
+#        # explicitly disable tls to avoid docker startup interruption
+#        command: ["--tls=false"]
+#   tags:
+#     - basys
+#     - maven
+#   script:
+#     - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
+#   dependencies:
+#      - compile
 
   
 install:
