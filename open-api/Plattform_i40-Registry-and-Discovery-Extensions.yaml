@@ -27,9 +27,6 @@ paths:
        responses:
          '404':
             description: Asset Administration Shell Descriptor not found
-       responses:
-         '204':
-            description: Submodel was already registered and did not change
   /registry/shell-descriptors/{aasIdentifier}/submodel-descriptors/{submodelIdentifier}:
     get:
        responses: 

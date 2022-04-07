@@ -1,19 +1,25 @@
-image: maven:3.6.0-jdk-11
+image: maven:3-eclipse-temurin-11-alpine
 
 variables:
   DOCKER_HOST: "tcp://docker:2375" 
   DOCKER_TLS_CERTDIR: ""
-  DOCKER_DRIVER: overlay2
-  MAVEN_TARGET_PLUGINS: ${CI_PROJECT_DIR}/aas-registry-plugins/target
+  DOCKER_DRIVER: overlay2  
+  MAVEN_TARGET_CLIENT: ${CI_PROJECT_DIR}/aas-registry-client/target
   MAVEN_TARGET_EVENTS: ${CI_PROJECT_DIR}/aas-registry-events/target
   MAVEN_TARGET_PATHS: ${CI_PROJECT_DIR}/aas-registry-paths/target
-  MAVEN_TARGET_CLIENT: ${CI_PROJECT_DIR}/aas-registry-client/target
+  MAVEN_TARGET_PLUGINS: ${CI_PROJECT_DIR}/aas-registry-plugins/target
   MAVEN_TARGET_SERVICE: ${CI_PROJECT_DIR}/aas-registry-service/target
+  MAVEN_TARGET_SERVICE_BASE_MODEL: ${CI_PROJECT_DIR}/aas-registry-service-base-model/target
+  MAVEN_TARGET_SERVICE_BASE_TESTS: ${CI_PROJECT_DIR}/aas-registry-service-base-tests/target
+  MAVEN_TARGET_SERVICE_ELASTICSEARCH_STORAGE: ${CI_PROJECT_DIR}/aas-registry-service-elasticsearch-storage/target
+  MAVEN_TARGET_SERVICE_INMEMORY_STORAGE: ${CI_PROJECT_DIR}/aas-registry-service-inmemory-storage/target
+  MAVEN_TARGET_SERVICE_KAFKA_EVENTS: ${CI_PROJECT_DIR}/aas-registry-service-kafka-events/target
+  MAVEN_TARGET_SERVICE_RELEASES: ${CI_PROJECT_DIR}/aas-registry-service-releases/target
   CLIENT_OPENAPI_FOLDER: ${CI_PROJECT_DIR}/aas-registry-client/open-api
   CLIENT_OPENAPI_FILE: ${CLIENT_OPENAPI_FOLDER}/Plattform_i40-Registry-and-Discovery.yaml
   MAVEN_OPTS: "-Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository"
   MAVEN_CLI_OPTS: "-s ${CI_PROJECT_DIR}/.m2/settings.xml --batch-mode -Pgitlab"
-  DOCKER_JAR: aas-registry-service.jar  
+#  DOCKER_JAR: aas-registry-service.jar  
   TYPESCRIPT_FOLDER: ${CI_PROJECT_DIR}/typescript
   NPM_REPO: ${MAVEN_REPO_URL}/npm-hosted/  # same as for maven but with npm-hosted suffix
 
@@ -29,7 +35,6 @@ stages:
   - test
   - install
   - deploy
-  - publish
 
 build-plugin:
   stage: plugin
@@ -65,10 +70,17 @@ compile:
     - build-plugin
   artifacts:
     paths:
+      - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_EVENTS
       - $MAVEN_TARGET_PATHS
-      - $MAVEN_TARGET_CLIENT
+      - $MAVEN_TARGET_PLUGINS
       - $MAVEN_TARGET_SERVICE
+      - $MAVEN_TARGET_SERVICE_BASE_MODEL
+      - $MAVEN_TARGET_SERVICE_BASE_TESTS
+      - $MAVEN_TARGET_SERVICE_ELASTICSEARCH_STORAGE
+      - $MAVEN_TARGET_SERVICE_INMEMORY_STORAGE
+      - $MAVEN_TARGET_SERVICE_KAFKA_EVENTS
+      - $MAVEN_TARGET_SERVICE_RELEASES
       - $CLIENT_OPENAPI_FOLDER
     expire_in: 3 hour    
     
@@ -116,14 +128,16 @@ deploy-npm:
 
 test:
   stage: test 
+  image: dfkibasys/docker-temurin11jdk:20.10.12
   services:
-     - name: docker:19.03.15-dind
+     - name: docker:20.10.12-dind
        # explicitly disable tls to avoid docker startup interruption
        command: ["--tls=false"]
   tags:
     - basys
     - maven
   script:
+    - chmod 775 ./mvnw
     - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
   dependencies:
      - compile
@@ -139,48 +153,62 @@ install:
      - compile
   artifacts:
     paths:
+      - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_EVENTS
       - $MAVEN_TARGET_PATHS
-      - $MAVEN_TARGET_CLIENT
+      - $MAVEN_TARGET_PLUGINS
       - $MAVEN_TARGET_SERVICE
+      - $MAVEN_TARGET_SERVICE_BASE_MODEL
+      - $MAVEN_TARGET_SERVICE_BASE_TESTS
+      - $MAVEN_TARGET_SERVICE_ELASTICSEARCH_STORAGE
+      - $MAVEN_TARGET_SERVICE_INMEMORY_STORAGE
+      - $MAVEN_TARGET_SERVICE_KAFKA_EVENTS
+      - $MAVEN_TARGET_SERVICE_RELEASES
     expire_in: 3 hour
-  
+
 deploy:
   stage: deploy
-  tags:
-    - basys
-    - maven
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    #- if: $CI_COMMIT_BRANCH == 'development'
-  script:
-    - mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
-  dependencies:
-    - compile
-      
-docker:
-  stage: publish
-  image: docker:19.03.15
+  image: dfkibasys/docker-temurin11jdk:20.10.12
   variables:
     DOCKER_DRIVER: overlay2
-    DOCKER_IMAGE_VERSION: 'dotaas-latest'
-    DOCKER_IMAGE: '$DOCKER_REGISTRY_USER/$CI_PROJECT_NAME:$DOCKER_IMAGE_VERSION'
   services:
-     - name: docker:19.03.15-dind
-       # explicitly disable tls to avoid docker startup interruption
-       command: ["--tls=false"]
-  dependencies:
-    - install
+    - name: docker:20.10.12-dind
+      command: ["--tls=false"]
   tags:
     - basys
     - docker
-  before_script:
-    - docker info      
+  dependencies:
+    - compile
   script:
-    - cd aas-registry-service
-    - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
-    - docker build -t "$DOCKER_IMAGE" .
-    - docker push "$DOCKER_IMAGE"
+    - chmod 775 ./mvnw
+    - ./mvnw $MAVEN_CLI_OPTS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD spring-boot:build-image -pl modules/server -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true    
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $CI_COMMIT_BRANCH == 'development'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+      
+# docker:
+#   stage: publish
+#   image: docker:19.03.15
+#   variables:
+#     DOCKER_DRIVER: overlay2
+#     DOCKER_IMAGE_VERSION: 'dotaas-latest'
+#     DOCKER_IMAGE: '$DOCKER_REGISTRY_USER/$CI_PROJECT_NAME:$DOCKER_IMAGE_VERSION'
+#   services:
+#      - name: docker:19.03.15-dind
+#        # explicitly disable tls to avoid docker startup interruption
+#        command: ["--tls=false"]
+#   dependencies:
+#     - install
+#   tags:
+#     - basys
+#     - docker
+#   before_script:
+#     - docker info      
+#   script:
+#     - cd aas-registry-service
+#     - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
+#     - docker build -t "$DOCKER_IMAGE" .
+#     - docker push "$DOCKER_IMAGE"
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+#     - if: $CI_COMMIT_BRANCH == 'development'

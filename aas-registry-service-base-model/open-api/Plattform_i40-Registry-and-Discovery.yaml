@@ -154,7 +154,7 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/SubmodelDescriptor'}
-        '204': {description: Submodel was already registered and did not change}
+        '404': {description: Asset Administration Shell Descriptor not found}
       x-semanticIds: ['https://admin-shell.io/aas/API/PostSubmodelDescriptor/1/0/RC02']
   /registry/shell-descriptors/{aasIdentifier}/submodel-descriptors/{submodelIdentifier}:
     get:

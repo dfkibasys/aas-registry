@@ -8,28 +8,19 @@
 		<artifactId>aas-registry</artifactId>
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
- 
+
 	<artifactId>aas-registry-service-releases</artifactId>
 	<name>aas-registry-service-releases</name>
-	<packaging>jar</packaging>
 
 	<properties>
 		<spring-cloud.version>2020.0.4</spring-cloud.version>
 		<start-class>org.eclipse.basyx.aas.registry.service.Swagger2SpringBoot</start-class>
 	</properties>
-
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<appendAssemblyId>false</appendAssemblyId>
-				</configuration>
 				<executions>
 					<execution>
 						<id>make-assembly</id>
@@ -37,13 +28,16 @@
 						<goals>
 							<goal>single</goal>
 						</goals>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<appendAssemblyId>true</appendAssemblyId>
+						</configuration>
 					</execution>
 				</executions>
-
 			</plugin>
 
-			<!-- https://www.baeldung.com/spring-boot-docker-images#1-creating-layered-jars -->
-			<!-- https://www.baeldung.com/deployable-fat-jar-spring-boot -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -51,19 +45,53 @@
 					<layers>
 						<enabled>true</enabled>
 					</layers>
-					<profiles>
-						<profile>kafkaEvents</profile>
-						<profile>elasticsearchStorage</profile>
-					</profiles>
+					<image>
+						<publish>false</publish>
+					</image>
+					<docker>
+						<publishRegistry>
+							<username>${docker.username}</username>
+							<password>${docker.password}</password>
+						</publishRegistry>
+					</docker>
+					<classifier>jar-with-dependencies</classifier>
+					<excludes>
+						<exclude>
+							<groupId>org.eclipse.basyx.aas.registry</groupId>
+							<artifactId>aas-registry-service-elasticsearch-storage</artifactId>
+						</exclude>
+					</excludes>
 				</configuration>
 				<executions>
 					<execution>
+						<id>repackage-kafka-es</id>
+						<phase>package</phase>
 						<goals>
 							<goal>repackage</goal>
+
 						</goals>
+					</execution>
+					<execution>
+						<id>build-image-kafka-es</id>
+						<goals>
+							<goal>build-image</goal>
+						</goals>
+						<configuration>
+							<image>
+								<name>docker.io/${docker.username}/aasregistry-dotaas-part2:0.1.0-kafka-es</name>
+							</image>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 	<dependencies>
@@ -71,11 +99,11 @@
 			<groupId>org.eclipse.basyx.aas.registry</groupId>
 			<artifactId>aas-registry-service-kafka-events</artifactId>
 		</dependency>
-		 <dependency>
+		<dependency>
 			<groupId>org.eclipse.basyx.aas.registry</groupId>
 			<artifactId>aas-registry-service-inmemory-storage</artifactId>
-		</dependency> 
-		<dependency> 
+		</dependency>
+		<dependency>
 			<groupId>org.eclipse.basyx.aas.registry</groupId>
 			<artifactId>aas-registry-service-elasticsearch-storage</artifactId>
 		</dependency>
@@ -103,11 +131,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.basyx.aas.registry</groupId>
-			<artifactId>aas-registry-events</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.basyx.aas.registry</groupId>
 			<artifactId>aas-registry-service-base-tests</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -122,12 +145,12 @@
 			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
- 		<dependency>
+		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>elasticsearch</artifactId>
 			<version>${testcontainers.version}</version>
 			<scope>test</scope>
-		 </dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>kafka</artifactId>
@@ -142,6 +165,13 @@
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
 				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>2.6.6</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
