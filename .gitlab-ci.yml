@@ -129,14 +129,14 @@ deploy-npm:
 test:
   stage: test 
   services:
-     - name: docker:19.03.15-dind
+     - name: docker:20.10.12-dind
        # explicitly disable tls to avoid docker startup interruption
        command: ["--tls=false"]
   tags:
     - basys
     - maven
   script:
-    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
+    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dorg.slf4j.simpleLogger.defaultLogLevel=ERROR
   dependencies:
      - compile
 
