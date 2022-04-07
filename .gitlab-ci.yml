@@ -1,4 +1,4 @@
-image: maven:3-eclipse-temurin-11-alpine
+image: maven:3.6.0-jdk-11
 
 variables:
   DOCKER_HOST: "tcp://docker:2375" 
@@ -142,38 +142,21 @@ deploy-npm:
 #   dependencies:
 #      - compile
 
-  
 install:
   stage: install
-  image: dfkibasys/docker-temurin11jdk:20.10.12
-  variables:
-    DOCKER_DRIVER: overlay2  
-  services:
-    - name: docker:20.10.12-dind
-      command: ["--tls=false"]
-  before_script:
-    - docker info
   tags:
     - basys
     - maven
   script:
-    - chmod 775 ./mvnw
-    - ./mvnw $MAVEN_CLI_OPTS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD spring-boot:build-image -pl modules/server -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
+    - mvn $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
   dependencies:
      - compile
   artifacts:
     paths:
-      - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_EVENTS
       - $MAVEN_TARGET_PATHS
-      - $MAVEN_TARGET_PLUGINS
+      - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_SERVICE
-      - $MAVEN_TARGET_SERVICE_BASE_MODEL
-      - $MAVEN_TARGET_SERVICE_BASE_TESTS
-      - $MAVEN_TARGET_SERVICE_ELASTICSEARCH_STORAGE
-      - $MAVEN_TARGET_SERVICE_INMEMORY_STORAGE
-      - $MAVEN_TARGET_SERVICE_KAFKA_EVENTS
-      - $MAVEN_TARGET_SERVICE_RELEASES
     expire_in: 3 hour
 
 # deploy:
