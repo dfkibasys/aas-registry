@@ -17,6 +17,7 @@
 	</parent>
 
 	<properties>
+		<testcontainers.version>1.16.2</testcontainers.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,7 +27,7 @@
 		<spring.fox.version>3.0.0</spring.fox.version>
 		<openapi.folder.name>open-api</openapi.folder.name>
 		<openapi.base.name>Plattform_i40-Registry-and-Discovery-Final-Draft-resolved.yaml</openapi.base.name>
-		<openapi.search.name>Plattform_i40-Registry-and-Discovery-Search.yaml</openapi.search.name>
+		<openapi.extensions.name>Plattform_i40-Registry-and-Discovery-Extensions.yaml</openapi.extensions.name>
 		<openapi.name>Plattform_i40-Registry-and-Discovery.yaml</openapi.name>
 		<guava.version>31.0.1-jre</guava.version>
 		<maven-plugin.version>3.6.0</maven-plugin.version>
@@ -37,12 +38,18 @@
 	</properties>
 
 	<modules>
-		<module>aas-registry-service</module>
 		<module>aas-registry-client</module>
 		<module>aas-registry-events</module>
 		<module>aas-registry-paths</module>
 		<module>aas-registry-compatibility</module>
 		<module>aas-registry-plugins</module>
+		<module>aas-registry-service-base-model</module>
+		<module>aas-registry-service</module>
+		<module>aas-registry-service-kafka-events</module>
+		<module>aas-registry-service-elasticsearch-storage</module>
+		<module>aas-registry-service-releases</module>
+		<module>aas-registry-service-base-tests</module>
+		<module>aas-registry-service-inmemory-storage</module>
 	</modules>
 
 	<developers>
@@ -91,7 +98,42 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>aas-registry-service-kafka-events</artifactId>
+				<version>${project.version}</version>
+			</dependency> 
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>aas-registry-service-elasticsearch-storage</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>aas-registry-service-base-model</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>aas-registry-service-tests</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>aas-registry-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>aas-registry-service-inmemory-storage</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.basyx.aas.registry</groupId>
+				<artifactId>aas-registry-storage-base-tests</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>aas-registry-service</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -107,6 +149,11 @@
 			<dependency>
 				<groupId>org.eclipse.basyx.aas.registry</groupId>
 				<artifactId>aas-registry-util</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>aas-registry-service-base-tests</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

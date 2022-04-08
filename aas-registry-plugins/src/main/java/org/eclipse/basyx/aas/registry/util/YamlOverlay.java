@@ -38,7 +38,6 @@ public class YamlOverlay extends AbstractMojo {
 	@Parameter(property = "charset", defaultValue = "UTF-8")
 	private String charSet;
 
-
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		Yaml yaml = new Yaml();
 		try (BufferedReader bReaderBase = new BufferedReader(new FileReader(base, Charset.forName(charSet)));
@@ -55,8 +54,7 @@ public class YamlOverlay extends AbstractMojo {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void doOverlay(Map<String, Object> baseContent, Map<String, Object> overlayContent,
-			Map<String, Object> target) throws MojoExecutionException {
+	private void doOverlay(Map<String, Object> baseContent, Map<String, Object> overlayContent, Map<String, Object> target) throws MojoExecutionException {
 		for (Entry<String, Object> eachBaseEntry : baseContent.entrySet()) {
 			String key = eachBaseEntry.getKey();
 			Object baseValue = eachBaseEntry.getValue();
@@ -65,8 +63,7 @@ public class YamlOverlay extends AbstractMojo {
 				Class<?> baseClass = baseValue.getClass();
 				Class<?> overlayClass = overlayValue.getClass();
 				if (baseClass != overlayClass) {
-					throw new MojoExecutionException(
-							"Value conflict: Base: " + baseClass + " Overlay: " + overlayClass);
+					throw new MojoExecutionException("Value conflict: Base: " + baseClass + " Overlay: " + overlayClass);
 				}
 				if (baseValue instanceof Map) {
 					Map<String, Object> targetMap = new LinkedHashMap<>();
@@ -78,7 +75,7 @@ public class YamlOverlay extends AbstractMojo {
 			} else {
 				target.put(key, baseValue);
 			}
-			
+
 		}
 		// for now we just append the remaining entries
 		overlayContent.forEach(target::put);

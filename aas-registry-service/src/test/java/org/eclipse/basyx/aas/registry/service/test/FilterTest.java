@@ -3,26 +3,21 @@ package org.eclipse.basyx.aas.registry.service.test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.basyx.aas.registry.configuration.ServletHeaderConfiguration;
-import org.eclipse.basyx.aas.registry.configuration.ServletHeaderConfiguration.HeaderDefinition;
-import org.eclipse.basyx.aas.registry.configuration.ServletHeaderConfiguration.MappingsHeaderApplier;
-import org.elasticsearch.common.collect.List;
-import org.elasticsearch.common.collect.Map;
-import org.junit.Test;
+import org.eclipse.basyx.aas.registry.service.configuration.ServletHeaderConfiguration.HeaderDefinition;
+import org.eclipse.basyx.aas.registry.service.configuration.ServletHeaderConfiguration.MappingsHeaderApplier;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 public class FilterTest {
-
-	ServletHeaderConfiguration config = new ServletHeaderConfiguration();
-	Filter filter = config.headerFilter();
 
 	private final FilterConfig filterConfig = Mockito.mock(FilterConfig.class);
 	private final HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
@@ -73,8 +68,7 @@ public class FilterTest {
 	}
 
 	@Test
-	public void whenFilteringWithUndefinedHeaders_thenNoAdditionalHeadersAreApplied()
-			throws ServletException, IOException {
+	public void whenFilteringWithUndefinedHeaders_thenNoAdditionalHeadersAreApplied() throws ServletException, IOException {
 		Mockito.when(request.getServletPath()).thenReturn("/registry/shell-descriptors");
 		Mockito.when(request.getMethod()).thenReturn("DELETE");
 
@@ -86,12 +80,12 @@ public class FilterTest {
 
 		Mockito.verify(response, Mockito.never()).addHeader(Mockito.anyString(), Mockito.anyString());
 	}
-	
+
 	@Test
 	public void whenMethodsNotDefined_thenAllAreMatching() throws IOException, ServletException {
 		Mockito.when(request.getServletPath()).thenReturn("/registry/shell-descriptors");
 		Mockito.when(request.getMethod()).thenReturn("GET");
-		
+
 		HeaderDefinition def1 = newDef("/registry/shell-descriptors", null, Map.of("Header1", "Value1"));
 		HeaderDefinition def2 = newDef("/registry/shell-descriptors", new String[0], Map.of("Header2", "Value2"));
 		MappingsHeaderApplier headers = new MappingsHeaderApplier(List.of(def1, def2));

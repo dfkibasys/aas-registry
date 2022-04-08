@@ -43,8 +43,11 @@ public class SimplePathGenerator extends AbstractMojo {
 	@Parameter(property = "className")
 	private String className;
 
-	@Parameter(property = "targetClassName")
-	private String targetClassName;
+	@Parameter(property = "pathsTargetClassName")
+	private String pathsTargetClassName;
+
+	@Parameter(property = "processorTargetClassName")
+	private String processorTargetClassName;
 
 	@Parameter(property = "targetPackageName")
 	private String targetPackageName;
@@ -62,43 +65,60 @@ public class SimplePathGenerator extends AbstractMojo {
 		return targetPackageName;
 	}
 
-	public String getTargetClassName(Class<?> cls) {
-		if (targetClassName == null) {
+	public String getPathsTargetClassName(Class<?> cls) {
+		if (pathsTargetClassName == null) {
 			return cls.getSimpleName() + "JacksonPaths";
 		}
-		return targetClassName;
+		return pathsTargetClassName;
+	}
+
+	public String getProcessorTargetClassName(Class<?> cls) {
+		if (processorTargetClassName == null) {
+			return cls.getSimpleName() + "PathsProcessor";
+		}
+		return processorTargetClassName;
 	}
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
 			URL[] urlsForClassLoader = getClassLoaderUrls();
-			try (URLClassLoader loader = new URLClassLoader(urlsForClassLoader,
-					SimplePathGenerator.class.getClassLoader())) {
-				generateClass(loader);
+			try (URLClassLoader loader = new URLClassLoader(urlsForClassLoader, SimplePathGenerator.class.getClassLoader())) {
+				generateClasses(loader);
 			}
 		} catch (ClassNotFoundException | IOException | DependencyResolutionRequiredException ex) {
 			throw new MojoExecutionException("Failed to load mojo.", ex);
 		}
 	}
 
-	private void generateClass(ClassLoader loader) throws IOException, ClassNotFoundException {
+	void generateClasses(ClassLoader loader) throws IOException, ClassNotFoundException {
+		Class<?> inputCls = loader.loadClass(className);
+
+		PathInfoGenerator generator = new PathInfoGenerator(inputCls);
+		PathInfo info = generator.generate();
+		info.setPathsTarget(new GenerationTarget(targetPackageName, pathsTargetClassName));
+		info.setProcessorTarget(new GenerationTarget(targetPackageName, processorTargetClassName));
+
+		generateClass(info, "simple-path.mustache", getPathsTargetClassName());
+		generateClass(info, "simple-path-processor.mustache", getProcessorTargetClassName());
+	}
+
+	private void generateClass(PathInfo info, String path, String outputFileName) throws IOException {
 		MustacheFactory mf = new DefaultMustacheFactory();
-		Mustache mustache = mf.compile("simple-path.mustache");
-		File outputFile = prepareOutputFile();
-		try (FileWriter fOut = new FileWriter(outputFile, Charset.forName(charSet));
-				BufferedWriter writer = new BufferedWriter(fOut)) {
-			Class<?> cls = loader.loadClass(className);
-			Map<String, Object> context = buildContext(cls);
+		Mustache mustache = mf.compile(path);
+		File outputFile = prepareOutputFile(outputFileName);
+		String charSetOrDefault = charSet == null ? "UTF-8" : charSet;
+		try (FileWriter fOut = new FileWriter(outputFile, Charset.forName(charSetOrDefault)); BufferedWriter writer = new BufferedWriter(fOut)) {
+			Map<String, Object> context = Map.of("info", info);
 			mustache.execute(writer, context);
 		}
 	}
 
-	private File prepareOutputFile() throws IOException {
+	private File prepareOutputFile(String name) throws IOException {
 		File targetFolder = new File(targetSourceFolder, targetPackageName.replace('.', File.separatorChar));
 		if (targetFolder.mkdirs()) {
 			getLog().info("Target folder created");
 		}
-		File targetFile = new File(targetFolder, targetClassName + ".java");
+		File targetFile = new File(targetFolder, name + ".java");
 		if (targetFile.createNewFile()) {
 			getLog().info("File " + targetFile + " created!");
 		}
@@ -113,12 +133,4 @@ public class SimplePathGenerator extends AbstractMojo {
 		}
 		return pathUrls.toArray(new URL[pathUrls.size()]);
 	}
-
-	private Map<String, Object> buildContext(Class<?> inputCls) {
-		PathInfoGenerator generator = new PathInfoGenerator(inputCls);
-		GenerationTarget target = new GenerationTarget(targetPackageName, targetClassName);
-		PathInfo info = generator.generate(target);
-		return Map.of("info", info);
-	}
-
 }

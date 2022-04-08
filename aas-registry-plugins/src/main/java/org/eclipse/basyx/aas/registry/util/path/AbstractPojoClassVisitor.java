@@ -7,20 +7,20 @@ abstract class AbstractPojoClassVisitor implements PojoClassVisitor {
 	@Override
 	public void startRelation(PojoRelation relation) {
 	}
-	
+
 	@Override
-	public void endRelation(PojoRelation relation) {	
+	public void endRelation(PojoRelation relation) {
 	}
-	
+
 	@Override
 	public boolean startType(String name, boolean isRoot) {
 		return true;
 	}
-	
+
 	@Override
 	public void endType() {
 	}
-	
+
 	@Override
 	public void onSubTypeRelation(String parent, List<String> subTypes) {
 	}

@@ -1,17 +1,5 @@
 package org.eclipse.basyx.aas.registry.compatibility;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.google.common.collect.ImmutableList;
-import org.eclipse.basyx.aas.metamodel.map.descriptor.AASDescriptor;
-import org.eclipse.basyx.aas.metamodel.map.descriptor.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +8,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.eclipse.basyx.aas.metamodel.map.descriptor.AASDescriptor;
+import org.eclipse.basyx.aas.metamodel.map.descriptor.SubmodelDescriptor;
+import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.common.collect.ImmutableList;
 
 public class DescriptorConversionTest {
 
@@ -33,16 +34,14 @@ public class DescriptorConversionTest {
 	@BeforeClass
 	public static void initialize() throws IOException {
 		BASYX_AAS_DESCRIPTOR_LIST = readFromResource(MAPPER, AASDescriptor.class, "/json/test-aas.json");
-				
-		DOT_AAS_DESCRIPTOR_LIST = readFromResource(MAPPER, AssetAdministrationShellDescriptor.class,
-				"/json/test-dotaas.json");
+
+		DOT_AAS_DESCRIPTOR_LIST = readFromResource(MAPPER, AssetAdministrationShellDescriptor.class, "/json/test-dotaas.json");
 		DOT_AAS_DESCRIPTORS_FORMATTED = PRETTY_WRITER.writeValueAsString(DOT_AAS_DESCRIPTOR_LIST);
 	}
 
 	@Test
 	public void testBasyxAasToDotAasIsSuccessful() throws JsonProcessingException {
-		List<AssetAdministrationShellDescriptor> result = BASYX_AAS_DESCRIPTOR_LIST.stream()
-				.map(DescriptorConversions::toDotaasAASDescriptor).collect(Collectors.toList());
+		List<AssetAdministrationShellDescriptor> result = BASYX_AAS_DESCRIPTOR_LIST.stream().map(DescriptorConversions::toDotaasAASDescriptor).collect(Collectors.toList());
 		String resultAsString = PRETTY_WRITER.writeValueAsString(result);
 		Assert.assertEquals(DOT_AAS_DESCRIPTORS_FORMATTED, resultAsString);
 	}
@@ -50,7 +49,7 @@ public class DescriptorConversionTest {
 	@Test
 	public void testDotAasToBasyxAasIsSuccessful() throws JsonProcessingException {
 		for (int i = 0, len = DOT_AAS_DESCRIPTOR_LIST.size(); i < len; i++) {
-			AssetAdministrationShellDescriptor dotAasDescriptor = DOT_AAS_DESCRIPTOR_LIST.get(i); 
+			AssetAdministrationShellDescriptor dotAasDescriptor = DOT_AAS_DESCRIPTOR_LIST.get(i);
 			AASDescriptor basyxDescriptor = DescriptorConversions.toBasyxAASDescriptor(dotAasDescriptor);
 			AASDescriptor expected = BASYX_AAS_DESCRIPTOR_LIST.get(i);
 			compareRelevantFieldsAreSet(expected, basyxDescriptor);
@@ -63,32 +62,29 @@ public class DescriptorConversionTest {
 		Assert.assertEquals(expected.getIdentifier().getId(), basyxDescriptor.getIdentifier().getId());
 		Assert.assertEquals(expected.getIdShort(), basyxDescriptor.getIdShort());
 		Assert.assertEquals(expected.getEndpoints(), basyxDescriptor.getEndpoints());
-		
+
 		Collection<SubmodelDescriptor> expectedSubmodels = expected.getSubmodelDescriptors();
 		Collection<SubmodelDescriptor> convertedSubModels = basyxDescriptor.getSubmodelDescriptors();
 		Assert.assertEquals(expectedSubmodels.size(), convertedSubModels.size());
-		
+
 		// we need a lookup map because they are not sorted internally -> no order
-		Map<String, SubmodelDescriptor> expectedLookupMap = expectedSubmodels.stream().collect(Collectors.toMap(SubmodelDescriptor::getIdShort, s->s));
+		Map<String, SubmodelDescriptor> expectedLookupMap = expectedSubmodels.stream().collect(Collectors.toMap(SubmodelDescriptor::getIdShort, s -> s));
 		for (SubmodelDescriptor eachConvertedSubmodel : convertedSubModels) {
 			SubmodelDescriptor eachExpectedSubmodel = expectedLookupMap.get(eachConvertedSubmodel.getIdShort());
 			Assert.assertNotNull(eachExpectedSubmodel);
 			compareRelevantFieldsAreSet(eachExpectedSubmodel, eachConvertedSubmodel);
 		}
-		
+
 	}
 
-	private void compareRelevantFieldsAreSet(SubmodelDescriptor eachExpectedSubmodel,
-			SubmodelDescriptor eachConvertedSubmodel) {
+	private void compareRelevantFieldsAreSet(SubmodelDescriptor eachExpectedSubmodel, SubmodelDescriptor eachConvertedSubmodel) {
 		Assert.assertEquals(eachExpectedSubmodel.getEndpoints(), eachConvertedSubmodel.getEndpoints());
 		Assert.assertEquals(eachExpectedSubmodel.getIdentifier().getId(), eachConvertedSubmodel.getIdentifier().getId());
 		Assert.assertEquals(eachExpectedSubmodel.getIdShort(), eachConvertedSubmodel.getIdShort());
 	}
 
-	private static <T> List<T> readFromResource(ObjectMapper mapper, Class<T> type, String resourcePath)
-			throws IOException {
-		try (InputStream in = DescriptorConversionTest.class.getResourceAsStream(resourcePath);
-				BufferedInputStream bIn = new BufferedInputStream(in)) {
+	private static <T> List<T> readFromResource(ObjectMapper mapper, Class<T> type, String resourcePath) throws IOException {
+		try (InputStream in = DescriptorConversionTest.class.getResourceAsStream(resourcePath); BufferedInputStream bIn = new BufferedInputStream(in)) {
 			Iterator<T> iter = mapper.readerFor(type).readValues(bIn);
 			return ImmutableList.copyOf(iter);
 		}

@@ -1,13 +1,13 @@
 {{#info}}
-package {{target.packageName}}; 
+package {{pathsTarget.packageName}}; 
 
-public class {{target.className}} {
+public class {{pathsTarget.className}} {
 
 {{#constants}}
- private static final String SEGMENT_{{nameUpper}} = "{{name}}";
+  static final String SEGMENT_{{nameUpper}} = "{{name}}";
 {{/constants}}
 
-  private {{target.className}}() {
+  private {{pathsTarget.className}}() {
   }
 {{#rootModel}}
 {{#primitiveRangeRelations}}

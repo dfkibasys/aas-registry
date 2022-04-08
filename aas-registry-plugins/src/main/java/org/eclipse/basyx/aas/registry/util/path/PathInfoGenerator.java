@@ -14,6 +14,7 @@ import org.eclipse.basyx.aas.registry.util.path.PathInfo.ComplexRangeRelationInf
 import org.eclipse.basyx.aas.registry.util.path.PathInfo.ConstantInfo;
 import org.eclipse.basyx.aas.registry.util.path.PathInfo.ModelInfo;
 import org.eclipse.basyx.aas.registry.util.path.PathInfo.PrimitiveRangeRelationInfo;
+import org.eclipse.basyx.aas.registry.util.path.PojoClassVisitor.PojoRelation.PojoRelationType;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,11 +23,10 @@ public class PathInfoGenerator {
 
 	private final Class<?> cls;
 
-	public PathInfo generate(GenerationTarget target) {
+	public PathInfo generate() {
 		PathInfo info = new PathInfo();
-		info.setTarget(target);
-		PojoClassVisitorDelegate delegate = new PojoClassVisitorDelegate(new ConstantFiller(info),
-				new ModelFiller(info));
+		info.setInputClassPackageName(cls.getPackageName());
+		PojoClassVisitorDelegate delegate = new PojoClassVisitorDelegate(new ConstantFiller(info), new ModelFiller(info));
 		PojoWalkCycleDetector visitor = new PojoWalkCycleDetector(delegate);
 		PojoClassWalker walker = new PojoClassWalker(cls, visitor);
 		walker.walkClass();
@@ -46,6 +46,7 @@ public class PathInfoGenerator {
 
 		public ModelFiller(PathInfo info) {
 			this.pathInfo = info;
+			info.setPrimitiveRanges(new TreeSet<>());
 			info.setModels(innerModels);
 		}
 
@@ -54,8 +55,7 @@ public class PathInfoGenerator {
 			String subject = relation.getSubject();
 			ModelInfo mSubject = lookupModels.get(subject);
 			if (relation.isComplex()) {
-				ComplexRangeRelationInfo info = new ComplexRangeRelationInfo(relation.getMethodName(),
-						relation.getFieldName(), relation.getRange());
+				ComplexRangeRelationInfo info = new ComplexRangeRelationInfo(relation.getMethodName(), relation.getFieldName(), relation.getRange(), relation.getType() == PojoRelationType.LIST);
 				mSubject.getComplexRangeRelations().add(info);
 				if (relation.isRootRelation()) {
 					rootRanges.add(relation.getRange());
@@ -63,8 +63,7 @@ public class PathInfoGenerator {
 					innerRanges.add(relation.getRange());
 				}
 			} else {
-				PrimitiveRangeRelationInfo info = new PrimitiveRangeRelationInfo(relation.getMethodName(),
-						relation.getFieldName());
+				PrimitiveRangeRelationInfo info = new PrimitiveRangeRelationInfo(relation.getMethodName(), relation.getFieldName(), relation.getType() == PojoRelationType.LIST);
 				mSubject.getPrimitiveRangeRelations().add(info);
 			}
 		}
@@ -78,6 +77,7 @@ public class PathInfoGenerator {
 		@Override
 		public boolean startType(String name, boolean isRoot) {
 			ModelInfo current = new ModelInfo(name);
+			current.setInfo(pathInfo);
 			if (isRoot) {
 				pathInfo.setRootModel(current);
 			} else {
@@ -104,6 +104,9 @@ public class PathInfoGenerator {
 				ModelInfo info = lookupModels.get(eachMapping.getKey());
 				info.setSubModels(eachMapping.getValue());
 			}
+			Set<ModelInfo> allModels = new TreeSet<>(Comparator.comparing(ModelInfo::getName));
+			allModels.addAll(lookupModels.values());
+			this.pathInfo.setAllModels(allModels);
 		}
 	}
 
