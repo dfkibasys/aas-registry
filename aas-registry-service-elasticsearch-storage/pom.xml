@@ -164,7 +164,7 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>aas-registry-service</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>testcontainers</artifactId>
@@ -179,7 +179,8 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>aas-registry-service-base-tests</artifactId>
+			<artifactId>aas-registry-service</artifactId>
+			<classifier>tests</classifier>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

@@ -16,7 +16,7 @@ public class LogConsumer {
 	
 	@KafkaListener(topics = "aas-registry", groupId = "log", autoStartup = "true")
 	public void consume(String message) throws IOException {
-		log.info("Kafka Event received -> " + message);
+		log.debug("Kafka Event received -> " + message);
 	}
 	
 }

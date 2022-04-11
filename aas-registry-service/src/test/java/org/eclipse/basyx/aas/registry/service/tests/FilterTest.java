@@ -1,4 +1,4 @@
-package org.eclipse.basyx.aas.registry.service.test;
+package org.eclipse.basyx.aas.registry.service.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

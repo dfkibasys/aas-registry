@@ -4,7 +4,17 @@ This in a Java-based implementation of the Asset Adminstration Shell Registry se
 
 [aas-registry-service](aas-registry-service/README.md) provides the application server to access the AAS descriptor storage and offers an API for REST-based communication.
 
-[aas-registry-client](aas-registry-client/README.md) can be used to interact with the backend and register or unregister descriptors and submodels.
+[aas-registry-kafka-events](aas-registry-kafka-events/README.md) extends the aas-registry-service with a registry-event-sink implementation that delivers shell descriptor and submodel registration events using Apache Kafka. The default provided by aas-registry-service just logs the events.
+
+[aas-registry-service-elasticsearch-storage](aas-registry-service-elasticsearch/README.md) provides a registry-storage implementation based on elasticsearch that could be used as storage for [aas-registry-service](aas-registry-service/README.md). It comes with its own java-based model classes, annotated with elasticsearch annotations.
+
+[aas-registry-service-inmemory-storage](aas-registry-service-inmemmory-storage/README.md) provides a non-persistent registry-storage implementation there instances are stored in hash maps. It can be used as storage for [aas-registry-service](aas-registry-service/README.md).
+
+[aas-registry-service-base-model](aas-registry-service-bases-model/README.md) provides a base model implementation that should be used if you do not need specific model annotations for your storage. It is used for the inmemory storage implementation and you need to add it explicitely as dependency for your server deployment as it is defined as 'provided' dependency in the [aas-registry-service](aas-registry-service/README.md) POM.
+
+[aas-registry-service-base-tests](aas-registry-service-base-tests/README.md) provides helper classes and abstract test classes that can be extended in storage tests or integration tests. The abstract test classes already define test methods so that you will get a good test coverage without writing any additional test cases.
+
+[aas-registry-client](aas-registry-client/README.md) can be used to interact with the backend to register or unregister descriptors and submodels or perform search operations.
 
 [aas-registry-compatibility](aas-registry-compatibility/README.md) provides a IAASRegistry implementation using the aas-registry-client as compatibility layer for existing BaSyx components, e.g. the AASServer.
 
@@ -14,10 +24,12 @@ This in a Java-based implementation of the Asset Adminstration Shell Registry se
 
 [aas-registry-plugins](aas-registry-plugins/README.md) contains maven plugins used by the other projects
 
-The server uses [Elasticsearch](https://www.elastic.co/de/elasticsearch/) as persistence layer and [Apache Kafka](https://kafka.apache.org/) as event broadcasting mechanism. Both are encapsulated via [Spring Data Elasticsearch](https://spring.io/projects/spring-data-elasticsearch) and [Spring Cloud Stream](https://spring.io/projects/spring-cloud-stream) and can easily be replaced.
+[aas-registry-service-releases](aas-registry-service-releases/README.md) is used to combine the server artifacts to a release image. Look for the launch-scripts that enable event-sinks and registry-storages using configuration properties.
 
-A docker image can be retrieved via `docker pull dfkibasys/aas-registry:dotaas-latest` or found [here](https://hub.docker.com/r/dfkibasys/aas-registry/).
+The released docker image uses [Elasticsearch](https://www.elastic.co/de/elasticsearch/) as persistence layer and [Apache Kafka](https://kafka.apache.org/) as event broadcasting mechanism. Both are encapsulated via [Spring Data Elasticsearch](https://spring.io/projects/spring-data-elasticsearch) and [Spring Cloud Stream](https://spring.io/projects/spring-cloud-stream). As described above, they can easily be replaced.
 
-A docker compose file for a fast setup is provided inside the aas-registry-service folder.
+A docker image can be retrieved via `docker pull dfkibasys/aas-registry-dotaas-part2:0.1.0-kafka-es` or found [here](https://hub.docker.com/r/dfkibasys/aas-registry-dotaas-part2/).
+
+A docker compose file for a fast setup is provided inside the aas-registry-service-release folder.
 
 

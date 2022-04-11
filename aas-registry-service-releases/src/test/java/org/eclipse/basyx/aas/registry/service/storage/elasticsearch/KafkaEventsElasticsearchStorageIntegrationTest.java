@@ -6,6 +6,7 @@ import org.eclipse.basyx.aas.registry.service.tests.integration.BaseEventListene
 import org.eclipse.basyx.aas.registry.service.tests.integration.BaseIntegrationTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -18,6 +19,7 @@ import org.testcontainers.utility.DockerImageName;
 
 
 @TestPropertySource(properties = { "registry.type=elasticsearch", "events.sink=kafka" })
+@Ignore
 public class KafkaEventsElasticsearchStorageIntegrationTest extends BaseIntegrationTest {	
 
 	private static final DockerImageName KAFKA_TEST_IMAGE = DockerImageName.parse("confluentinc/cp-kafka:6.2.1");

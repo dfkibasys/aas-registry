@@ -17,6 +17,7 @@ import org.eclipse.basyx.aas.registry.client.api.AasRegistryPathProcessor;
 import org.eclipse.basyx.aas.registry.client.api.AasRegistryPathProcessor.AssetAdministrationShellDescriptorVisitor;
 import org.eclipse.basyx.aas.registry.client.api.AasRegistryPathProcessor.ProcessInstruction;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
+import org.eclipse.basyx.aas.registry.model.DescriptorCopies;
 import org.eclipse.basyx.aas.registry.model.Page;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorQuery;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorQuery.QueryTypeEnum;
@@ -26,12 +27,11 @@ import org.eclipse.basyx.aas.registry.model.SortDirection;
 import org.eclipse.basyx.aas.registry.model.Sorting;
 import org.eclipse.basyx.aas.registry.model.SortingPath;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.service.storage.DescriptorCopies;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class InMemoryStorageSearch {
+class InMemoryStorageSearch {
 
 	private final Collection<AssetAdministrationShellDescriptor> aasDecriptors;
 
@@ -183,6 +183,7 @@ public class InMemoryStorageSearch {
 			if (aasDescriptor == null) {
 				return Optional.empty();
 			} else {
+				// we alter the storage object so we need a copy here
 				AssetAdministrationShellDescriptor toReturn = DescriptorCopies.deepClone(aasDescriptor);
 				if (submodels != null) {
 					toReturn.setSubmodelDescriptors(new LinkedList<>(submodels));

@@ -66,17 +66,26 @@ services:
     networks:
       - basyx
 
-#  aas-registry:
-#    image: dfkibasys/aasregistry-dotaas-part2:0.1.0-kafka-es
-#    container_name: aasRegistry
-#    ports:
-#       - 8080:8080
-#    depends_on:
-#      - kafka
-#      - zookeeper
-#      - elasticsearch
-#    networks:
-#      - basyx
+  aas-server:
+    image: docker.io/dfkibasys/aas-server:0.3.0-SNAPSHOT
+    container_name: aasServer
+    ports:
+      - 8090:8080
+    networks:
+      - basyx
+ 
+ 
+  # aas-registry:
+  #   image: geso02/aasregistry-dotaas-part2:0.1.0-kafka-es
+  #   container_name: aasRegistry
+  #   ports:
+  #     - 8080:8080
+  #   depends_on:
+  #     - kafka
+  #     - zookeeper
+  #     - elasticsearch
+  #   networks:
+  #     - basyx
 
   akhq:
     image: tchiotludo/akhq:dev

@@ -1,4 +1,4 @@
-package org.eclipse.basyx.aas.registry.service.storage;
+package org.eclipse.basyx.aas.registry.model;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -10,13 +10,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
-@UtilityClass
+
+@UtilityClass 
 public class DescriptorCopies {
 
 	@SuppressWarnings("unchecked")
-	public static <T extends Serializable> T deepClone(T toClone) {
+	public static <T extends Serializable> T deepClone(@NonNull T toClone) {
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -29,7 +31,7 @@ public class DescriptorCopies {
 		}
 	}
 
-	public static <T extends Serializable> List<T> deepCloneCollection(Collection<T> values) {
+	public static <T extends Serializable> List<T> deepCloneCollection(@NonNull Collection<T> values) {
 		List<T> clonedValues = new ArrayList<>(values.size());
 		for (T eachItem : values) {
 			T clone = deepClone(eachItem);
@@ -45,6 +47,5 @@ public class DescriptorCopies {
 		public DeepCopyException(String msg, Exception e) {
 			super(msg, e);
 		}
-
 	}
 }

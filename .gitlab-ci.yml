@@ -1,4 +1,4 @@
-image: maven:3.6.0-jdk-11
+image: maven:3-eclipse-temurin-11-alpine
 
 variables:
   DOCKER_HOST: "tcp://docker:2375" 
@@ -159,6 +159,29 @@ install:
       - $MAVEN_TARGET_SERVICE
     expire_in: 3 hour
 
+docker:
+  stage: publish
+  tags:
+    - basys
+    - docker
+  image: dfkibasys/docker-temurin11jdk:20.10.12
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.12-dind
+     # explicitly disable tls to avoid docker startup interruption
+     # - command: ["--tls=false"]
+  before_script:
+    - docker info
+  script:
+    - chmod 775 ./mvnw
+    - ./mvnw $MAVEN_CLI_OPTS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD spring-boot:build-image -pl aas-registry-service-relases
+  only:
+    - master
+    - develop
+
+
+
 # deploy:
 #   stage: deploy
 #   variables:
@@ -202,5 +225,5 @@ install:
 #     - docker build -t "$DOCKER_IMAGE" .
 #     - docker push "$DOCKER_IMAGE"
 #   rules:
-#     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-#     - if: $CI_COMMIT_BRANCH == 'development'
+#     - if: $CI_COMMIT_BRANCH == 'master'
+#     - if: $CI_COMMIT_BRANCH == 'develop'

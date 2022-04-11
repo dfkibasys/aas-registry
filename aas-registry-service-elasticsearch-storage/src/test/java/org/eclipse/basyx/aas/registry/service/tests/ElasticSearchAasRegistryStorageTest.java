@@ -1,6 +1,7 @@
 package org.eclipse.basyx.aas.registry.service.tests;
 
 import org.eclipse.basyx.aas.registry.service.ElasticSearchConfiguration;
+import org.eclipse.basyx.aas.registry.service.tests.AasRegistryStorageTest;
 import org.junit.ClassRule;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
