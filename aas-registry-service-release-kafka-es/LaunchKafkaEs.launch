@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-        <listEntry value="/aas-registry-service-releases"/>
+        <listEntry value="/aas-registry-service/src/generated/java/org/eclipse/basyx/aas/registry/service/Swagger2SpringBoot.java"/>
     </listAttribute>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
-        <listEntry value="4"/>
+        <listEntry value="1"/>
     </listAttribute>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>
@@ -18,8 +18,8 @@
     <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.eclipse.basyx.aas.registry.service.Swagger2SpringBoot"/>
     <listAttribute key="org.eclipse.jdt.launching.MODULEPATH"/>
-    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="aas-registry-service-releases"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="aas-registry-service-releases"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="aas-registry-service-releases-kafka-es"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="aas-registry-service-release-kafka-es"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.kafka.bootstrap-servers=PLAINTEXT_HOST://127.0.0.1:9092 -Dspring.profiles.active=kafkaEvents,inMemoryStorage"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.kafka.bootstrap-servers=PLAINTEXT_HOST://localhost:9092 -Delasticsearch.url=127.0.0.1:9200 -Dspring.profiles.active=kafkaEvents,elasticsearchStorage"/>
 </launchConfiguration>

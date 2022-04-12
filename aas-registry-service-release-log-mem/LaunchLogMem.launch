@@ -18,8 +18,8 @@
     <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.eclipse.basyx.aas.registry.service.Swagger2SpringBoot"/>
     <listAttribute key="org.eclipse.jdt.launching.MODULEPATH"/>
-    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="aas-registry-service-releases"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="aas-registry-service-releases"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="aas-registry-service-releases-log-mem"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="aas-registry-service-release-log-mem"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Delasticsearch.url=127.0.0.1:9200 -Dspring.profiles.active=logEvents,elasticsearchStorage"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dspring.profiles.active=logEvents,inMemoryStorage"/>
 </launchConfiguration>

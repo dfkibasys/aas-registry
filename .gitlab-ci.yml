@@ -14,7 +14,10 @@ variables:
   MAVEN_TARGET_SERVICE_ELASTICSEARCH_STORAGE: ${CI_PROJECT_DIR}/aas-registry-service-elasticsearch-storage/target
   MAVEN_TARGET_SERVICE_INMEMORY_STORAGE: ${CI_PROJECT_DIR}/aas-registry-service-inmemory-storage/target
   MAVEN_TARGET_SERVICE_KAFKA_EVENTS: ${CI_PROJECT_DIR}/aas-registry-service-kafka-events/target
-  MAVEN_TARGET_SERVICE_RELEASES: ${CI_PROJECT_DIR}/aas-registry-service-releases/target
+  MAVEN_TARGET_SERVICE_RELEASE_KAFKA_ES: ${CI_PROJECT_DIR}/aas-registry-service-release-kafka-es/target
+  MAVEN_TARGET_SERVICE_RELEASE_KAFKA_MEM: ${CI_PROJECT_DIR}/aas-registry-service-release-kafka-mem/target
+  MAVEN_TARGET_SERVICE_RELEASE_LOG_ES: ${CI_PROJECT_DIR}/aas-registry-service-release-log-es/target
+  MAVEN_TARGET_SERVICE_RELEASE_LOG_MEM: ${CI_PROJECT_DIR}/aas-registry-service-release-log-mem/target
   MAVEN_TARGET_COMPATIBILITY: ${CI_PROJECT_DIR}/aas-registry-compatibility/target
   CLIENT_OPENAPI_FOLDER: ${CI_PROJECT_DIR}/aas-registry-client/open-api
   CLIENT_OPENAPI_FILE: ${CLIENT_OPENAPI_FOLDER}/Plattform_i40-Registry-and-Discovery.yaml
@@ -81,7 +84,10 @@ compile:
       - $MAVEN_TARGET_SERVICE_ELASTICSEARCH_STORAGE
       - $MAVEN_TARGET_SERVICE_INMEMORY_STORAGE
       - $MAVEN_TARGET_SERVICE_KAFKA_EVENTS
-      - $MAVEN_TARGET_SERVICE_RELEASES
+      - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_ES
+      - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_MEM
+      - $MAVEN_TARGET_SERVICE_RELEASE_LOG_ES
+      - $MAVEN_TARGET_SERVICE_RELEASE_LOG_MEM
       - $MAVEN_TARGET_COMPATIBILITY
       - $CLIENT_OPENAPI_FOLDER
     expire_in: 3 hour    
@@ -153,77 +159,53 @@ install:
      - compile
   artifacts:
     paths:
+      - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_EVENTS
       - $MAVEN_TARGET_PATHS
-      - $MAVEN_TARGET_CLIENT
+      - $MAVEN_TARGET_PLUGINS
       - $MAVEN_TARGET_SERVICE
+      - $MAVEN_TARGET_SERVICE_BASE_MODEL
+      - $MAVEN_TARGET_SERVICE_BASE_TESTS
+      - $MAVEN_TARGET_SERVICE_ELASTICSEARCH_STORAGE
+      - $MAVEN_TARGET_SERVICE_INMEMORY_STORAGE
+      - $MAVEN_TARGET_SERVICE_KAFKA_EVENTS
+      - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_ES
+      - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_MEM
+      - $MAVEN_TARGET_SERVICE_RELEASE_LOG_ES
+      - $MAVEN_TARGET_SERVICE_RELEASE_LOG_MEM
+      - $MAVEN_TARGET_COMPATIBILITY
+      - $CLIENT_OPENAPI_FOLDER
     expire_in: 3 hour
 
 docker:
   stage: publish
+  image: docker:20.10.12
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_IMAGE_VERSION_PREFIX: '0.1.0-snapshot'
+    DOCKER_IMAGE_NAME: 'aas-registry-dotaas-part2'
+    DOCKER_IMAGE: '$DOCKER_REGISTRY_USER/:$DOCKER_IMAGE_VERSION'
+  services:
+     - name: docker:20.10.12-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  dependencies:
+    - install
   tags:
     - basys
     - docker
-  image: dfkibasys/docker-temurin11jdk:20.10.12
-  variables:
-    DOCKER_DRIVER: overlay2
-  services:
-     - name: docker:20.10.12-dind
-     # explicitly disable tls to avoid docker startup interruption
-     # - command: ["--tls=false"]
   before_script:
-    - docker info
+    - docker info      
   script:
-    - chmod 775 ./mvnw
-    - ./mvnw $MAVEN_CLI_OPTS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD spring-boot:build-image -pl aas-registry-service-relases
-  only:
-    - master
-    - develop
-
-
-
-# deploy:
-#   stage: deploy
-#   variables:
-#     DOCKER_DRIVER: overlay2
-#   services:
-#     - name: docker:20.10.12-dind
-#       command: ["--tls=false"]
-#   before_script:
-#     - docker info
-#   script:
-#     - chmod 775 ./mvnw
-#     - ./mvnw $MAVEN_CLI_OPTS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD spring-boot:build-image -pl modules/server
-  #only:
-  #  - master
-  #  - develop
-
-#    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-#    - if: $CI_COMMIT_BRANCH == 'develop'
-      
-# docker:
-#   stage: publish
-#   image: docker:19.03.15
-#   variables:
-#     DOCKER_DRIVER: overlay2
-#     DOCKER_IMAGE_VERSION: 'dotaas-latest'
-#     DOCKER_IMAGE: '$DOCKER_REGISTRY_USER/$CI_PROJECT_NAME:$DOCKER_IMAGE_VERSION'
-#   services:
-#      - name: docker:19.03.15-dind
-#        # explicitly disable tls to avoid docker startup interruption
-#        command: ["--tls=false"]
-#   dependencies:
-#     - install
-#   tags:
-#     - basys
-#     - docker
-#   before_script:
-#     - docker info      
-#   script:
-#     - cd aas-registry-service
-#     - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
-#     - docker build -t "$DOCKER_IMAGE" .
-#     - docker push "$DOCKER_IMAGE"
-#   rules:
-#     - if: $CI_COMMIT_BRANCH == 'master'
-#     - if: $CI_COMMIT_BRANCH == 'develop'
+    - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
+    - cd aas-registry-service-release-kafka-es; ./build-image.sh; cd ..
+    - cd aas-registry-service-release-kafka-mem; ./build-image.sh; cd ..
+    - cd aas-registry-service-release-log-es; ./build-image.sh; cd ..
+    - cd aas-registry-service-release-log-mem; ./build-image.sh; cd ..
+    - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-es"
+    - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-mem"
+    - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-es"
+    - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-mem"
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'

@@ -47,8 +47,11 @@
 		<module>aas-registry-service</module>
 		<module>aas-registry-service-kafka-events</module>
 		<module>aas-registry-service-elasticsearch-storage</module>
-		<module>aas-registry-service-releases</module>
 		<module>aas-registry-service-inmemory-storage</module>
+		<module>aas-registry-service-release-kafka-es</module>
+		<module>aas-registry-service-release-kafka-mem</module>
+		<module>aas-registry-service-release-log-mem</module>
+		<module>aas-registry-service-release-log-es</module>
 	</modules>
 
 	<developers>
@@ -144,11 +147,6 @@
 			<dependency>
 				<groupId>org.eclipse.basyx.aas.registry</groupId>
 				<artifactId>aas-registry-util</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>aas-registry-service-base-tests</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
