@@ -131,8 +131,8 @@ deploy-npm:
     - npm run build  # build with tests
     - npm publish  # deploy
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $CI_COMMIT_BRANCH == 'development'
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
 
 test:
   stage: test 
@@ -178,7 +178,7 @@ install:
     expire_in: 3 hour
 
 docker:
-  stage: publish
+  stage: deploy
   image: docker:20.10.12
   variables:
     DOCKER_DRIVER: overlay2
