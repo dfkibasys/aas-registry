@@ -1,4 +1,4 @@
-# AAS Registry Service Release Kafka ES
+# AAS Registry Service Release Kafka Es
 
 This project creates a docker image based on the specific spring-boot jar file.
 

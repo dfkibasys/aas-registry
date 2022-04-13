@@ -14,7 +14,7 @@ Then included, you can active it by either setting the active profile or the *re
 
 ```
  -Dspring.profiles.active=logEvents,inMemoryStorage
-``
+```
 
 
 

@@ -12,7 +12,7 @@ This registry storage implementation uses [Apache Kafka](https://kafka.apache.or
 
 Then included, you can activate it by either setting the active profile or the "events.sink" property:
 ```
- -Dspring.profiles.active=logEvents,elasticsearchStorage
+ -Dspring.profiles.active=kafkaEvents,elasticsearchStorage
 ``
 
 Dont't forget to also set the kafka bootstrap servers as property:

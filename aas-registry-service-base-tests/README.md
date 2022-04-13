@@ -8,7 +8,7 @@ Have a look at the elastic-search-storage project or the release projects to see
 
 Use [testcontainers](https://www.testcontainers.org/) for your integration or storage tests. 
 
-The integration test of the [kafak-es release](../aas-registry-service-release-kafka-es/) project starts an Apache Kafka and an ElasticSearch instance using testcontainers. Don't forget to start a docker daemon before running the tests.
+The integration test of the [kafka-es release](../aas-registry-service-release-kafka-es/) project starts an Apache Kafka and an ElasticSearch instance using testcontainers. Don't forget to start a docker daemon before running the tests.
 
 
 
