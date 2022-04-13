@@ -186,10 +186,10 @@ docker:
     - docker info      
   script:
     - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
-    - docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-es aas-registry-service-release-kafka-es
-    - docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-mem aas-registry-service-release-kafka-mem
-    - docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-es aas-registry-service-release-log-es
-    - docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-mem aas-registry-service-release-log-mem
+    - cd aas-registry-service-release-kafka-es; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-es . ; cd ..
+    - cd aas-registry-service-release-kafka-mem; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-mem . ; cd ..
+    - cd aas-registry-service-release-log-es; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-es . ; cd ..
+    - cd aas-registry-service-release-log-mem; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-mem . ; cd ..
     - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-es"
     - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-mem"
     - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-es"
