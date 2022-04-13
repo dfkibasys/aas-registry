@@ -45,6 +45,7 @@
 		<module>aas-registry-plugins</module>
 		<module>aas-registry-service-base-model</module>
 		<module>aas-registry-service</module>
+		<module>aas-registry-service-base-tests</module>
 		<module>aas-registry-service-kafka-events</module>
 		<module>aas-registry-service-elasticsearch-storage</module>
 		<module>aas-registry-service-inmemory-storage</module>
@@ -102,7 +103,7 @@
 				<groupId>${project.groupId}</groupId>
 				<artifactId>aas-registry-service-kafka-events</artifactId>
 				<version>${project.version}</version>
-			</dependency> 
+			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>aas-registry-service-elasticsearch-storage</artifactId>
@@ -130,9 +131,9 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>aas-registry-service</artifactId>
+				<artifactId>aas-registry-service-base-tests</artifactId>
+				<scope>test</scope>
 				<version>${project.version}</version>
-				<classifier>tests</classifier>
 			</dependency>
 			<dependency>
 				<groupId>io.springfox</groupId>

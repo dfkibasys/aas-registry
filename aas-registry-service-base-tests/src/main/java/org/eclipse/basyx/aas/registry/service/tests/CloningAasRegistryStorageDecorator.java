@@ -3,9 +3,9 @@ package org.eclipse.basyx.aas.registry.service.tests;
 import java.util.List;
 
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.eclipse.basyx.aas.registry.model.DescriptorCopies;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.service.storage.AasRegistryStorage;
+import org.eclipse.basyx.aas.registry.service.storage.DescriptorCopies;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
