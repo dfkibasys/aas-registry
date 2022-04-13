@@ -36,7 +36,7 @@ stages:
   - validate
   - build-java
   - build-typescript
-  - test
+ # - test
   - install
   - deploy
 
@@ -135,19 +135,19 @@ deploy-npm:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
 
-test:
-  stage: test 
-  services:
-     - name: docker:20.10.12-dind
-       # explicitly disable tls to avoid docker startup interruption
-       command: ["--tls=false"]
-  tags:
-    - basys
-    - maven
-  script:
-    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
-  dependencies:
-     - compile
+# test:
+#   stage: test 
+#   services:
+#      - name: docker:20.10.12-dind
+#        # explicitly disable tls to avoid docker startup interruption
+#        command: ["--tls=false"]
+#   tags:
+#     - basys
+#     - maven
+#   script:
+#     - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
+#   dependencies:
+#      - compile
 
 install:
   stage: install
@@ -155,7 +155,7 @@ install:
     - basys
     - maven
   script:
-    - mvn $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
+    - mvn $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true  -Dmaven.test.skip=true # -Dmaven.compile.skip=true
   dependencies:
      - compile
   artifacts:
