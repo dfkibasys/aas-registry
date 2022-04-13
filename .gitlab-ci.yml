@@ -23,7 +23,6 @@ variables:
   CLIENT_OPENAPI_FILE: ${CLIENT_OPENAPI_FOLDER}/Plattform_i40-Registry-and-Discovery.yaml
   MAVEN_OPTS: "-Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository"
   MAVEN_CLI_OPTS: "-s ${CI_PROJECT_DIR}/.m2/settings.xml --batch-mode -Pgitlab"
-#  DOCKER_JAR: aas-registry-service.jar  
   TYPESCRIPT_FOLDER: ${CI_PROJECT_DIR}/typescript
   NPM_REPO: ${MAVEN_REPO_URL}/npm-hosted/  # same as for maven but with npm-hosted suffix
 
@@ -36,7 +35,7 @@ stages:
   - validate
   - build-java
   - build-typescript
- # - test
+  - test
   - install
   - deploy
 
@@ -73,7 +72,6 @@ compile:
   dependencies:
     - build-plugin
   artifacts:
-    name: ${CI_JOB_ID}-compiled
     paths:
       - $MAVEN_TARGET_CLIENT
       - $MAVEN_TARGET_EVENTS
@@ -135,19 +133,19 @@ deploy-npm:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
 
-# test:
-#   stage: test 
-#   services:
-#      - name: docker:20.10.12-dind
-#        # explicitly disable tls to avoid docker startup interruption
-#        command: ["--tls=false"]
-#   tags:
-#     - basys
-#     - maven
-#   script:
-#     - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
-#   dependencies:
-#      - compile
+test:
+  stage: test 
+  services:
+     - name: docker:20.10.12-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
+  dependencies:
+     - compile
 
 install:
   stage: install
@@ -159,7 +157,6 @@ install:
   dependencies:
      - compile
   artifacts:
-    name: ${CI_JOB_ID}-jar-files
     paths:
       - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_ES/aas-registry-kafka-es-0.1.0-SNAPSHOT.jar
       - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_MEM/aas-registry-kafka-mem-0.1.0-SNAPSHOT.jar
