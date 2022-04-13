@@ -158,10 +158,10 @@ install:
      - compile
   artifacts:
     paths:
-      - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_ES/aas-registry-kafka-es-0.1.0-SNAPSHOT.jar
-      - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_MEM/aas-registry-kafka-mem-0.1.0-SNAPSHOT.jar
-      - $MAVEN_TARGET_SERVICE_RELEASE_LOG_ES/aas-registry-log-es-0.1.0-SNAPSHOT.jar
-      - $MAVEN_TARGET_SERVICE_RELEASE_LOG_MEM/aas-registry-log-mem-0.1.0-SNAPSHOT.jar
+      - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_ES/aas-registry-service-release-kafka-es-0.1.0-SNAPSHOT.jar
+      - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_MEM/aas-registry-service-release-kafka-mem-0.1.0-SNAPSHOT.jar
+      - $MAVEN_TARGET_SERVICE_RELEASE_LOG_ES/aas-registry-service-release-log-es-0.1.0-SNAPSHOT.jar
+      - $MAVEN_TARGET_SERVICE_RELEASE_LOG_MEM/aas-registry-service-release-log-mem-0.1.0-SNAPSHOT.jar
       - $CLIENT_OPENAPI_FOLDER
     expire_in: 3 hour
 
