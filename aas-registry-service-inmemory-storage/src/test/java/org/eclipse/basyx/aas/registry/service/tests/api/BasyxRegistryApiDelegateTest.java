@@ -70,7 +70,7 @@ public class BasyxRegistryApiDelegateTest {
 	public TestResourcesLoader testResourcesLoader = new TestResourcesLoader();
 
 	@Before
-	public void initStorage() throws IOException {
+	public void initStorage() throws IOException {		
 		testResourcesLoader.loadRepositoryDefinition().forEach(storage::addOrReplaceAasDescriptor);
 	}
 	

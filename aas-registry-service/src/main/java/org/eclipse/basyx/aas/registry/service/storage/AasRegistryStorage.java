@@ -12,11 +12,11 @@ import lombok.NonNull;
 
 public interface AasRegistryStorage {
 
-	boolean containsSubmodel(@NonNull String aasDescriptorId, @NonNull String submodelId);
+	boolean containsSubmodel(@NonNull String aasDescriptorId, String submodelId);
 
 	List<AssetAdministrationShellDescriptor> getAllAasDesriptors();
 
-	AssetAdministrationShellDescriptor getAasDescriptor(@NonNull String aasId) throws AasDescriptorNotFoundException;
+	AssetAdministrationShellDescriptor getAasDescriptor(@NonNull String aasDescriptorId) throws AasDescriptorNotFoundException;
 
 	void addOrReplaceAasDescriptor(@NonNull AssetAdministrationShellDescriptor descriptor);
 
@@ -28,10 +28,10 @@ public interface AasRegistryStorage {
 
 	void appendOrReplaceSubmodel(@NonNull String aasDescriptorId, @NonNull SubmodelDescriptor submodel) throws AasDescriptorNotFoundException;
 
-	boolean removeSubmodel(@NonNull String aasDescrId, @NonNull String submodelId);
+	boolean removeSubmodel(@NonNull String aasDescriptorId, @NonNull String submodelId);
 
 	Set<String> clear();
 
-	ShellDescriptorSearchResponse searchAasDescriptors(ShellDescriptorSearchRequest request);
+	ShellDescriptorSearchResponse searchAasDescriptors(@NonNull ShellDescriptorSearchRequest request);
 
 }

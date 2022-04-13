@@ -25,7 +25,7 @@ public class TestResourcesLoader extends TestName {
 	public TestResourcesLoader(String packageName) {
 		this.packageName = packageName;
 	}
-	
+
 	public TestResourcesLoader() {
 	}
 
@@ -91,10 +91,8 @@ public class TestResourcesLoader extends TestName {
 
 	private <T> T load(String path, ObjectReader reader) throws IOException {
 		path = basedOnPackageName(path);
-		try (InputStream in = getClass().getResourceAsStream(path)) {
-			try (BufferedInputStream bIn = new BufferedInputStream(in)) {
-				return reader.readValue(bIn);
-			}
+		try (InputStream in = getClass().getResourceAsStream(path); BufferedInputStream bIn = new BufferedInputStream(in)) {
+			return reader.readValue(bIn);
 		}
 	}
 

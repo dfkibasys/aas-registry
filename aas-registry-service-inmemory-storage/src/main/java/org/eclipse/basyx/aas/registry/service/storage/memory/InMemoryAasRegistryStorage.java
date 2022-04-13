@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,7 +22,6 @@ import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registry.service.storage.AasDescriptorNotFoundException;
 import org.eclipse.basyx.aas.registry.service.storage.AasRegistryStorage;
-import org.eclipse.basyx.aas.registry.service.storage.DescriptorCopies;
 import org.eclipse.basyx.aas.registry.service.storage.SubmodelNotFoundException;
 
 import lombok.NonNull;
@@ -98,8 +98,7 @@ public class InMemoryAasRegistryStorage implements AasRegistryStorage {
 	@Override
 	public void appendOrReplaceSubmodel(@NonNull String aasDescriptorId, @NonNull SubmodelDescriptor submodel) {
 		AssetAdministrationShellDescriptor aasDescriptor = getAasDescriptor(aasDescriptorId);
-		SubmodelDescriptor submodelClone = DescriptorCopies.deepClone(submodel);
-		replaceOrAppendSubmodel(aasDescriptorId, aasDescriptor, submodelClone);
+		replaceOrAppendSubmodel(aasDescriptorId, aasDescriptor, submodel);
 	}
 
 	private void replaceOrAppendSubmodel(String aasDescriptorId, AssetAdministrationShellDescriptor aasDescriptor, SubmodelDescriptor submodel) {
@@ -155,7 +154,7 @@ public class InMemoryAasRegistryStorage implements AasRegistryStorage {
 
 	@Override
 	public Set<String> clear() {
-		Set<String> keys = aasDescriptorLookupMap.keySet();
+		Set<String> keys = new HashSet<>(aasDescriptorLookupMap.keySet());
 		aasDescriptorLookupMap.clear();
 		submodelLookupMap.clear();
 		return keys;

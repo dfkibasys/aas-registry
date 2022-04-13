@@ -164,7 +164,11 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>aas-registry-service</artifactId>
 		</dependency>
-		
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>aas-registry-service-base-tests</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>testcontainers</artifactId>
@@ -180,7 +184,7 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>aas-registry-service-base-tests</artifactId>
-			<scope>test</scope>
+			<scope>teste</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

@@ -40,10 +40,6 @@
 			<artifactId>aas-registry-paths</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.basyx.aas.registry</groupId>
-			<artifactId>aas-registry-client</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
@@ -51,7 +47,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.basyx.aas.registry</groupId>
-			<artifactId>aas-registry-service-base-model</artifactId>
+			<artifactId>aas-registry-client</artifactId>			
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.basyx.aas.registry</groupId>

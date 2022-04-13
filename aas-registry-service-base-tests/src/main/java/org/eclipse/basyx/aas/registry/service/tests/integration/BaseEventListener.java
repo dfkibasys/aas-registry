@@ -44,7 +44,7 @@ public abstract class BaseEventListener {
 
 	public RegistryEvent poll() {
 		try {
-			String message = messageQueue.poll(5, TimeUnit.SECONDS);
+			String message = messageQueue.poll(15, TimeUnit.SECONDS);
 			if (message == null) {
 				throw new EventListenerException("timeout");
 			}
