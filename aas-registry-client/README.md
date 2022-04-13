@@ -1,3 +1,5 @@
+# AAS Registry Client
+
 This is the generated java openAPI client that can be used to communicate with the AAS registry server.
 
 To use the client in your maven projects define the following dependency:

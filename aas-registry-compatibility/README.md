@@ -1,3 +1,5 @@
+# AAS Registry Compatibility
+
 This project provides an *IAASRegistry* implementation using the [aas-registry-client](../aas-registry-client/README.md) as compatibility layer for existing BaSyx components, e.g. the AASServer.
 
 To use the compatibility layer the following two dependencies in your POM file with an appropriate version:

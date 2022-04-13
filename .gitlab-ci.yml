@@ -159,10 +159,10 @@ install:
   artifacts:
     paths:
       - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_ES/aas-registry-service-release-kafka-es-0.1.0-SNAPSHOT.jar
-      - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_MEM/aas-registry-service-release-kafka-mem-0.1.0-SNAPSHOT.jar
-      - $MAVEN_TARGET_SERVICE_RELEASE_LOG_ES/aas-registry-service-release-log-es-0.1.0-SNAPSHOT.jar
-      - $MAVEN_TARGET_SERVICE_RELEASE_LOG_MEM/aas-registry-service-release-log-mem-0.1.0-SNAPSHOT.jar
-      - $CLIENT_OPENAPI_FOLDER
+    #  - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_MEM/aas-registry-service-release-kafka-mem-0.1.0-SNAPSHOT.jar
+    #  - $MAVEN_TARGET_SERVICE_RELEASE_LOG_ES/aas-registry-service-release-log-es-0.1.0-SNAPSHOT.jar
+    #  - $MAVEN_TARGET_SERVICE_RELEASE_LOG_MEM/aas-registry-service-release-log-mem-0.1.0-SNAPSHOT.jar
+    #  - $CLIENT_OPENAPI_FOLDER
     expire_in: 3 hour
 
 docker:
@@ -187,13 +187,13 @@ docker:
   script:
     - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
     - cd aas-registry-service-release-kafka-es; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-es . ; cd ..
-    - cd aas-registry-service-release-kafka-mem; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-mem . ; cd ..
-    - cd aas-registry-service-release-log-es; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-es . ; cd ..
-    - cd aas-registry-service-release-log-mem; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-mem . ; cd ..
+  #  - cd aas-registry-service-release-kafka-mem; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-mem . ; cd ..
+  #  - cd aas-registry-service-release-log-es; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-es . ; cd ..
+  #  - cd aas-registry-service-release-log-mem; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-mem . ; cd ..
     - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-es"
-    - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-mem"
-    - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-es"
-    - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-mem"
+  #  - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-mem"
+  #  - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-es"
+  #  - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-mem"
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
