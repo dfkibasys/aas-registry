@@ -4,12 +4,14 @@ COPY target/${JAR_FILE_WITHOUT}-*.jar application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 
 FROM adoptopenjdk:11-jre-hotspot
-COPY --from=builder dependencies/ ./
-COPY --from=builder snapshot-dependencies/ ./
+RUN mkdir /workspace
+COPY --from=builder dependencies/ /workspace
+COPY --from=builder snapshot-dependencies/ /workspace
 RUN true
-COPY --from=builder spring-boot-loader/ ./
-COPY --from=builder application/ ./
+COPY --from=builder spring-boot-loader/ /workspace
+COPY --from=builder application/ /workspace
 EXPOSE 8080
+WORKDIR /workspace
 ENV SPRING_PROFILES_ACTIVE=logEvents,inMemoryStorage
 ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
 
