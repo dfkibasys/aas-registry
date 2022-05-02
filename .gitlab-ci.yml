@@ -4,21 +4,10 @@ variables:
   DOCKER_HOST: "tcp://docker:2375" 
   DOCKER_TLS_CERTDIR: ""
   DOCKER_DRIVER: overlay2  
-  MAVEN_TARGET_CLIENT: ${CI_PROJECT_DIR}/aas-registry-client/target
-  MAVEN_TARGET_EVENTS: ${CI_PROJECT_DIR}/aas-registry-events/target
-  MAVEN_TARGET_PATHS: ${CI_PROJECT_DIR}/aas-registry-paths/target
-  MAVEN_TARGET_PLUGINS: ${CI_PROJECT_DIR}/aas-registry-plugins/target
-  MAVEN_TARGET_SERVICE: ${CI_PROJECT_DIR}/aas-registry-service/target
-  MAVEN_TARGET_SERVICE_BASE_MODEL: ${CI_PROJECT_DIR}/aas-registry-service-base-model/target
-  MAVEN_TARGET_SERVICE_BASE_TESTS: ${CI_PROJECT_DIR}/aas-registry-service-base-tests/target
-  MAVEN_TARGET_SERVICE_ELASTICSEARCH_STORAGE: ${CI_PROJECT_DIR}/aas-registry-service-elasticsearch-storage/target
-  MAVEN_TARGET_SERVICE_INMEMORY_STORAGE: ${CI_PROJECT_DIR}/aas-registry-service-inmemory-storage/target
-  MAVEN_TARGET_SERVICE_KAFKA_EVENTS: ${CI_PROJECT_DIR}/aas-registry-service-kafka-events/target
-  MAVEN_TARGET_SERVICE_RELEASE_KAFKA_ES: ${CI_PROJECT_DIR}/aas-registry-service-release-kafka-es/target
-  MAVEN_TARGET_SERVICE_RELEASE_KAFKA_MEM: ${CI_PROJECT_DIR}/aas-registry-service-release-kafka-mem/target
-  MAVEN_TARGET_SERVICE_RELEASE_LOG_ES: ${CI_PROJECT_DIR}/aas-registry-service-release-log-es/target
-  MAVEN_TARGET_SERVICE_RELEASE_LOG_MEM: ${CI_PROJECT_DIR}/aas-registry-service-release-log-mem/target
-  MAVEN_TARGET_COMPATIBILITY: ${CI_PROJECT_DIR}/aas-registry-compatibility/target
+  MAVEN_TARGET_PLUGINS: '${CI_PROJECT_DIR}/aas-registry-plugins/target'
+  MAVEN_TARGET_CLASSES: '${CI_PROJECT_DIR}/**/target/classes'
+  MAVEN_TARGET_JARS: '${CI_PROJECT_DIR}/**/target/*.jar'
+  MAVEN_TARGET_RELEASE_JARS: '${CI_PROJECT_DIR}/aas-registry-service-release-*/target/*.jar'
   CLIENT_OPENAPI_FOLDER: ${CI_PROJECT_DIR}/aas-registry-client/open-api
   CLIENT_OPENAPI_FILE: ${CLIENT_OPENAPI_FOLDER}/Plattform_i40-Registry-and-Discovery.yaml
   MAVEN_OPTS: "-Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository"
@@ -73,21 +62,7 @@ compile:
     - build-plugin
   artifacts:
     paths:
-      - $MAVEN_TARGET_CLIENT
-      - $MAVEN_TARGET_EVENTS
-      - $MAVEN_TARGET_PATHS
-      - $MAVEN_TARGET_PLUGINS
-      - $MAVEN_TARGET_SERVICE
-      - $MAVEN_TARGET_SERVICE_BASE_MODEL
-      - $MAVEN_TARGET_SERVICE_BASE_TESTS
-      - $MAVEN_TARGET_SERVICE_ELASTICSEARCH_STORAGE
-      - $MAVEN_TARGET_SERVICE_INMEMORY_STORAGE
-      - $MAVEN_TARGET_SERVICE_KAFKA_EVENTS
-      - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_ES
-      - $MAVEN_TARGET_SERVICE_RELEASE_KAFKA_MEM
-      - $MAVEN_TARGET_SERVICE_RELEASE_LOG_ES
-      - $MAVEN_TARGET_SERVICE_RELEASE_LOG_MEM
-      - $MAVEN_TARGET_COMPATIBILITY
+      - $MAVEN_TARGET_CLASSES
       - $CLIENT_OPENAPI_FOLDER
     expire_in: 3 hour    
     
@@ -158,10 +133,7 @@ install:
      - compile
   artifacts:
     paths:
-      - '${MAVEN_TARGET_SERVICE_RELEASE_KAFKA_ES}/aas-registry-service-release-kafka-es-*.jar'
-      - '${MAVEN_TARGET_SERVICE_RELEASE_KAFKA_MEM}/aas-registry-service-release-kafka-mem-*.jar'
-      - '${MAVEN_TARGET_SERVICE_RELEASE_LOG_ES}/aas-registry-service-release-log-es-*.jar'
-      - '${MAVEN_TARGET_SERVICE_RELEASE_LOG_MEM}/aas-registry-service-release-log-mem-*.jar'
+      - $MAVEN_TARGET_RELEASE_JARS
     expire_in: 3 hour
 
 docker:
