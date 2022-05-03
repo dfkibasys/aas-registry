@@ -35,7 +35,7 @@ build-plugin:
     - maven
   script:
     - cd aas-registry-plugins
-    - mvn $MAVEN_CLI_OPTS install 
+    - mvn $MAVEN_CLI_OPTS deploy 
   artifacts:
     paths:
       - $MAVEN_TARGET_PLUGINS
