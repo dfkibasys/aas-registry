@@ -35,7 +35,7 @@ build-plugin:
     - maven
   script:
     - cd aas-registry-plugins
-    - mvn $MAVEN_CLI_OPTS deploy 
+    - mvn $MAVEN_CLI_OPTS install 
   artifacts:
     paths:
       - $MAVEN_TARGET_PLUGINS
@@ -142,6 +142,7 @@ deploy-mvn:
     - basys
     - maven
   script:
+    - cd aas-registry-plugins; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
     - cd aas-registry-client; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
     - cd aas-registry-compatibility; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
     - cd aas-registry-events; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
@@ -153,8 +154,11 @@ deploy-mvn:
     # - cd aas-registry-service-inmemory-storage; mvn -o $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
     # - cd aas-registry-service-kafka-events; mvn -o $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
   dependencies:
+    - build-plugin
     - install
-
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
 docker:
   stage: deploy
   image: docker:20.10.12
