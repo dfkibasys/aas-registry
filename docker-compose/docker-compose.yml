@@ -104,31 +104,33 @@ services:
     networks:
       - basyx
 
+
   aas-registry-kafka-es-external-conf:
     image: dfkibasys/aas-registry-dotaas-part2:0.1.0-snapshot-kafka-es
     container_name: aas-registry-kafka-es-external-conf
     ports:
-      - "8022:8080"
+      - "8024:8080"
     depends_on:
       - elasticsearch
       - kafka
     restart: always    
-    volumes:
-      - ./aas-config:/etc/config/aas-registry
+    volumes: 
+    # here an example on how to apply configuration using a application.yml in the config folder
+    # you can also use an import or locations
+    # https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config.files
+    # or specify the settings directly -> it will override the profile settings because of the property-overlay order
+    # -> see https://docs.spring.io/spring-boot/docs/2.1.8.RELEASE/reference/html/boot-features-external-config.html#boot-features-external-config
+      - ./aas-config:/workspace/config  # /workspace is the docker file working dir
     environment:
       ELASTICSEARCH_HOST_URL: elasticsearch:9200 
       KAFKA_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:29092
-      # here an example on how to apply configuration using an import but you can also use locations
-      # https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config.files
-      SPRING_CONFIG_IMPORT: file:///etc/config/aas-registry/
-      # additionally we have multiple options to enable inMemory storage. For example:
+      # We have multiple options to enable inMemory storage. For example:
       # SPRING_PROFILES_ACTIVE: kafkaEvents,inMemoryStorage
       # as we have profile specific properties in our resource folders
-      # or specify the settings directly -> it will override the profile settings because of the property-overlay order
-      # -> see https://docs.spring.io/spring-boot/docs/2.1.8.RELEASE/reference/html/boot-features-external-config.html#boot-features-external-config
       REGISTRY_TYPE: inMemory
     networks:
       - basyx
+
 
   aas-registry-kafka-mem:
     image: dfkibasys/aas-registry-dotaas-part2:0.1.0-snapshot-kafka-mem
