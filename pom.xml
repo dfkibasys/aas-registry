@@ -7,7 +7,7 @@
 	<groupId>org.eclipse.basyx.aas.registry</groupId>
 	<artifactId>aas-registry</artifactId>
 	<packaging>pom</packaging>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.3.0-SNAPSHOT</version>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -35,7 +35,14 @@
 		<maven-project.version>3.0-alpha-2</maven-project.version>
 		<mustache.compiler.version>0.9.4</mustache.compiler.version>
 		<snakeyaml.version>1.30</snakeyaml.version>
-		<aas-registry-plugins.version>0.1.0-SNAPSHOT</aas-registry-plugins.version>
+
+		<aas-registry-plugins.version>${project.version}</aas-registry-plugins.version>
+
+		<docker.maven.plugin.version>0.39.1</docker.maven.plugin.version>
+
+		<docker.image.name>${project.artifactId}</docker.image.name>
+		<docker.image.version>${project.version}</docker.image.version>
+		<docker.pull.registry>docker.io</docker.pull.registry>
 	</properties>
 
 	<modules>
@@ -85,7 +92,13 @@
 					<artifactId>swagger-codegen-maven-plugin</artifactId>
 					<version>${swagger.codegen.version}</version>
 				</plugin>
+				<plugin>
+					<groupId>io.fabric8</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>${docker.maven.plugin.version}</version>
+				</plugin>
 			</plugins>
+			
 		</pluginManagement>
 	</build>
 	<dependencyManagement>
@@ -183,4 +196,77 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<profiles>
+		<profile>
+			<id>dockerbuild</id>
+			<activation>
+				<!-- This profile is always active if there is a Dockerfile and a user name is given -->
+				<file>
+					<exists>src/main/docker/Dockerfile</exists>
+				</file>
+				<property>
+					<name>docker.username</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration>
+							<layers>
+								<enabled>true</enabled>
+								<includeLayerTools>true</includeLayerTools>
+							</layers>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>repackage</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>build-docker</id>
+								<phase>package</phase>
+								<goals>
+									<goal>build</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>push-docker</id>
+								<phase>deploy</phase>
+								<goals>
+									<goal>push</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<verbose>true</verbose>
+							<images>
+								<image>
+									<name>${docker.username}/${docker.image.name}</name>
+									<build>
+										<assembly>
+											<descriptorRef>artifact</descriptorRef>
+										</assembly>
+										<dockerFile>Dockerfile</dockerFile>
+										<tags>
+											<tag>${docker.image.version}</tag>
+										</tags>
+									</build>
+								</image>
+							</images>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

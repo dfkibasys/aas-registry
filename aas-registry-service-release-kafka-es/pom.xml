@@ -6,35 +6,17 @@
 	<parent>
 		<groupId>org.eclipse.basyx.aas.registry</groupId>
 		<artifactId>aas-registry</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>0.3.0-SNAPSHOT</version>
+		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>aas-registry-service-release-kafka-es</artifactId>
 	<name>aas-registry-service-release-kafka-es</name>
 	<properties>
 		<spring-cloud.version>2020.0.4</spring-cloud.version>
 		<start-class>org.eclipse.basyx.aas.registry.service.Swagger2SpringBoot</start-class>
+		<docker.image.name>aas-registry-dotaas-part2-kafka-es</docker.image.name>
 	</properties>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<layers>
-						<enabled>true</enabled>
-					<!-- 	<includeLayerTools>true</includeLayerTools> -->
-					</layers>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.basyx.aas.registry</groupId>

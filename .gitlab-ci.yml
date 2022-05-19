@@ -22,26 +22,24 @@ cache:
 stages:
   - plugin
   - validate
-  - build-java
-  - build-typescript
+  - build
   - test
   - install
   - deploy
 
-build-plugin:
+mvn-build-plugin:
   stage: plugin
   tags:
     - basys
     - maven
   script:
-    - cd aas-registry-plugins
-    - mvn $MAVEN_CLI_OPTS install 
+    - mvn $MAVEN_CLI_OPTS install -f ./aas-registry-plugins
   artifacts:
     paths:
       - $MAVEN_TARGET_PLUGINS
     expire_in: 3 hour    
     
-validate:
+mvn-validate:
   stage: validate
   tags:
     - basys
@@ -49,30 +47,30 @@ validate:
   script:
     - mvn -V $MAVEN_CLI_OPTS validate
   dependencies:
-    - build-plugin
+    - mvn-build-plugin
     
-compile:
-  stage: build-java
+mvn-compile:
+  stage: build
   tags:
     - basys
     - maven
   script:
     - mvn $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true
   dependencies:
-    - build-plugin
+    - mvn-build-plugin
   artifacts:
     paths:
       - $MAVEN_TARGET_CLASSES
       - $CLIENT_OPENAPI_FOLDER
     expire_in: 3 hour    
     
-generate-typescript:
-  stage: build-typescript
+npm-build:
+  stage: build
   tags: 
     - basys
     - maven
   dependencies:
-    - compile
+    - mvn-compile
   script:
     - mkdir $TYPESCRIPT_FOLDER
     - cd $TYPESCRIPT_FOLDER
@@ -84,14 +82,92 @@ generate-typescript:
     paths:
       - $TYPESCRIPT_FOLDER
     expire_in: 3 hour
-  
-deploy-npm:
+
+mvn-test:
+  stage: test 
+  services:
+     - name: docker:20.10.12-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
+  dependencies:
+    - mvn-compile
+
+mvn-docker-install:
+  stage: install
+  image: dfkibasys/docker-temurin11jdk:20.10.12
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.12-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  tags:
+    - basys
+    - maven
+  script:
+    - chmod 775 ./mvnw
+    - ./mvnw $MAVEN_CLI_OPTS install -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.test.skip=true -Dmaven.compile.skip=true
+  dependencies:
+    - mvn-compile
+  artifacts:
+    paths:
+      - $MAVEN_TARGET_RELEASE_JARS
+    expire_in: 3 hour
+
+mvn-deploy:
+  stage: deploy
+  tags:
+    - basys
+    - maven
+  script:
+    - cd aas-registry-plugins; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+    - cd aas-registry-client; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+    - cd aas-registry-compatibility; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+    - cd aas-registry-events; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+    - cd aas-registry-paths; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+  dependencies:
+    - mvn-build-plugin
+    - mvn-docker-install
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+
+docker-deploy:
+  stage: deploy
+  image: dfkibasys/docker-temurin11jdk:20.10.12
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.12-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  dependencies:
+    - mvn-compile
+  tags:
+    - basys
+    - docker
+  before_script:
+    - docker info
+  script:
+    - chmod 775 ./mvnw
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true 
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+
+
+npm-deploy:
   image: node:14-alpine
   stage: deploy
   tags:
     - basys
   dependencies:
-    - generate-typescript
+    - npm-build
   script:
     - cd $TYPESCRIPT_FOLDER
     - npm config set strict-ssl false
@@ -104,89 +180,6 @@ deploy-npm:
     - npm prune 
     - npm run build  # build with tests
     - npm publish  # deploy
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
-    - if: $CI_COMMIT_BRANCH == 'develop'
-
-test:
-  stage: test 
-  services:
-     - name: docker:20.10.12-dind
-       # explicitly disable tls to avoid docker startup interruption
-       command: ["--tls=false"]
-  tags:
-    - basys
-    - maven
-  script:
-    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
-  dependencies:
-     - compile
-
-install:
-  stage: install
-  tags:
-    - basys
-    - maven
-  script:
-    - mvn -o $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true
-  dependencies:
-     - compile
-  artifacts:
-    paths:
-      - $MAVEN_TARGET_RELEASE_JARS
-    expire_in: 3 hour
-
-deploy-mvn:
-  stage: deploy
-  tags:
-    - basys
-    - maven
-  script:
-    - cd aas-registry-plugins; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-    - cd aas-registry-client; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-    - cd aas-registry-compatibility; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-    - cd aas-registry-events; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-    - cd aas-registry-paths; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-   # - cd aas-registry-service; mvn -o $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-    # - cd aas-registry-service-base-model; mvn -o $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-    # - cd aas-registry-service-base-tests; mvn -o $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-    # - cd aas-registry-service-elasticsearch-storage; mvn -o $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-    # - cd aas-registry-service-inmemory-storage; mvn -o $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-    # - cd aas-registry-service-kafka-events; mvn -o $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-  dependencies:
-    - build-plugin
-    - install
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
-    - if: $CI_COMMIT_BRANCH == 'develop'
-docker:
-  stage: deploy
-  image: docker:20.10.12
-  variables:
-    DOCKER_DRIVER: overlay2
-    DOCKER_IMAGE_VERSION_PREFIX: '0.1.0-snapshot'
-    DOCKER_IMAGE_NAME: 'aas-registry-dotaas-part2'
-  services:
-     - name: docker:20.10.12-dind
-       # explicitly disable tls to avoid docker startup interruption
-       command: ["--tls=false"]
-  dependencies:
-    - install
-  tags:
-    - basys
-    - docker
-  before_script:
-    - docker info      
-  script:
-    - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
-    - cd aas-registry-service-release-kafka-es; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-es . ; cd ..
-    - cd aas-registry-service-release-kafka-mem; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-mem . ; cd ..
-    - cd aas-registry-service-release-log-es; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-es . ; cd ..
-    - cd aas-registry-service-release-log-mem; docker build -t dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-mem . ; cd ..
-    - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-es"
-    - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-kafka-mem"
-    - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-es"
-    - docker push "docker.io/dfkibasys/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION_PREFIX}-log-mem"
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'

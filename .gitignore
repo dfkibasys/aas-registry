@@ -3,11 +3,6 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
-*.jar
-*.war
-*.ear
-
 
 # exclude jar for gradle wrapper
 !gradle/wrapper/*.jar
@@ -17,7 +12,6 @@ hs_err_pid*
 
 # build files
 **/target
-aas-registry-client/target
 .gradle
 build
 
@@ -30,4 +24,3 @@ build
 *.project
 
 */src/generated/
-/aas-registry-service/elasticsearch-data/
