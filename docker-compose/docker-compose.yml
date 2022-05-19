@@ -90,8 +90,9 @@ services:
       - basyx      
                
   aas-registry-kafka-es:
-    image: dfkibasys/aas-registry-dotaas-part2:0.1.0-snapshot-kafka-es
+    image: aas-registry-test/aas-registry-dotaas-part2-kafka-es:0.3.0-SNAPSHOT
     container_name: aas-registry-kafka-es
+    pull_policy: never
     ports:
       - "8020:8080"
     depends_on:
@@ -106,8 +107,9 @@ services:
 
 
   aas-registry-kafka-es-external-conf:
-    image: dfkibasys/aas-registry-dotaas-part2:0.1.0-snapshot-kafka-es
+    image: aas-registry-test/aas-registry-dotaas-part2-kafka-es:0.3.0-SNAPSHOT
     container_name: aas-registry-kafka-es-external-conf
+    pull_policy: never
     ports:
       - "8024:8080"
     depends_on:
@@ -133,8 +135,9 @@ services:
 
 
   aas-registry-kafka-mem:
-    image: dfkibasys/aas-registry-dotaas-part2:0.1.0-snapshot-kafka-mem
+    image: aas-registry-test/aas-registry-dotaas-part2-kafka-mem:0.3.0-SNAPSHOT
     container_name: aas-registry-kafka-mem
+    pull_policy: never
     ports:
       - "8030:8080"
     depends_on:
@@ -147,8 +150,9 @@ services:
       - basyx
 
   aas-registry-log-mem:
-    image: dfkibasys/aas-registry-dotaas-part2:0.1.0-snapshot-log-mem 
+    image: aas-registry-test/aas-registry-dotaas-part2-log-mem:0.3.0-SNAPSHOT
     container_name: aas-registry-log-mem
+    pull_policy: never
     ports:
       - "8040:8080"
     restart: always
@@ -156,8 +160,9 @@ services:
       - basyx
 
   aas-registry-log-es:
-    image: dfkibasys/aas-registry-dotaas-part2:0.1.0-snapshot-log-es
+    image: aas-registry-test/aas-registry-dotaas-part2-log-es:0.3.0-SNAPSHOT
     container_name: aas-registry-log-es
+    pull_policy: never
     ports:
       - "8050:8080"
     depends_on:

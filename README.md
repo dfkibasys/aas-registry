@@ -10,7 +10,7 @@ This in a Java-based implementation of the Asset Adminstration Shell Registry se
 
 [aas-registry-paths](aas-registry-paths/README.md) generates a builder class that can be used by the registry client to create search requests. 
 
-[aas-registry-plugins](aas-registry-plugins/README.md) contains maven plugins used by the other projects
+[aas-registry-plugins](aas-registry-plugins/README.md) contains maven plugins used by the other projects, so you need to build this project first.
 
 [aas-registry-service](aas-registry-service/README.md) provides the application server to access the AAS descriptor storage and offers an API for REST-based communication.
 
