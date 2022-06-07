@@ -161,7 +161,7 @@ docker-deploy:
     - if: $CI_COMMIT_BRANCH == 'develop'
 
 
-npm-deploy:
+.npm-deploy:
   image: node:14-alpine
   stage: deploy
   tags:
