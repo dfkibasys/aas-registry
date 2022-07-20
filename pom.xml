@@ -38,7 +38,7 @@
 
 		<aas-registry-plugins.version>${project.version}</aas-registry-plugins.version>
 
-		<docker.maven.plugin.version>0.39.1</docker.maven.plugin.version>
+		<docker.maven.plugin.version>0.40.1</docker.maven.plugin.version>
 
 		<docker.image.name>${project.artifactId}</docker.image.name>
 		<docker.image.version>${project.version}</docker.image.version>
@@ -257,6 +257,10 @@
 											<descriptorRef>artifact</descriptorRef>
 										</assembly>
 										<dockerFile>Dockerfile</dockerFile>
+										<buildOptions>
+											<platforms>linux/amd64,linux/arm64</platforms>
+											<version>2</version>
+										</buildOptions>
 										<tags>
 											<tag>${docker.image.version}</tag>
 										</tags>
