@@ -257,10 +257,12 @@
 											<descriptorRef>artifact</descriptorRef>
 										</assembly>
 										<dockerFile>Dockerfile</dockerFile>
-										<buildOptions>
-											<platforms>linux/amd64,linux/arm64</platforms>
-											<version>2</version>
-										</buildOptions>
+										<buildx>
+											<platforms>
+												<platform>linux/amd64</platform>
+												<platform>linux/arm64</platform>
+											</platforms>
+										</buildx>
 										<tags>
 											<tag>${docker.image.version}</tag>
 										</tags>
