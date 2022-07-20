@@ -43,6 +43,7 @@
 		<docker.image.name>${project.artifactId}</docker.image.name>
 		<docker.image.version>${project.version}</docker.image.version>
 		<docker.pull.registry>docker.io</docker.pull.registry>
+		<docker.registry>docker.io</docker.registry>
 	</properties>
 
 	<modules>
@@ -252,6 +253,7 @@
 							<images>
 								<image>
 									<name>${docker.username}/${docker.image.name}</name>
+									<registry>${docker.registry}</registry>
 									<build>
 										<assembly>
 											<descriptorRef>artifact</descriptorRef>
