@@ -262,11 +262,28 @@
 										<buildx>
 											<platforms>
 												<platform>linux/amd64</platform>
-												<platform>linux/arm64/v8</platform>
 											</platforms>
 										</buildx>
 										<tags>
-											<tag>${docker.image.version}</tag>
+											<tag>${docker.image.version}-amd64</tag>
+										</tags>
+									</build>
+								</image>
+								<image>
+									<name>${docker.username}/${docker.image.name}</name>
+									<registry>${docker.registry}</registry>
+									<build>
+										<assembly>
+											<descriptorRef>artifact</descriptorRef>
+										</assembly>
+										<dockerFile>Dockerfile</dockerFile>
+										<buildx>
+											<platforms>
+												<platform>linux/arm64</platform>
+											</platforms>
+										</buildx>
+										<tags>
+											<tag>${docker.image.version}-arm64</tag>
 										</tags>
 									</build>
 								</image>
