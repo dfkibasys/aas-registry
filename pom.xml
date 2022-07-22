@@ -251,7 +251,6 @@
 						</executions>
 						
 						<configuration>
-							<verbose>true</verbose>
 							<images>
 								<image>
 									<name>${docker.username}/${docker.image.name}</name>

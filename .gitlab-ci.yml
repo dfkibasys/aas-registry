@@ -155,13 +155,11 @@ docker-deploy:
   before_script:
     - docker info
   script:
-    # - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD" "$DOCKER_REGISTRY"
     - chmod 775 ./mvnw
     - ./mvnw $MAVEN_CLI_OPTS deploy -Ddocker.registry=$DOCKER_REGISTRY -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true 
-#  rules:
-#    - if: $CI_COMMIT_BRANCH == 'master'
-#    - if: $CI_COMMIT_BRANCH == 'develop'
-
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
 
 npm-deploy:
   image: node:14-alpine
