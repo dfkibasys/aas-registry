@@ -22,7 +22,8 @@ cache:
 stages:
   - plugin
   - validate
-  - build
+  - build-mvn
+  - build-npm
   - test
   - install
   - deploy
@@ -50,7 +51,7 @@ mvn-validate:
     - mvn-build-plugin
     
 mvn-compile:
-  stage: build
+  stage: build-mvn
   tags:
     - basys
     - maven
@@ -65,7 +66,7 @@ mvn-compile:
     expire_in: 3 hour    
     
 npm-build:
-  stage: build
+  stage: build-npm
   tags: 
     - basys
     - maven
@@ -86,7 +87,7 @@ npm-build:
 mvn-test:
   stage: test 
   services:
-     - name: docker:20.10.12-dind
+     - name: docker:20.10.17-dind
        # explicitly disable tls to avoid docker startup interruption
        command: ["--tls=false"]
   tags:
@@ -99,11 +100,11 @@ mvn-test:
 
 mvn-docker-install:
   stage: install
-  image: dfkibasys/docker-temurin11jdk:20.10.12
+  image: dfkibasys/docker-temurin11jdk:20.10.17
   variables:
     DOCKER_DRIVER: overlay2
   services:
-     - name: docker:20.10.12-dind
+     - name: docker:20.10.17-dind
        # explicitly disable tls to avoid docker startup interruption
        command: ["--tls=false"]
   tags:
@@ -111,7 +112,7 @@ mvn-docker-install:
     - maven
   script:
     - chmod 775 ./mvnw
-    - ./mvnw $MAVEN_CLI_OPTS install -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.test.skip=true -Dmaven.compile.skip=true
+    - ./mvnw $MAVEN_CLI_OPTS install -Ddocker.registry=$DOCKER_REGISTRY -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.test.skip=true -Dmaven.compile.skip=true
   dependencies:
     - mvn-compile
   artifacts:
@@ -139,11 +140,11 @@ mvn-deploy:
 
 docker-deploy:
   stage: deploy
-  image: dfkibasys/docker-temurin11jdk:20.10.12
+  image: dfkibasys/docker-temurin11jdk:20.10.17
   variables:
     DOCKER_DRIVER: overlay2
   services:
-     - name: docker:20.10.12-dind
+     - name: docker:20.10.17-dind
        # explicitly disable tls to avoid docker startup interruption
        command: ["--tls=false"]
   dependencies:
@@ -155,11 +156,10 @@ docker-deploy:
     - docker info
   script:
     - chmod 775 ./mvnw
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true 
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Ddocker.registry=$DOCKER_REGISTRY -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true 
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
-
 
 npm-deploy:
   image: node:14-alpine
