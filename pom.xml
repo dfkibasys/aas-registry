@@ -238,32 +238,56 @@
 								<goals>
 									<goal>build</goal>
 								</goals>
+								<configuration>
+									<images>
+										<image>
+											<name>${docker.username}/${docker.image.name}</name>
+											<build>
+												<assembly>
+													<descriptorRef>artifact</descriptorRef>
+												</assembly>
+												<tags>
+													<tag>${docker.image.version}</tag>
+												</tags>
+												<dockerFile>Dockerfile</dockerFile>
+												<contextDir>${project.basedir}/src/main/docker</contextDir>
+												<!-- building non buildx image here to speed up build -->
+											</build>
+										</image>
+									</images>
+								</configuration>
 							</execution>
 							<execution>
 								<id>push-docker</id>
 								<phase>deploy</phase>
 								<goals>
+									<goal>build</goal>
 									<goal>push</goal>
 								</goals>
+								<configuration>
+									<images>
+										<image>
+											<name>${docker.username}/${docker.image.name}</name>
+											<!-- needs to be set to this registry https://github.com/fabric8io/docker-maven-plugin/pull/1578 -->
+											<registry>https://index.docker.io/v1/</registry>
+											<build>
+												<assembly>
+													<descriptorRef>artifact</descriptorRef>
+												</assembly>
+												<tags>
+													<tag>${docker.image.version}</tag>
+												</tags>
+												<dockerFile>Dockerfile</dockerFile>
+												<contextDir>${project.basedir}/src/main/docker</contextDir>
+												<buildx>
+													<platforms>${docker.target.platforms}</platforms>
+												</buildx>
+											</build>
+										</image>
+									</images>
+								</configuration>
 							</execution>
 						</executions>
-						<configuration>
-							<verbose>true</verbose>
-							<images>
-								<image>
-									<name>${docker.username}/${docker.image.name}</name>
-									<build>
-										<assembly>
-											<descriptorRef>artifact</descriptorRef>
-										</assembly>
-										<dockerFile>Dockerfile</dockerFile>
-										<tags>
-											<tag>${docker.image.version}</tag>
-										</tags>
-									</build>
-								</image>
-							</images>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>
