@@ -49,10 +49,10 @@ import org.eclipse.basyx.aas.registry.model.SortDirection;
 import org.eclipse.basyx.aas.registry.model.Sorting;
 import org.eclipse.basyx.aas.registry.model.SortingPath;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.service.storage.AasDescriptorNotFoundException;
+import org.eclipse.basyx.aas.registry.service.errors.AasDescriptorNotFoundException;
+import org.eclipse.basyx.aas.registry.service.errors.SubmodelNotFoundException;
 import org.eclipse.basyx.aas.registry.service.storage.AasRegistryStorage;
 import org.eclipse.basyx.aas.registry.service.storage.RegistrationEventSendingAasRegistryStorage;
-import org.eclipse.basyx.aas.registry.service.storage.SubmodelNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -135,7 +135,7 @@ public abstract class AasRegistryStorageTest {
 	public void whenSearchWithPagination_thenReturnStepwise() throws IOException {
 		List<AssetAdministrationShellDescriptor> expectedFirstPage = testResourcesLoader.loadShellDescriptorList("0");
 		List<AssetAdministrationShellDescriptor> expectedSecondPage = testResourcesLoader.loadShellDescriptorList("1");
-		ShellDescriptorSearchRequest request = new ShellDescriptorSearchRequest().query(new ShellDescriptorQuery().path(AasRegistryPaths.submodelDescriptors().description().text()).value(".*[R|r]obot.*").queryType(QueryTypeEnum.REGEX))
+		ShellDescriptorSearchRequest request = new ShellDescriptorSearchRequest().query(new ShellDescriptorQuery().path(AasRegistryPaths.submodelDescriptors().descriptions().text()).value(".*[R|r]obot.*").queryType(QueryTypeEnum.REGEX))
 				.sortBy(new Sorting().addPathItem(SortingPath.IDENTIFICATION).direction(SortDirection.DESC)).page(new Page().index(0).size(2));
 		ShellDescriptorSearchResponse response1 = storage.searchAasDescriptors(request);
 		request.setPage(new Page().index(1).size(2));

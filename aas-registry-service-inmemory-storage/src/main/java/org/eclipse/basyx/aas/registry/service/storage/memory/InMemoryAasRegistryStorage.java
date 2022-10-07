@@ -45,9 +45,9 @@ import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchRequest;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registry.service.storage.AasDescriptorNotFoundException;
+import org.eclipse.basyx.aas.registry.service.errors.AasDescriptorNotFoundException;
+import org.eclipse.basyx.aas.registry.service.errors.SubmodelNotFoundException;
 import org.eclipse.basyx.aas.registry.service.storage.AasRegistryStorage;
-import org.eclipse.basyx.aas.registry.service.storage.SubmodelNotFoundException;
 
 import lombok.NonNull;
 

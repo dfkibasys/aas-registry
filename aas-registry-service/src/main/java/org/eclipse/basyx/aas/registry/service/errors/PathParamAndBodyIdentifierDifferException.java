@@ -23,11 +23,19 @@
  * 
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
-package org.eclipse.basyx.aas.registry.service.api;
+package org.eclipse.basyx.aas.registry.service.errors;
 
-import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-@Service
-public class BasyxLookupApiDelegate implements LookupApiDelegate {
+public class PathParamAndBodyIdentifierDifferException extends ResponseStatusException {
+
+	private static final long serialVersionUID = 1L;
+	
+	public static final String ERROR_MESSAGE_TEMPLATE = "Path identifier '%s' and body identifier '%s' are not the same";
+
+	public PathParamAndBodyIdentifierDifferException(String identifierPath, String identifierBody) {
+		super(HttpStatus.BAD_REQUEST, String.format(ERROR_MESSAGE_TEMPLATE, identifierPath, identifierBody));
+	}
 
 }

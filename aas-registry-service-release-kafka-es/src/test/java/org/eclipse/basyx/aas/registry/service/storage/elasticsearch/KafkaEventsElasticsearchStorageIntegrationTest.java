@@ -44,7 +44,6 @@ import org.testcontainers.utility.DockerImageName;
 
 
 @TestPropertySource(properties = { "registry.type=elasticsearch", "events.sink=kafka" })
-@Ignore
 public class KafkaEventsElasticsearchStorageIntegrationTest extends BaseIntegrationTest {	
 
 	private static final DockerImageName KAFKA_TEST_IMAGE = DockerImageName.parse("confluentinc/cp-kafka:6.2.1");

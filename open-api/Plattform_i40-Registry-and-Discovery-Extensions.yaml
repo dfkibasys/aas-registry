@@ -2,45 +2,107 @@
 openapi: 3.0.3
 info:
   title: DotAAS Part 2 | HTTP/REST | Registry and Discovery and Search
-  version: Final-Draft + Search
+  version: V1.0RC03 + Search
+servers: []
 paths:
-  /registry/shell-descriptors:
+  /shell-descriptors:
+    get:
+      tags:
+         - Registry and Discovery Interface
+    post:
+      tags:
+         - Registry and Discovery Interface
     delete:
-      tags: [Registry and Discovery Interface]
+      tags:
+         - Registry and Discovery Interface
       summary: Deletes all Asset Administration Shell Descriptors
       operationId: DeleteAllShellDescriptors
       responses:
         '204':
           description: No content
-      x-semanticIds: ['https://admin-shell.io/aas/API/GetAllAssetAdministrationShellDescriptors/1/0/RC02']
-  /registry/shell-descriptors/{aasIdentifier}:
+      x-semanticIds:
+      - https://admin-shell.io/aas/API/GetAllAssetAdministrationShellDescriptors/1/0/RC03
+  /shell-descriptors/{aasIdentifier}:
     get:
-      responses:
-        "404":
-          description: Requested Asset Administration Shell Descriptor not found
-  /registry/shell-descriptors/{aasIdentifier}/submodel-descriptors:
-    get:
-      responses:
-        '404':
-          description: Asset Administration Shell Descriptor not found
-    post:
-       responses:
-         '404':
-            description: Asset Administration Shell Descriptor not found
-  /registry/shell-descriptors/{aasIdentifier}/submodel-descriptors/{submodelIdentifier}:
-    get:
-       responses: 
-          "404":
-             description: Asset Administration Shell Descriptor or submodel not found
+      tags:
+         - Registry and Discovery Interface
+      parameters:
+        $LIST_PROCESS_INSTRUCTION$:
+           overlay:
+              0:
+                 x-utf8-base64-url-encoded-as-string: true
     put:
-       responses:
-         "404":
-             description: Asset Administration Shell Descriptor not found
-  /registry/search:
+      tags:
+         - Registry and Discovery Interface
+      parameters:
+        $LIST_PROCESS_INSTRUCTION$:
+          overlay:
+             0:
+                x-utf8-base64-url-encoded-as-string: true
+    delete:
+      tags:
+         - Registry and Discovery Interface
+      parameters:
+        $LIST_PROCESS_INSTRUCTION$:
+           overlay:
+              0:
+                 x-utf8-base64-url-encoded-as-string: true
+  /shell-descriptors/{aasIdentifier}/submodel-descriptors:
+    get:
+      tags:
+         - Registry and Discovery Interface
+      parameters:
+        $LIST_PROCESS_INSTRUCTION$:
+           overlay:
+              0:
+                 x-utf8-base64-url-encoded-as-string: true  
+    post:
+      tags:
+         - Registry and Discovery Interface
+      parameters:
+        $LIST_PROCESS_INSTRUCTION$:
+           overlay:
+              0:
+                 x-utf8-base64-url-encoded-as-string: true
+  /shell-descriptors/{aasIdentifier}/submodel-descriptors/{submodelIdentifier}:
+    get:
+      tags:
+         - Registry and Discovery Interface
+      parameters:
+        $LIST_PROCESS_INSTRUCTION$:
+           overlay:
+              0:
+                 x-utf8-base64-url-encoded-as-string: true
+              1:
+                 x-utf8-base64-url-encoded-as-string: true
+    put:
+      tags:
+         - Registry and Discovery Interface
+      parameters:
+        $LIST_PROCESS_INSTRUCTION$:
+           overlay:
+              0:
+                 x-utf8-base64-url-encoded-as-string: true
+              1:
+                 x-utf8-base64-url-encoded-as-string: true
+    delete:
+      tags:
+         - Registry and Discovery Interface
+      parameters:
+        $LIST_PROCESS_INSTRUCTION$:
+           overlay:
+              0:
+                 x-utf8-base64-url-encoded-as-string: true
+              1:
+                 x-utf8-base64-url-encoded-as-string: true
+  # these both are not implemented for now so remove them using overlay
+  /lookup/shells: {}
+  /lookup/shells/{aasIdentifier}: {}
+  /search:
     post:
       operationId: SearchShellDescriptors
       tags:
-        - Registry and Discovery Interface  
+         - Registry and Discovery Interface 
       requestBody:
         content:
           application/json:
@@ -48,35 +110,20 @@ paths:
               $ref: '#/components/schemas/ShellDescriptorSearchRequest'
         required: true
       responses:
-        "200":
+        '200':
           description: Search response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ShellDescriptorSearchResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
 components:
   schemas:
-    Reference:
-      discriminator:
-        propertyName: type
-    GlobalReference:
-      required:
-      - value
-      - type
-      properties:
-        type:
-          type: string
-          default: GlobalReference
-          readOnly: true
-    ModelReference:
-      required:
-      - keys
-      - type
-      properties:
-         type: 
-            type: string
-            default: ModelReference
-            readOnly: true
     ShellDescriptorSearchRequest:
       type: object
       properties:

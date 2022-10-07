@@ -23,16 +23,28 @@
  * 
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
-package org.eclipse.basyx.aas.registry.service.storage;
+package org.eclipse.basyx.aas.registry.service.api;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+import org.eclipse.basyx.aas.registry.events.RegistryEventSink;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchRequest;
+import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
+import org.eclipse.basyx.aas.registry.service.storage.AasRegistryStorage;
+import org.eclipse.basyx.aas.registry.service.storage.RegistrationEventSendingAasRegistryStorage;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
-public class AasDescriptorNotFoundException extends ResponseStatusException {
+@Component
+public class BasyxSearchApiDelegate implements SearchApiDelegate {
 
-	private static final long serialVersionUID = 1L;
+	private final AasRegistryStorage storage;
 
-	public AasDescriptorNotFoundException(String aasDesriptorId) {
-		super(HttpStatus.NOT_FOUND, "The parent aasDescriptor '" + aasDesriptorId + "' is not available.");
+	public BasyxSearchApiDelegate(AasRegistryStorage storage, RegistryEventSink eventSink) {
+		this.storage = new RegistrationEventSendingAasRegistryStorage(storage, eventSink);
+	}
+	
+	@Override
+	public ResponseEntity<ShellDescriptorSearchResponse> searchShellDescriptors(ShellDescriptorSearchRequest request) {
+		ShellDescriptorSearchResponse result = storage.searchAasDescriptors(request);
+		return ResponseEntity.ok(result);
 	}
 }
