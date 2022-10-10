@@ -7,7 +7,7 @@
 	<groupId>org.eclipse.basyx.aas.registry</groupId>
 	<artifactId>aas-registry</artifactId>
 	<packaging>pom</packaging>
-	<version>0.3.0-SNAPSHOT</version>
+	<version>0.4.2-SNAPSHOT</version>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -24,10 +24,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<generated.folder>src/generated</generated.folder>
 		<springfox-version>3.0.0</springfox-version>
-		<swagger.codegen.version>3.0.33</swagger.codegen.version>
+		<swagger.codegen.version>3.0.35</swagger.codegen.version>
 		<spring.fox.version>3.0.0</spring.fox.version>
 		<openapi.folder.name>open-api</openapi.folder.name>
-		<openapi.base.name>Plattform_i40-Registry-and-Discovery-Final-Draft-resolved.yaml</openapi.base.name>
+		<openapi.base.name>Plattform_i40-Registry-and-Discovery-V1.0RC03-resolved.yaml</openapi.base.name>
 		<openapi.extensions.name>Plattform_i40-Registry-and-Discovery-Extensions.yaml</openapi.extensions.name>
 		<openapi.name>Plattform_i40-Registry-and-Discovery.yaml</openapi.name>
 		<guava.version>31.0.1-jre</guava.version>
@@ -41,7 +41,7 @@
 		<docker.maven.plugin.version>0.40.1</docker.maven.plugin.version>
 
 		<docker.image.name>${project.artifactId}</docker.image.name>
-		<docker.image.version>${project.version}</docker.image.version>
+		<docker.image.version>V1.0RC03-${project.version}</docker.image.version>
 		<docker.pull.registry>docker.io</docker.pull.registry>
 		<docker.target.platforms>linux/amd64,linux/arm64</docker.target.platforms>
 		<docker.registry>docker.io</docker.registry>

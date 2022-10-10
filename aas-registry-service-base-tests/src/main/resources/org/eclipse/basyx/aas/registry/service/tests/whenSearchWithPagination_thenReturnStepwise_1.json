@@ -4,7 +4,7 @@
 		"submodelDescriptors": [
 			{
 				"identification": "identification_2.1",
-				"description": [{
+				"descriptions": [{
 					"language": "de_DE",
 					"text": "I am a robot!"
 				}]

@@ -4,7 +4,7 @@
 		"submodelDescriptors": [
 			{
 				"identification": "identification_2.1",
-				"description" : [{
+				"descriptions" : [{
 					"language" : "de_DE",
 					"text" : "I am a robot!"
 				}]
@@ -23,7 +23,7 @@
 		"submodelDescriptors": [
 			{
 				"identification": "identification_3.1",
-				"description" : [{
+				"descriptions" : [{
 					"language" : "de_DE",
 					"text" : "A green Robot."
 				}]
@@ -39,7 +39,7 @@
 		"submodelDescriptors": [
 			{
 				"identification": "identification_4.1",
-				"description" : [{
+				"descriptions" : [{
 					"language" : "de_DE",
 					"text" : "A yellow drone."
 				}]
@@ -51,7 +51,7 @@
 		"submodelDescriptors": [
 			{
 				"identification": "identification_5.1",
-				"description" : [{
+				"descriptions" : [{
 					"language" : "de_DE",
 					"text" : "A blue roboter."
 				}]

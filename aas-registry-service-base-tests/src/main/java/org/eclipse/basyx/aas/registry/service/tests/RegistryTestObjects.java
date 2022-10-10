@@ -54,7 +54,7 @@ public class RegistryTestObjects {
 	private void addDescription(SubmodelDescriptor descriptor, String description) {
 		if (description != null) {
 			LangString lString = newDescription(description);
-			descriptor.addDescriptionItem(lString);
+			descriptor.addDescriptionsItem(lString);
 		}
 	}
 

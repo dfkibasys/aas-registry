@@ -11,8 +11,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/8152_1113_5012_0429"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/8152_1113_5012_0429"
+				}
 			]
 		},
 		"idShort": "mir100_2_aas",
@@ -72,8 +75,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/3332_1113_5012_4899"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/3332_1113_5012_4899"
+				}
 			]
 		},
 		"idShort": "drone_1_aas",
@@ -133,8 +139,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/8125_0191_1112_1824"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/8125_0191_1112_1824"
+				}
 			]
 		},
 		"idShort": "baxter_2_aas",
@@ -176,8 +185,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/3572_1113_5012_2487"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/3572_1113_5012_2487"
+				}
 			]
 		},
 		"idShort": "ur10_1_aas",
@@ -273,8 +285,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/0222_1113_5012_4427"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/0222_1113_5012_4427"
+				}
 			]
 		},
 		"idShort": "aio_1_aas",
@@ -316,8 +331,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/3422_1113_5012_0005"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/3422_1113_5012_0005"
+				}
 			]
 		},
 		"idShort": "baxter_1_aas",
@@ -359,8 +377,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/8052_1113_5012_1023"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/8052_1113_5012_1023"
+				}
 			]
 		},
 		"idShort": "mir100_1_aas",
@@ -420,8 +441,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/0242_1113_5012_3428"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/0242_1113_5012_3428"
+				}
 			]
 		},
 		"idShort": "panda_2_aas",
@@ -463,8 +487,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/8482_1113_5012_4409"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/8482_1113_5012_4409"
+				}
 			]
 		},
 		"idShort": "ur10e_1_aas",
@@ -506,8 +533,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/2082_1113_5012_4886"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/2082_1113_5012_4886"
+				}
 			]
 		},
 		"idShort": "ur10_2_aas",
@@ -549,8 +579,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/5472_1113_5012_2754"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/5472_1113_5012_2754"
+				}
 			]
 		},
 		"idShort": "ur5_1_aas",
@@ -592,8 +625,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/9221_4191_1112_4976"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/9221_4191_1112_4976"
+				}
 			]
 		},
 		"idShort": "mir100_4_aas",
@@ -653,8 +689,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/9132_1113_5012_0244"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/9132_1113_5012_0244"
+				}
 			]
 		},
 		"idShort": "bmb_2_aas",
@@ -696,8 +735,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/9072_1113_5012_4001"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/9072_1113_5012_4001"
+				}
 			]
 		},
 		"idShort": "sawyer_1_aas",
@@ -739,8 +781,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/3142_7132_1112_9303"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/3142_7132_1112_9303"
+				}
 			]
 		},
 		"idShort": "hololens2_1_aas",
@@ -782,8 +827,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/4564_3152_8012_5305"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/4564_3152_8012_5305"
+				}
 			]
 		},
 		"idShort": "mrk40_lab_aas",
@@ -839,8 +887,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/0142_1113_5012_2784"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/0142_1113_5012_2784"
+				}
 			]
 		},
 		"idShort": "panda_1_aas",
@@ -882,8 +933,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/9582_1113_5012_8716"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/9582_1113_5012_8716"
+				}
 			]
 		},
 		"idShort": "yumi_1_aas",
@@ -925,8 +979,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/3372_1113_5012_9690"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/3372_1113_5012_9690"
+				}
 			]
 		},
 		"idShort": "ur3_1_aas",
@@ -968,8 +1025,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/9032_1113_5012_5735"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/9032_1113_5012_5735"
+				}
 			]
 		},
 		"idShort": "bmb_1_aas",
@@ -1011,8 +1071,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/7092_1113_5012_4194"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/7092_1113_5012_4194"
+				}
 			]
 		},
 		"idShort": "yumi_2_aas",
@@ -1054,8 +1117,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/6542_1113_5012_9769"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/6542_1113_5012_9769"
+				}
 			]
 		},
 		"idShort": "lap_1_aas",
@@ -1097,8 +1163,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/3432_1113_5012_7640"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/3432_1113_5012_7640"
+				}
 			]
 		},
 		"idShort": "drone_2_aas",
@@ -1158,8 +1227,11 @@
 		],
 		"globalAssetId": {
 			"type": "GlobalReference",
-			"value": [
-				"https://test.de/ids/asset/0352_1113_5012_8795"
+			"keys": [
+				{
+					"type": "Identifiable",
+					"value": "https://test.de/ids/asset/0352_1113_5012_8795"
+				}
 			]
 		},
 		"idShort": "mir100_3_aas",

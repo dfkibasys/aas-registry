@@ -42,11 +42,11 @@ import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceAp
 import org.eclipse.basyx.aas.registry.events.RegistryEvent;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent.EventType;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.eclipse.basyx.aas.registry.model.GlobalReference;
 import org.eclipse.basyx.aas.registry.model.Key;
-import org.eclipse.basyx.aas.registry.model.KeyElements;
-import org.eclipse.basyx.aas.registry.model.ModelReference;
+import org.eclipse.basyx.aas.registry.model.KeyTypes;
 import org.eclipse.basyx.aas.registry.model.Page;
+import org.eclipse.basyx.aas.registry.model.Reference;
+import org.eclipse.basyx.aas.registry.model.ReferenceTypes;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorQuery;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorQuery.QueryTypeEnum;
 import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchRequest;
@@ -121,10 +121,14 @@ public abstract class BaseIntegrationTest {
 	private HttpStatus writeSubModel(String descriptorId, int idx) {
 		SubmodelDescriptor sm = new SubmodelDescriptor();
 		sm.setIdentification(idx + "");
+		Reference reference = new Reference();
+		sm.setSemanticId(reference);
 		if (idx % 2 == 0) {
-			sm.setSemanticId(new GlobalReference().value(List.of("a", "b")));
+			reference.setType(ReferenceTypes.GLOBALREFERENCE);
+			reference.addKeysItem(new Key().type(KeyTypes.PROPERTY).value("a"));
 		} else {
-			sm.setSemanticId(new ModelReference().keys(List.of(new Key().type(KeyElements.PROPERTY).value("aaa"))));
+			reference.setType(ReferenceTypes.MODELREFERENCE);
+			reference.addKeysItem(new Key().type(KeyTypes.PROPERTY).value("aaa"));
 		}
 		try {
 			return api.postSubmodelDescriptorWithHttpInfo(sm, descriptorId).getStatusCode();
@@ -312,7 +316,7 @@ public abstract class BaseIntegrationTest {
 	private void whenSearchWithSortingByIdShort_thenReturnSorted(SortDirection direction) throws IOException, InterruptedException, TimeoutException {
 		initialize();
 		List<AssetAdministrationShellDescriptor> expected = resourceLoader.loadShellDescriptorList();
-		String path = AasRegistryPaths.description().language();
+		String path = AasRegistryPaths.descriptions().language();
 		ShellDescriptorSearchRequest request = new ShellDescriptorSearchRequest().query(new ShellDescriptorQuery().queryType(QueryTypeEnum.MATCH).path(path).value("de-DE"))
 				.sortBy(new Sorting().addPathItem(SortingPath.IDSHORT).addPathItem(SortingPath.ADMINISTRATION_REVISION).direction(direction));
 		ResponseEntity<ShellDescriptorSearchResponse> response = api.searchShellDescriptorsWithHttpInfo(request);

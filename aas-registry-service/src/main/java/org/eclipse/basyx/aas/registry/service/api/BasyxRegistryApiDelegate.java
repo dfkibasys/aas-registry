@@ -32,9 +32,9 @@ import javax.validation.Valid;
 
 import org.eclipse.basyx.aas.registry.events.RegistryEventSink;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
-import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchRequest;
-import org.eclipse.basyx.aas.registry.model.ShellDescriptorSearchResponse;
+import org.eclipse.basyx.aas.registry.model.Result;
 import org.eclipse.basyx.aas.registry.model.SubmodelDescriptor;
+import org.eclipse.basyx.aas.registry.service.errors.PathParamAndBodyIdentifierDifferException;
 import org.eclipse.basyx.aas.registry.service.storage.AasRegistryStorage;
 import org.eclipse.basyx.aas.registry.service.storage.RegistrationEventSendingAasRegistryStorage;
 import org.springframework.http.HttpStatus;
@@ -42,13 +42,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
+public class BasyxRegistryApiDelegate implements ShellDescriptorsApiDelegate {
 
 	private final AasRegistryStorage storage;
+
 
 	public BasyxRegistryApiDelegate(AasRegistryStorage storage, RegistryEventSink eventSink) {
 		this.storage = new RegistrationEventSendingAasRegistryStorage(storage, eventSink);
 	}
+	
 
 	@Override
 	public ResponseEntity<Void> deleteAssetAdministrationShellDescriptorById(String aasIdentifier) {
@@ -57,6 +59,7 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 		}
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+	
 
 	@Override
 	public ResponseEntity<Void> deleteSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier) {
@@ -87,17 +90,18 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 		SubmodelDescriptor result = storage.getSubmodel(aasIdentifier, submodelIdentifier);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-
+	
 	@Override
-	public ResponseEntity<SubmodelDescriptor> postSubmodelDescriptor(String aasIdentifier, @Valid SubmodelDescriptor body) {
+	public ResponseEntity<SubmodelDescriptor> postSubmodelDescriptor(SubmodelDescriptor body, String aasIdentifier) {
 		storage.appendOrReplaceSubmodel(aasIdentifier, body);
 		return new ResponseEntity<>(body, HttpStatus.CREATED);
 	}
 
 	@Override
-	public ResponseEntity<Void> putAssetAdministrationShellDescriptorById(String aasIdentifier, @Valid AssetAdministrationShellDescriptor body) {
-		if (!Objects.equals(aasIdentifier, body.getIdentification())) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<Void> putAssetAdministrationShellDescriptorById(AssetAdministrationShellDescriptor body, String aasIdentifier) {
+		String bodyId = body.getIdentification();
+		if (!Objects.equals(aasIdentifier, bodyId)) {
+			throw new PathParamAndBodyIdentifierDifferException(aasIdentifier, bodyId);
 		}
 		// override if existing
 		storage.addOrReplaceAasDescriptor(body);
@@ -114,23 +118,20 @@ public class BasyxRegistryApiDelegate implements RegistryApiDelegate {
 	}
 
 	@Override
-	public ResponseEntity<Void> putSubmodelDescriptorById(String aasIdentifier, String submodelIdentifier, @Valid SubmodelDescriptor body) {
-		if (!Objects.equals(submodelIdentifier, body.getIdentification())) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<Void> putSubmodelDescriptorById(@Valid SubmodelDescriptor body, String aasIdentifier, String submodelIdentifier) {
+		String bodyId = body.getIdentification();
+		if (!Objects.equals(submodelIdentifier, bodyId)) {
+			throw new PathParamAndBodyIdentifierDifferException(aasIdentifier, bodyId);
 		}
 		storage.appendOrReplaceSubmodel(aasIdentifier, body);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-
-	@Override
-	public ResponseEntity<ShellDescriptorSearchResponse> searchShellDescriptors(ShellDescriptorSearchRequest request) {
-		ShellDescriptorSearchResponse result = storage.searchAasDescriptors(request);
-		return ResponseEntity.ok(result);
-	}
+	
 
 	@Override
 	public ResponseEntity<Void> deleteAllShellDescriptors() {
 		storage.clear();
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+
 }

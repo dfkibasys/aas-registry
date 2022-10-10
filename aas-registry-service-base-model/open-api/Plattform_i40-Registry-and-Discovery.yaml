@@ -1,16 +1,16 @@
 openapi: 3.0.3
 info:
   title: DotAAS Part 2 | HTTP/REST | Registry and Discovery and Search
-  description: The registry and discovery interface as part of Details of the Asset
-    Administration Shell Part 2
+  description: The registry and discovery API as part of Details of the Asset Administration
+    Shell Part 2
   termsOfService: https://github.com/admin-shell-io/aas-specs
-  contact: {name: 'Michael Hoffmeister, Torben Miny, Andreas Orzelski, Manuel Sauer,
-      Constantin Ziesche'}
-  version: Final-Draft + Search
-servers:
-- {url: /}
+  contact: {name: 'Constantin Ziesche, Andreas Orzelski, Florian Krebs, Bastian Rössl,
+      Manuel Sauer, Jens Vialkowitsch, Michael Hoffmeister, Torben Miny, Sebastian
+      Bader, Marko Ristin, Nico Braunisch'}
+  version: V1.0RC03 + Search
+servers: []
 paths:
-  /registry/shell-descriptors:
+  /shell-descriptors:
     get:
       tags: [Registry and Discovery Interface]
       summary: Returns all Asset Administration Shell Descriptors
@@ -23,7 +23,12 @@ paths:
               schema:
                 type: array
                 items: {$ref: '#/components/schemas/AssetAdministrationShellDescriptor'}
-      x-semanticIds: ['https://admin-shell.io/aas/API/GetAllAssetAdministrationShellDescriptors/1/0/RC02']
+        default:
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+      x-semanticIds: ['https://admin-shell.io/aas/API/GetAllAssetAdministrationShellDescriptors/1/0/RC03']
     post:
       tags: [Registry and Discovery Interface]
       summary: Creates a new Asset Administration Shell Descriptor, i.e. registers
@@ -41,15 +46,25 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/AssetAdministrationShellDescriptor'}
-      x-semanticIds: ['https://admin-shell.io/aas/API/PostAssetAdministrationShellDescriptor/1/0/RC02']
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+        default:
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+      x-semanticIds: ['https://admin-shell.io/aas/API/PostAssetAdministrationShellDescriptor/1/0/RC03']
     delete:
       tags: [Registry and Discovery Interface]
       summary: Deletes all Asset Administration Shell Descriptors
       operationId: DeleteAllShellDescriptors
       responses:
         '204': {description: No content}
-      x-semanticIds: ['https://admin-shell.io/aas/API/GetAllAssetAdministrationShellDescriptors/1/0/RC02']
-  /registry/shell-descriptors/{aasIdentifier}:
+      x-semanticIds: ['https://admin-shell.io/aas/API/GetAllAssetAdministrationShellDescriptors/1/0/RC03']
+  /shell-descriptors/{aasIdentifier}:
     get:
       tags: [Registry and Discovery Interface]
       summary: Returns a specific Asset Administration Shell Descriptor
@@ -57,19 +72,29 @@ paths:
       parameters:
       - name: aasIdentifier
         in: path
-        description: The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
         required: true
         style: simple
         explode: false
-        schema: {type: string}
+        schema: {type: string, format: byte}
+        x-utf8-base64-url-encoded-as-string: true
       responses:
         '200':
           description: Requested Asset Administration Shell Descriptor
           content:
             application/json:
               schema: {$ref: '#/components/schemas/AssetAdministrationShellDescriptor'}
-        '404': {description: Requested Asset Administration Shell Descriptor not found}
-      x-semanticIds: ['https://admin-shell.io/aas/API/GetAssetAdministrationShellDescriptorById/1/0/RC02']
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+        default:
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+      x-semanticIds: ['https://admin-shell.io/aas/API/GetAssetAdministrationShellDescriptorById/1/0/RC03']
     put:
       tags: [Registry and Discovery Interface]
       summary: Updates an existing Asset Administration Shell Descriptor
@@ -77,11 +102,12 @@ paths:
       parameters:
       - name: aasIdentifier
         in: path
-        description: The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
         required: true
         style: simple
         explode: false
-        schema: {type: string}
+        schema: {type: string, format: byte}
+        x-utf8-base64-url-encoded-as-string: true
       requestBody:
         description: Asset Administration Shell Descriptor object
         content:
@@ -90,7 +116,22 @@ paths:
         required: true
       responses:
         '204': {description: Asset Administration Shell Descriptor updated successfully}
-      x-semanticIds: ['https://admin-shell.io/aas/API/PutAssetAdministrationShellDescriptorById/1/0/RC02']
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+        default:
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+      x-semanticIds: ['https://admin-shell.io/aas/API/PutAssetAdministrationShellDescriptorById/1/0/RC03']
     delete:
       tags: [Registry and Discovery Interface]
       summary: Deletes an Asset Administration Shell Descriptor, i.e. de-registers
@@ -99,15 +140,26 @@ paths:
       parameters:
       - name: aasIdentifier
         in: path
-        description: The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
         required: true
         style: simple
         explode: false
-        schema: {type: string}
+        schema: {type: string, format: byte}
+        x-utf8-base64-url-encoded-as-string: true
       responses:
         '204': {description: Asset Administration Shell Descriptor deleted successfully}
-      x-semanticIds: ['https://admin-shell.io/aas/API/DeleteAssetAdministrationShellDescriptorById/1/0/RC02']
-  /registry/shell-descriptors/{aasIdentifier}/submodel-descriptors:
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+        default:
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+      x-semanticIds: ['https://admin-shell.io/aas/API/DeleteAssetAdministrationShellDescriptorById/1/0/RC03']
+  /shell-descriptors/{aasIdentifier}/submodel-descriptors:
     get:
       tags: [Registry and Discovery Interface]
       summary: Returns all Submodel Descriptors
@@ -115,11 +167,12 @@ paths:
       parameters:
       - name: aasIdentifier
         in: path
-        description: The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
         required: true
         style: simple
         explode: false
-        schema: {type: string}
+        schema: {type: string, format: byte}
+        x-utf8-base64-url-encoded-as-string: true
       responses:
         '200':
           description: Requested Submodel Descriptors
@@ -128,8 +181,17 @@ paths:
               schema:
                 type: array
                 items: {$ref: '#/components/schemas/SubmodelDescriptor'}
-        '404': {description: Asset Administration Shell Descriptor not found}
-      x-semanticIds: ['https://admin-shell.io/aas/API/GetAllSubmodelDescriptors/1/0/RC02']
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+        default:
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+      x-semanticIds: ['https://admin-shell.io/aas/API/GetAllSubmodelDescriptors/1/0/RC03']
     post:
       tags: [Registry and Discovery Interface]
       summary: Creates a new Submodel Descriptor, i.e. registers a submodel
@@ -137,11 +199,12 @@ paths:
       parameters:
       - name: aasIdentifier
         in: path
-        description: The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
         required: true
         style: simple
         explode: false
-        schema: {type: string}
+        schema: {type: string, format: byte}
+        x-utf8-base64-url-encoded-as-string: true
       requestBody:
         description: Submodel Descriptor object
         content:
@@ -154,9 +217,23 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/SubmodelDescriptor'}
-        '404': {description: Asset Administration Shell Descriptor not found}
-      x-semanticIds: ['https://admin-shell.io/aas/API/PostSubmodelDescriptor/1/0/RC02']
-  /registry/shell-descriptors/{aasIdentifier}/submodel-descriptors/{submodelIdentifier}:
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+        default:
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+      x-semanticIds: ['https://admin-shell.io/aas/API/PostSubmodelDescriptor/1/0/RC03']
+  /shell-descriptors/{aasIdentifier}/submodel-descriptors/{submodelIdentifier}:
     get:
       tags: [Registry and Discovery Interface]
       summary: Returns a specific Submodel Descriptor
@@ -164,27 +241,37 @@ paths:
       parameters:
       - name: aasIdentifier
         in: path
-        description: The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
         required: true
         style: simple
         explode: false
-        schema: {type: string}
+        schema: {type: string, format: byte}
+        x-utf8-base64-url-encoded-as-string: true
       - name: submodelIdentifier
         in: path
-        description: The Submodel’s unique id (BASE64-URL-encoded)
+        description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
         required: true
         style: simple
         explode: false
-        schema: {type: string}
+        schema: {type: string, format: byte}
+        x-utf8-base64-url-encoded-as-string: true
       responses:
         '200':
           description: Requested Submodel Descriptor
           content:
             application/json:
               schema: {$ref: '#/components/schemas/SubmodelDescriptor'}
-        '404': {description: Asset Administration Shell Descriptor or submodel not
-            found}
-      x-semanticIds: ['https://admin-shell.io/aas/API/GetSubmodelDescriptorById/1/0/RC02']
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+        default:
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+      x-semanticIds: ['https://admin-shell.io/aas/API/GetSubmodelDescriptorById/1/0/RC03']
     put:
       tags: [Registry and Discovery Interface]
       summary: Updates an existing Submodel Descriptor
@@ -192,18 +279,20 @@ paths:
       parameters:
       - name: aasIdentifier
         in: path
-        description: The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
         required: true
         style: simple
         explode: false
-        schema: {type: string}
+        schema: {type: string, format: byte}
+        x-utf8-base64-url-encoded-as-string: true
       - name: submodelIdentifier
         in: path
-        description: The Submodel’s unique id (BASE64-URL-encoded)
+        description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
         required: true
         style: simple
         explode: false
-        schema: {type: string}
+        schema: {type: string, format: byte}
+        x-utf8-base64-url-encoded-as-string: true
       requestBody:
         description: Submodel Descriptor object
         content:
@@ -212,8 +301,22 @@ paths:
         required: true
       responses:
         '204': {description: Submodel Descriptor updated successfully}
-        '404': {description: Asset Administration Shell Descriptor not found}
-      x-semanticIds: ['https://admin-shell.io/aas/API/PutSubmodelDescriptorById/1/0/RC02']
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+        default:
+          description: Default error handling for unmentioned status codes
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
+      x-semanticIds: ['https://admin-shell.io/aas/API/PutSubmodelDescriptorById/1/0/RC03']
     delete:
       tags: [Registry and Discovery Interface]
       summary: Deletes a Submodel Descriptor, i.e. de-registers a submodel
@@ -221,118 +324,36 @@ paths:
       parameters:
       - name: aasIdentifier
         in: path
-        description: The Asset Administration Shell’s unique id (BASE64-URL-encoded)
+        description: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)
         required: true
         style: simple
         explode: false
-        schema: {type: string}
+        schema: {type: string, format: byte}
+        x-utf8-base64-url-encoded-as-string: true
       - name: submodelIdentifier
         in: path
-        description: The Submodel’s unique id (BASE64-URL-encoded)
+        description: The Submodel’s unique id (UTF8-BASE64-URL-encoded)
         required: true
         style: simple
         explode: false
-        schema: {type: string}
+        schema: {type: string, format: byte}
+        x-utf8-base64-url-encoded-as-string: true
       responses:
         '204': {description: Submodel Descriptor deleted successfully}
-      x-semanticIds: ['https://admin-shell.io/aas/API/DeleteSubmodelDescriptorById/1/0/RC02']
-  /lookup/shells:
-    get:
-      tags: [Registry and Discovery Interface]
-      summary: Returns a list of Asset Administration Shell ids based on Asset identifier
-        key-value-pairs
-      operationId: GetAllAssetAdministrationShellIdsByAssetLink
-      parameters:
-      - name: assetIds
-        in: query
-        description: The key-value-pair of an Asset identifier
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          example: '[{"key": "globalAssetId","value": "http://example.company/myAsset"},{"key":
-            "myOwnInternalAssetId","value": "12345ABC"}]'
-          items: {$ref: '#/components/schemas/IdentifierKeyValuePair'}
-      responses:
-        '200':
-          description: Requested Asset Administration Shell ids
+        '404':
+          description: Not Found
           content:
             application/json:
-              schema:
-                type: array
-                items: {$ref: '#/components/schemas/Identifier'}
-      x-semanticIds: ['https://admin-shell.io/aas/API/GetAllAssetAdministrationShellIdsByAssetLink/1/0/RC02']
-  /lookup/shells/{aasIdentifier}:
-    get:
-      tags: [Registry and Discovery Interface]
-      summary: Returns a list of Asset identifier key-value-pairs based on an Asset
-        Administration Shell id to edit discoverable content
-      operationId: GetAllAssetLinksById
-      parameters:
-      - name: aasIdentifier
-        in: path
-        description: The Asset Administration Shell’s unique id (BASE64-URL-encoded)
-        required: true
-        style: simple
-        explode: false
-        schema: {type: string}
-      responses:
-        '200':
-          description: Requested Asset identifier key-value-pairs
+              schema: {$ref: '#/components/schemas/Result'}
+        default:
+          description: Default error handling for unmentioned status codes
           content:
             application/json:
-              schema:
-                type: array
-                items: {$ref: '#/components/schemas/IdentifierKeyValuePair'}
-      x-semanticIds: ['https://admin-shell.io/aas/API/GetAllAssetLinksById/1/0/RC02']
-    post:
-      tags: [Registry and Discovery Interface]
-      summary: Creates all Asset identifier key-value-pair linked to an Asset Administration
-        Shell to edit discoverable content
-      operationId: PostAllAssetLinksById
-      parameters:
-      - name: aasIdentifier
-        in: path
-        description: The Asset Administration Shell’s unique id (BASE64-URL-encoded)
-        required: true
-        style: simple
-        explode: false
-        schema: {type: string}
-      requestBody:
-        description: Asset identifier key-value-pairs
-        content:
-          application/json:
-            schema:
-              type: array
-              items: {$ref: '#/components/schemas/IdentifierKeyValuePair'}
-        required: true
-      responses:
-        '201':
-          description: Asset identifier key-value-pairs created successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items: {$ref: '#/components/schemas/IdentifierKeyValuePair'}
-      x-semanticIds: ['https://admin-shell.io/aas/API/PostAllAssetLinksById/1/0/RC02']
-    delete:
-      tags: [Registry and Discovery Interface]
-      summary: Deletes all Asset identifier key-value-pair linked to an Asset Administration
-        Shell to edit discoverable content
-      operationId: DeleteAllAssetLinksById
-      parameters:
-      - name: aasIdentifier
-        in: path
-        description: The Asset Administration Shell’s unique id (BASE64-URL-encoded)
-        required: true
-        style: simple
-        explode: false
-        schema: {type: string}
-      responses:
-        '204': {description: Asset identifier key-value-pairs deleted successfully}
-      x-semanticIds: ['https://admin-shell.io/aas/API/DeleteAllAssetLinksById/1/0/RC02']
-  /registry/search:
+              schema: {$ref: '#/components/schemas/Result'}
+      x-semanticIds: ['https://admin-shell.io/aas/API/DeleteSubmodelDescriptorById/1/0/RC03']
+  /lookup/shells: {}
+  /lookup/shells/{aasIdentifier}: {}
+  /search:
     post:
       operationId: SearchShellDescriptors
       tags: [Registry and Discovery Interface]
@@ -347,40 +368,54 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/ShellDescriptorSearchResponse'}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Result'}
 components:
   schemas:
     AssetAdministrationShellDescriptor:
       required: [endpoints, identification]
       type: object
-      properties:
-        administration: {$ref: '#/components/schemas/AdministrativeInformation'}
-        description:
-          type: array
-          items: {$ref: '#/components/schemas/LangString'}
-        globalAssetId: {$ref: '#/components/schemas/Reference'}
-        idShort: {type: string}
-        identification: {$ref: '#/components/schemas/Identifier'}
-        specificAssetIds:
-          type: array
-          items: {$ref: '#/components/schemas/IdentifierKeyValuePair'}
-        submodelDescriptors:
-          type: array
-          items: {$ref: '#/components/schemas/SubmodelDescriptor'}
+      example: '{ "identification": "https://example.org/aas/motor", "endpoints":
+        [ { "protocolInformation": { "endpointAddress": "https://localhost:1234",
+        "endpointProtocolVersion": "1.1" }, "interface": "AAS-1.0" }, { "protocolInformation":
+        { "endpointAddress": "opc.tcp://localhost:4840" }, "interface": "AAS-1.0"
+        }, { "protocolInformation": { "endpointAddress": "https://localhost:5678",
+        "endpointProtocolVersion": "1.1", "subprotocol": "OPC UA Basic SOAP", "subprotocolBody":
+        "ns=2;s=MyAAS", "subprotocolBodyEncoding": "application/soap+xml" }, "interface":
+        "AAS-1.0" } ] }'
       allOf:
       - {$ref: '#/components/schemas/Descriptor'}
+      - properties:
+          administration: {$ref: '#/components/schemas/AdministrativeInformation'}
+          descriptions:
+            type: array
+            items: {$ref: '#/components/schemas/LangString'}
+          displayNames:
+            type: array
+            items: {$ref: '#/components/schemas/LangString'}
+          globalAssetId: {$ref: '#/components/schemas/Reference'}
+          idShort: {type: string}
+          identification: {type: string}
+          specificAssetIds: {$ref: '#/components/schemas/SpecificAssetId'}
+          submodelDescriptors:
+            type: array
+            items: {$ref: '#/components/schemas/SubmodelDescriptor'}
     Descriptor:
       type: object
       properties:
         endpoints:
           type: array
           items: {$ref: '#/components/schemas/Endpoint'}
-      example: '{  "endpoints": [{ "protocolInformation": { "endpointAddress": "https://localhost:1234",
-        "endpointProtocolVersion: "identification_1.1"  }, "interface": "AAS-1.0"  },
-        { "protocolInformation": {  "endpointAddress": "opc.tcp://localhost:4840"
-        },    "interface": "AAS-1.0" }, {  "protocolInformation": { "endpointAddress":
-        "https://localhost:5678",  "endpointProtocolVersion: "identification_1.1",
-        "subprotocol": "OPC UA Basic SOAP", "subprotocolBody": "ns=2;s=MyAAS", "subprotocolBodyEncoding":
-        "plain"  }, "interface": "AAS-1.0"  }] }'
+      example: '{ "endpoints": [ { "protocolInformation": { "endpointAddress": "https://localhost:1234",
+        "endpointProtocolVersion": "1.1" }, "interface": "AAS-1.0" }, { "protocolInformation":
+        { "endpointAddress": "opc.tcp://localhost:4840" }, "interface": "AAS-1.0"
+        }, { "protocolInformation": { "endpointAddress": "https://localhost:5678",
+        "endpointProtocolVersion": "1.1", "subprotocol": "OPC UA Basic SOAP", "subprotocolBody":
+        "ns=2;s=MyAAS", "subprotocolBodyEncoding": "application/soap+xml" }, "interface":
+        "AAS-1.0" } ] }'
     Endpoint:
       required: [interface, protocolInformation]
       type: object
@@ -398,80 +433,127 @@ components:
         subprotocolBody: {type: string}
         subprotocolBodyEncoding: {type: string}
     AdministrativeInformation:
-      type: object
-      properties:
-        revision: {type: string}
-        version: {type: string}
-    LangString:
-      required: [language, text]
-      type: object
-      properties:
-        language: {type: string}
-        text: {type: string}
-    Reference:
-      type: object
-      oneOf:
-      - {$ref: '#/components/schemas/GlobalReference'}
-      - {$ref: '#/components/schemas/ModelReference'}
-      discriminator: {propertyName: type}
-    GlobalReference:
-      required: [value, type]
-      properties:
-        value:
-          type: array
-          items: {$ref: '#/components/schemas/Identifier'}
-        type: {type: string, default: GlobalReference, readOnly: true}
       allOf:
-      - {$ref: '#/components/schemas/Reference'}
-    Identifier: {type: string}
-    ModelReference:
+      - {$ref: '#/components/schemas/HasDataSpecification'}
+      - properties:
+          version: {minLength: 1, type: string}
+          revision: {minLength: 1, type: string}
+    HasDataSpecification:
+      type: object
+      properties:
+        embeddedDataSpecifications:
+          minItems: 1
+          type: array
+          items: {$ref: '#/components/schemas/EmbeddedDataSpecification'}
+    EmbeddedDataSpecification:
+      required: [dataSpecification, dataSpecificationContent]
+      type: object
+      properties:
+        dataSpecification: {$ref: '#/components/schemas/Reference'}
+        dataSpecificationContent: {$ref: '#/components/schemas/DataSpecificationContent'}
+    Reference:
+      allOf:
+      - {$ref: '#/components/schemas/ReferenceParent'}
+      - properties:
+          referredSemanticId: {$ref: '#/components/schemas/ReferenceParent'}
+    ReferenceParent:
       required: [keys, type]
       properties:
-        referredSemanticId: {$ref: '#/components/schemas/Reference'}
+        type: {$ref: '#/components/schemas/ReferenceTypes'}
         keys:
+          minItems: 1
           type: array
           items: {$ref: '#/components/schemas/Key'}
-        type: {type: string, default: ModelReference, readOnly: true}
-      allOf:
-      - {$ref: '#/components/schemas/Reference'}
+    ReferenceTypes:
+      type: string
+      enum: [GlobalReference, ModelReference]
     Key:
       required: [type, value]
       type: object
       properties:
-        type: {$ref: '#/components/schemas/KeyElements'}
-        value: {type: string}
-    KeyElements:
+        type: {$ref: '#/components/schemas/KeyTypes'}
+        value: {minLength: 1, type: string}
+    KeyTypes:
       type: string
-      enum: [AssetAdministrationShell, AccessPermissionRule, ConceptDescription, Submodel,
-        AnnotatedRelationshipElement, BasicEvent, Blob, Capability, DataElement, File,
-        Entity, Event, MultiLanguageProperty, Operation, Property, Range, ReferenceElement,
-        RelationshipElement, SubmodelElement, SubmodelElementList, SubmodelElementStruct,
-        View, FragmentReference]
-    IdentifierKeyValuePair:
+      enum: [AnnotatedRelationshipElement, AssetAdministrationShell, BasicEventElement,
+        Blob, Capability, ConceptDescription, DataElement, Entity, EventElement, File,
+        FragmentReference, GlobalReference, Identifiable, MultiLanguageProperty, Operation,
+        Property, Range, Referable, ReferenceElement, RelationshipElement, Submodel,
+        SubmodelElement, SubmodelElementCollection, SubmodelElementList]
+    DataSpecificationContent:
+      required: [modelType]
+      type: object
+      properties:
+        modelType: {$ref: '#/components/schemas/ModelType'}
+    ModelType:
+      type: string
+      enum: [AnnotatedRelationshipElement, AssetAdministrationShell, BasicEventElement,
+        Blob, Capability, ConceptDescription, DataSpecificationIEC61360, DataSpecificationPhysicalUnit,
+        Entity, File, MultiLanguageProperty, Operation, Property, Range, ReferenceElement,
+        RelationshipElement, Submodel, SubmodelElementCollection, SubmodelElementList]
+    LangString:
+      required: [language, text]
+      type: object
+      properties:
+        language: {pattern: '^(([a-zA-Z]{2,3}(-[a-zA-Z]{3}(-[a-zA-Z]{3}){2})?|[a-zA-Z]{4}|[a-zA-Z]{5,8})(-[a-zA-Z]{4})?(-([a-zA-Z]{2}|[0-9]{3}))?(-(([a-zA-Z0-9]){5,8}|[0-9]([a-zA-Z0-9]){3}))*(-[0-9A-WY-Za-wy-z](-([a-zA-Z0-9]){2,8})+)*(-[xX](-([a-zA-Z0-9]){1,8})+)?|[xX](-([a-zA-Z0-9]){1,8})+|((en-GB-oed|i-ami|i-bnn|i-default|i-enochian|i-hak|i-klingon|i-lux|i-mingo|i-navajo|i-pwn|i-tao|i-tay|i-tsu|sgn-BE-FR|sgn-BE-NL|sgn-CH-DE)|(art-lojban|cel-gaulish|no-bok|no-nyn|zh-guoyu|zh-hakka|zh-min|zh-min-nan|zh-xiang)))$',
+          type: string}
+        text: {type: string}
+    SpecificAssetId:
       allOf:
       - {$ref: '#/components/schemas/HasSemantics'}
-      - required: [key, subjectId, value]
+      - required: [externalSubjectId, name, value]
         properties:
-          key: {type: string}
-          subjectId: {$ref: '#/components/schemas/Reference'}
-          value: {type: string}
+          name: {minLength: 1, type: string}
+          value: {minLength: 1, type: string}
+          externalSubjectId: {$ref: '#/components/schemas/Reference'}
     HasSemantics:
       type: object
       properties:
         semanticId: {$ref: '#/components/schemas/Reference'}
+        supplementalSemanticIds:
+          minItems: 1
+          type: array
+          items: {$ref: '#/components/schemas/Reference'}
     SubmodelDescriptor:
       required: [endpoints, identification]
       type: object
       properties:
         administration: {$ref: '#/components/schemas/AdministrativeInformation'}
-        description:
+        descriptions:
+          type: array
+          items: {$ref: '#/components/schemas/LangString'}
+        displayNames:
           type: array
           items: {$ref: '#/components/schemas/LangString'}
         idShort: {type: string}
-        identification: {$ref: '#/components/schemas/Identifier'}
+        identification: {type: string}
         semanticId: {$ref: '#/components/schemas/Reference'}
+      example: '{ "identification": "https://admin-shell.io/zvei/nameplate/1/0/Nameplate",
+        "endpoints": [ { "protocolInformation": { "endpointAddress": "https://localhost:1234",
+        "endpointProtocolVersion": "1.1" }, "interface": "AAS-1.0" }, { "protocolInformation":
+        { "endpointAddress": "opc.tcp://localhost:4840" }, "interface": "AAS-1.0"
+        }, { "protocolInformation": { "endpointAddress": "https://localhost:5678",
+        "endpointProtocolVersion": "1.1", "subprotocol": "OPC UA Basic SOAP", "subprotocolBody":
+        "ns=2;s=MyAAS", "subprotocolBodyEncoding": "application/soap+xml" }, "interface":
+        "AAS-1.0" } ] }'
       allOf:
       - {$ref: '#/components/schemas/Descriptor'}
+    Result:
+      type: object
+      properties:
+        messages:
+          type: array
+          items: {$ref: '#/components/schemas/Message'}
+        success: {type: boolean}
+    Message:
+      type: object
+      properties:
+        code: {type: string}
+        messageType:
+          type: string
+          enum: [Undefined, Info, Warning, Error, Exception]
+        text: {type: string}
+        timestamp: {type: string}
     ShellDescriptorSearchRequest:
       type: object
       properties:

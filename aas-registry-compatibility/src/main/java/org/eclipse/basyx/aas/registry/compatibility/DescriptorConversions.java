@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.eclipse.basyx.aas.metamodel.api.parts.asset.IAsset;
@@ -42,9 +43,9 @@ import org.eclipse.basyx.aas.metamodel.map.parts.Asset;
 import org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor;
 import org.eclipse.basyx.aas.registry.model.Descriptor;
 import org.eclipse.basyx.aas.registry.model.Endpoint;
-import org.eclipse.basyx.aas.registry.model.GlobalReference;
-import org.eclipse.basyx.aas.registry.model.ModelReference;
+import org.eclipse.basyx.aas.registry.model.KeyTypes;
 import org.eclipse.basyx.aas.registry.model.ProtocolInformation;
+import org.eclipse.basyx.aas.registry.model.ReferenceTypes;
 import org.eclipse.basyx.submodel.metamodel.api.identifier.IIdentifier;
 import org.eclipse.basyx.submodel.metamodel.api.identifier.IdentifierType;
 import org.eclipse.basyx.submodel.metamodel.api.reference.IKey;
@@ -101,7 +102,8 @@ public class DescriptorConversions {
 	}
 
 	private static void assignSemanticId(IReference semanticId, org.eclipse.basyx.aas.registry.model.SubmodelDescriptor target) {
-		ModelReference semanticRef = new ModelReference();
+		org.eclipse.basyx.aas.registry.model.Reference semanticRef = new org.eclipse.basyx.aas.registry.model.Reference();
+		semanticRef.setType(ReferenceTypes.MODELREFERENCE);
 		target.setSemanticId(semanticRef);
 		List<IKey> keys = semanticId.getKeys();
 		if (keys != null) {
@@ -116,12 +118,12 @@ public class DescriptorConversions {
 		return dotaasKey;
 	}
 
-	private static org.eclipse.basyx.aas.registry.model.KeyElements toDotaasKeyElement(KeyElements key) {
+	private static KeyTypes toDotaasKeyElement(KeyElements key) {
 		switch (key) {
 		// case SUBMODEL:
 		// return org.eclipse.basyx.aas.registry.model.KeyElements.SUBMODEL;
 		default:
-			return org.eclipse.basyx.aas.registry.model.KeyElements.CONCEPTDESCRIPTION;
+			return KeyTypes.CONCEPTDESCRIPTION;
 		}
 	}
 
@@ -133,9 +135,13 @@ public class DescriptorConversions {
 
 		AASDescriptor result = new AASDescriptor(idShort, identifier, new Asset(), address);
 
-		GlobalReference ref = (GlobalReference) dotaasDescriptor.getGlobalAssetId();
+		org.eclipse.basyx.aas.registry.model.Reference ref = (org.eclipse.basyx.aas.registry.model.Reference) dotaasDescriptor.getGlobalAssetId();
 		Asset resultAsset = (Asset) result.getAsset();
-		resultAsset.setIdentification(IdentifierType.CUSTOM, ref.getValue().get(0));
+		Predicate<org.eclipse.basyx.aas.registry.model.Key> isIdKey = k->k.getType() == KeyTypes.IDENTIFIABLE;
+		Optional<String> idOpt = ref.getKeys().stream().filter(isIdKey).map(org.eclipse.basyx.aas.registry.model.Key::getValue).findFirst();
+		if (idOpt.isPresent()) {
+			resultAsset.setIdentification(IdentifierType.CUSTOM, idOpt.get());	
+		}
 
 		Optional.ofNullable(dotaasDescriptor.getSubmodelDescriptors()).map(List::stream).orElseGet(Stream::empty).map(DescriptorConversions::toBasyxSubmodelDescriptor).forEach(result::addSubmodelDescriptor);
 
@@ -158,7 +164,9 @@ public class DescriptorConversions {
 		String address = getEndpointAddress(dotaasDescriptor.getEndpoints());
 		SubmodelDescriptor result = new SubmodelDescriptor(dotaasDescriptor.getIdShort(), new Identifier(IdentifierType.CUSTOM, dotaasDescriptor.getIdentification()), address);
 
-		Optional.ofNullable(dotaasDescriptor.getSemanticId()).filter(ModelReference.class::isInstance).map(ModelReference.class::cast).map(ModelReference::getKeys).map(List::iterator).filter(Iterator::hasNext).map(Iterator::next)
+		Predicate<org.eclipse.basyx.aas.registry.model.Reference> isModelRef = r -> r.getType().equals(ReferenceTypes.MODELREFERENCE);
+		Optional.ofNullable(dotaasDescriptor.getSemanticId()).filter(isModelRef).map(org.eclipse.basyx.aas.registry.model.Reference::getKeys)
+				.map(List::iterator).filter(Iterator::hasNext).map(Iterator::next)
 				.map(org.eclipse.basyx.aas.registry.model.Key::getValue).map(DescriptorConversions::toCustomKey).filter(Objects::nonNull).map(Reference::new).ifPresent(result::setSemanticId);
 
 		return result;
@@ -172,9 +180,17 @@ public class DescriptorConversions {
 	}
 
 	private static void assignGlobalReference(AASDescriptor basyxDescriptor, AssetAdministrationShellDescriptor result) {
-		GlobalReference assetRef = new GlobalReference();
-		Optional.of(basyxDescriptor.getAsset()).map(IAsset::getIdentification).map(IIdentifier::getId).ifPresent(assetRef::addValueItem);
+		org.eclipse.basyx.aas.registry.model.Reference assetRef = new org.eclipse.basyx.aas.registry.model.Reference();
+		assetRef.setType(ReferenceTypes.GLOBALREFERENCE);
+		Optional.of(basyxDescriptor.getAsset()).map(IAsset::getIdentification).map(IIdentifier::getId).map(DescriptorConversions::newIdKey).ifPresent(assetRef::addKeysItem);
 		result.setGlobalAssetId(assetRef);
+	}
+	
+	private static org.eclipse.basyx.aas.registry.model.Key newIdKey(String id) {
+		org.eclipse.basyx.aas.registry.model.Key key = new org.eclipse.basyx.aas.registry.model.Key();
+		key.setType(KeyTypes.IDENTIFIABLE);
+		key.setValue(id);
+		return key;
 	}
 
 	private enum InterfaceType {

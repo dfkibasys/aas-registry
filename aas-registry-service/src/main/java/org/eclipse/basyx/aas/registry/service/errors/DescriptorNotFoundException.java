@@ -23,16 +23,16 @@
  * 
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
-package org.eclipse.basyx.aas.registry.service.storage;
+package org.eclipse.basyx.aas.registry.service.errors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-public class SubmodelNotFoundException extends ResponseStatusException {
+public abstract class DescriptorNotFoundException extends ResponseStatusException {
 
 	private static final long serialVersionUID = 1L;
 
-	public SubmodelNotFoundException(String aasDesriptorId, String submodelId) {
-		super(HttpStatus.NOT_FOUND, "Submodel '" + submodelId + "' is not avaialbe for descriptor '" + aasDesriptorId + "'.");
+	public DescriptorNotFoundException(HttpStatus status, String reason) {
+		super(status, reason);
 	}
 }

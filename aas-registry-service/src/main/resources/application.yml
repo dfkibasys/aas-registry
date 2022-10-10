@@ -16,6 +16,9 @@ server:
   port: 8080
   servlet:
     contextPath: /
+  error:
+    whitelabel:
+      enabled: false
 servlet:
   headers: []
 spring:

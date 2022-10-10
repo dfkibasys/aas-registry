@@ -1,6 +1,6 @@
 # Asset Administration Shell Registry
 
-This in a Java-based implementation of the Asset Adminstration Shell Registry server and client based on the corresponding [Open-API specification](https://api.swaggerhub.com/apis/Plattform_i40/Registry-and-Discovery/Final-Draft/swagger.yaml?resolved=true) of the German Plattform Industrie 4.0 and its specification document [Details of the Asset Administration Shell, Part 2, v1.0RC02](https://www.plattform-i40.de/IP/Redaktion/EN/Downloads/Publikation/Details_of_the_Asset_Administration_Shell_Part2_V1.html)
+This in a Java-based implementation of the Asset Adminstration Shell Registry server and client based on the corresponding [Open-API specification](https://app.swaggerhub.com/apis/Plattform_i40/Registry-and-Discovery/V1.0RC03) of the German Plattform Industrie 4.0 and its specification document [Details of the Asset Administration Shell, Part 2, v1.0RC02](https://www.plattform-i40.de/IP/Redaktion/EN/Downloads/Publikation/Details_of_the_Asset_Administration_Shell_Part2_V1.html)
 
 [aas-registry-client](aas-registry-client/README.md) can be used to interact with the backend to register or unregister descriptors and submodels or perform search operations.
 

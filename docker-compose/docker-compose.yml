@@ -90,7 +90,7 @@ services:
       - basyx      
                
   aas-registry-kafka-es:
-    image: aas-registry-test/aas-registry-dotaas-part2-kafka-es:0.3.0-SNAPSHOT
+    image: aas-registry-test/aas-registry-dotaas-part2-kafka-es:0.4.2-SNAPSHOT
     container_name: aas-registry-kafka-es
     pull_policy: never
     ports:
@@ -107,7 +107,7 @@ services:
 
 
   aas-registry-kafka-es-external-conf:
-    image: aas-registry-test/aas-registry-dotaas-part2-kafka-es:0.3.0-SNAPSHOT
+    image: aas-registry-test/aas-registry-dotaas-part2-kafka-es:0.4.2-SNAPSHOT
     container_name: aas-registry-kafka-es-external-conf
     pull_policy: never
     ports:
@@ -135,7 +135,7 @@ services:
 
 
   aas-registry-kafka-mem:
-    image: aas-registry-test/aas-registry-dotaas-part2-kafka-mem:0.3.0-SNAPSHOT
+    image: aas-registry-test/aas-registry-dotaas-part2-kafka-mem:0.4.2-SNAPSHOT
     container_name: aas-registry-kafka-mem
     pull_policy: never
     ports:
@@ -150,7 +150,7 @@ services:
       - basyx
 
   aas-registry-log-mem:
-    image: aas-registry-test/aas-registry-dotaas-part2-log-mem:0.3.0-SNAPSHOT
+    image: aas-registry-test/aas-registry-dotaas-part2-log-mem:0.4.2-SNAPSHOT
     container_name: aas-registry-log-mem
     pull_policy: never
     ports:
@@ -160,7 +160,7 @@ services:
       - basyx
 
   aas-registry-log-es:
-    image: aas-registry-test/aas-registry-dotaas-part2-log-es:0.3.0-SNAPSHOT
+    image: aas-registry-test/aas-registry-dotaas-part2-log-es:0.4.2-SNAPSHOT
     container_name: aas-registry-log-es
     pull_policy: never
     ports:

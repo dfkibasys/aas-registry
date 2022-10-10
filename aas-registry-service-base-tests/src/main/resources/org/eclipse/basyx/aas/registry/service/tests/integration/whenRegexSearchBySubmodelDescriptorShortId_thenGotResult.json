@@ -4,7 +4,7 @@
 	"administration": {
 		"revision": "identification_1.1"
 	},
-	"description": [
+	"descriptions": [
 		{
 			"language": "de-DE",
 			"text": "identification_5"
@@ -14,7 +14,7 @@
 		{
 			"idShort": "sm3",
 			"identification": "submodel3",
-			"description": [
+			"descriptions": [
 				{
 					"language": "de-DE",
 					"text": "G2"

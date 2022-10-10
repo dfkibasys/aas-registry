@@ -5,7 +5,7 @@
 		"administration": {
 			"revision": "identification_2.2"
 		},
-		"description": [
+		"descriptions": [
 			{
 				"language": "en-US",
 				"text": "identification_1"
@@ -18,7 +18,7 @@
 		"administration": {
 			"revision": "2.22221"
 		},
-		"description": [
+		"descriptions": [
 			{
 				"language": "de-DE",
 				"text": "identification_2"
@@ -31,7 +31,7 @@
 		"administration": {
 			"revision": "identification_1.1"
 		},
-		"description": [
+		"descriptions": [
 			{
 				"language": "de-DE",
 				"text": "identification_5"
@@ -41,7 +41,7 @@
 			{
 				"idShort": "submodel_0",
 				"identification": "submodel_0",
-				"description": [
+				"descriptions": [
 					{
 						"language": "de-DE",
 						"text": "G1"
@@ -51,7 +51,7 @@
 			{
 				"idShort": "submodel_1",
 				"identification": "submodel1",
-				"description": [
+				"descriptions": [
 					{
 						"language": "de-DE",
 						"text": "G2"
@@ -61,7 +61,7 @@
 			{
 				"idShort": "sm2",
 				"identification": "submodel2",
-				"description": [
+				"descriptions": [
 					{
 						"language": "de-DE",
 						"text": "G1"
@@ -71,7 +71,7 @@
 			{
 				"idShort": "sm3",
 				"identification": "submodel3",
-				"description": [
+				"descriptions": [
 					{
 						"language": "de-DE",
 						"text": "G2"
@@ -86,7 +86,7 @@
 		"administration": {
 			"revision": "identification_2.1"
 		},
-		"description": [
+		"descriptions": [
 			{
 				"language": "de-DE",
 				"text": "identification_7"
@@ -99,7 +99,7 @@
 		"administration": {
 			"revision": "identification_2.2"
 		},
-		"description": [
+		"descriptions": [
 			{
 				"language": "de-DE",
 				"text": "identification_7"
