@@ -41,7 +41,7 @@
 		<docker.maven.plugin.version>0.40.1</docker.maven.plugin.version>
 
 		<docker.image.name>${project.artifactId}</docker.image.name>
-		<docker.image.version>${project.version}</docker.image.version>
+		<docker.image.version>V1.0RC03-${project.version}</docker.image.version>
 		<docker.pull.registry>docker.io</docker.pull.registry>
 		<docker.target.platforms>linux/amd64,linux/arm64</docker.target.platforms>
 		<docker.registry>docker.io</docker.registry>
