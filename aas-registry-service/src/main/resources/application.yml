@@ -23,7 +23,7 @@ servlet:
   headers: []
 spring:
   jackson:
-    date-format: org.eclipse.basyx.aas.registry.service.RFC3339DateFormat
+    date-format: de.dfki.cos.basys.aas.registry.service.RFC3339DateFormat
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
   cloud:

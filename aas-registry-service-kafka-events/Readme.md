@@ -5,7 +5,7 @@ This registry storage implementation uses [Apache Kafka](https://kafka.apache.or
 ```xml
 
 	<dependency>
-		<groupId>org.eclipse.basyx.aas.registry</groupId>
+		<groupId>de.dfki.cos.basys.aas.registry</groupId>
 		<artifactId>aas-registry-service-kafka-events</artifactId>
 	</dependency>
 ```

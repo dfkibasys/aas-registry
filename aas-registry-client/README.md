@@ -5,7 +5,7 @@ This is the generated java openAPI client that can be used to communicate with t
 To use the client in your maven projects define the following dependency:
 ```xml
 <dependency>
-		<groupId>org.eclipse.basyx.aas.registry</groupId>
+		<groupId>de.dfki.cos.basys.aas.registry</groupId>
 		<artifactId>aas-registry-client</artifactId>
 		<version>0.1.0-SNAPSHOT</version>
 </dependency>
@@ -14,7 +14,7 @@ To use the client in your maven projects define the following dependency:
 If you also want to use the search API we highly recommend that you also include the search path builder class. It is also used in an example later in this document:
 ```xml
 <dependency>
-		<groupId>org.eclipse.basyx.aas.registry</groupId>
+		<groupId>de.dfki.cos.basys.aas.registry</groupId>
 		<artifactId>aas-registry-paths</artifactId>
 		<version>0.1.0-SNAPSHOT</version>
 </dependency>
@@ -41,10 +41,10 @@ Path parameters in the request are automatically base64-URL-ecoded if you use th
 Here is some generated java code that describes the client usage. 
 
 ```java
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 import java.io.File;
 import java.util.*;
@@ -63,10 +63,10 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         }
     }
 }
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 import java.io.File;
 import java.util.*;
@@ -85,10 +85,10 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         }
     }
 }
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 import java.io.File;
 import java.util.*;
@@ -108,10 +108,10 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         }
     }
 }
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 import java.io.File;
 import java.util.*;
@@ -130,10 +130,10 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         }
     }
 }
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 import java.io.File;
 import java.util.*;
@@ -153,10 +153,10 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         }
     }
 }
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 import java.io.File;
 import java.util.*;
@@ -176,10 +176,10 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         }
     }
 }
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 import java.io.File;
 import java.util.*;
@@ -199,10 +199,10 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         }
     }
 }
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 import java.io.File;
 import java.util.*;
@@ -222,10 +222,10 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         }
     }
 }
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 import java.io.File;
 import java.util.*;
@@ -246,10 +246,10 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         }
     }
 }
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 import java.io.File;
 import java.util.*;
@@ -270,10 +270,10 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         }
     }
 }
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 import java.io.File;
 import java.util.*;
@@ -293,10 +293,10 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         }
     }
 }
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 import java.io.File;
 import java.util.*;
@@ -317,10 +317,10 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         }
     }
 }
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 import java.io.File;
 import java.util.*;
@@ -340,10 +340,10 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         }
     }
 }
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 import java.io.File;
 import java.util.*;
@@ -364,11 +364,11 @@ public class RegistryAndDiscoveryInterfaceApiExample {
         }
     }
 }
-import org.eclipse.basyx.aas.registry.client.*;
-import org.eclipse.basyx.aas.registry.client.auth.*;
-import org.eclipse.basyx.aas.registry.model.*;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
-import org.eclipse.basyx.aas.registry.client.api.AasRegistryPaths;
+import de.dfki.cos.basys.aas.registry.client.*;
+import de.dfki.cos.basys.aas.registry.client.auth.*;
+import de.dfki.cos.basys.aas.registry.model.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.client.api.AasRegistryPaths;
 
 import java.io.File;
 import java.util.*;

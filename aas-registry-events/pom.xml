@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.eclipse.basyx.aas.registry</groupId>
+		<groupId>de.dfki.cos.basys.aas.registry</groupId>
 		<artifactId>aas-registry</artifactId>
 		<version>0.4.2-SNAPSHOT</version>
 		<relativePath>..</relativePath>

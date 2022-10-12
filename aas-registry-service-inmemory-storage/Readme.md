@@ -5,7 +5,7 @@ This registry storage implementation uses in-memory hash maps as document store 
 ```xml
 
 	<dependency>
-		<groupId>org.eclipse.basyx.aas.registry</groupId>
+		<groupId>de.dfki.cos.basys.aas.registry</groupId>
 		<artifactId>aas-registry-service-inmemory-storage</artifactId>
 	</dependency>
 ```
