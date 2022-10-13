@@ -4,7 +4,7 @@ This registry storage implementation uses [ElasticSearch](https://www.elastic.co
 
 ```xml
 	<dependency>
-		<groupId>org.eclipse.basyx.aas.registry</groupId>
+		<groupId>de.dfki.cos.basys.aas.registry</groupId>
 		<artifactId>aas-registry-service-elasticsearch-storage</artifactId>
 	</dependency>
 ```

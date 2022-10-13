@@ -76,7 +76,7 @@ npm-build:
     - mkdir $TYPESCRIPT_FOLDER
     - cd $TYPESCRIPT_FOLDER
     - mvn dependency:get -Dartifact=io.swagger.codegen.v3:swagger-codegen-cli:3.0.31:jar -Ddest=openapi-generator.jar
-    - java -jar openapi-generator.jar generate -l typescript-fetch -i ../aas-registry-client/open-api/Plattform_i40-Registry-and-Discovery.yaml -o . --additional-properties [ npmName=@basys/aas-registry-client-ts-fetch npmVersion=0.3.0 snapshot=true ]
+    - java -jar openapi-generator.jar generate -l typescript-fetch -i ../aas-registry-client/open-api/Plattform_i40-Registry-and-Discovery.yaml -o . --additional-properties [ npmName=@basys/aas-registry-client-ts-fetch npmVersion=0.4.2 snapshot=true ]
     - rm openapi-generator.jar
     - rm -rf .swagger-codegen
   artifacts:
@@ -134,9 +134,9 @@ mvn-deploy:
   dependencies:
     - mvn-build-plugin
     - mvn-docker-install
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
-    - if: $CI_COMMIT_BRANCH == 'develop'
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == 'master'
+  #   - if: $CI_COMMIT_BRANCH == 'develop'
 
 docker-deploy:
   stage: deploy
@@ -157,9 +157,9 @@ docker-deploy:
   script:
     - chmod 775 ./mvnw
     - ./mvnw $MAVEN_CLI_OPTS deploy -Ddocker.registry=$DOCKER_REGISTRY -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true 
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
-    - if: $CI_COMMIT_BRANCH == 'develop'
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == 'master'
+  #   - if: $CI_COMMIT_BRANCH == 'develop'
 
 npm-deploy:
   image: node:14-alpine
@@ -180,6 +180,6 @@ npm-deploy:
     - npm prune 
     - npm run build  # build with tests
     - npm publish  # deploy
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
-    - if: $CI_COMMIT_BRANCH == 'develop'
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == 'master'
+  #   - if: $CI_COMMIT_BRANCH == 'develop'

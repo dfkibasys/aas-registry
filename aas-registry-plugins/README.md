@@ -8,7 +8,7 @@ To use the plugin embed this snippet into your POM file and specify an appropria
 
 ``` xml
 <plugin>
-	<groupId>org.eclipse.basyx.aas.registry</groupId>
+	<groupId>de.dfki.cos.basys.aas.registry</groupId>
 	<artifactId>aas-registry-plugins</artifactId>
 	<executions>
 		<execution>
@@ -34,7 +34,7 @@ This is how you embed it into your POM file:
 
 ``` xml 
 <plugin>
-	<groupId>org.eclipse.basyx.aas.registry</groupId>
+	<groupId>de.dfki.cos.basys.aas.registry</groupId>
 	<artifactId>aas-registry-plugins</artifactId>
 	<executions>
 		<execution>
@@ -47,9 +47,9 @@ This is how you embed it into your POM file:
 	<configuration>
 		<pathsTargetClassName>AasRegistryPaths</pathsTargetClassName>
 		<processorTargetClassName>AasRegistryPathProcessor</processorTargetClassName>
-		<className>org.eclipse.basyx.aas.registry.model.AssetAdministrationShellDescriptor</className>
+		<className>de.dfki.cos.basys.aas.registry.model.AssetAdministrationShellDescriptor</className>
 		<targetSourceFolder>${project.basedir}/src/generated/java</targetSourceFolder>
-		<targetPackageName>org.eclipse.basyx.aas.registry.client.api</targetPackageName>
+		<targetPackageName>de.dfki.cos.basys.aas.registry.client.api</targetPackageName>
 	</configuration>
 </plugin>
 ```

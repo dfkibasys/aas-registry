@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.eclipse.basyx.aas.registry</groupId>
+		<groupId>de.dfki.cos.basys.aas.registry</groupId>
 		<artifactId>aas-registry</artifactId>
 		<version>0.4.2-SNAPSHOT</version>
 		<relativePath>..</relativePath>
@@ -36,7 +36,7 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.eclipse.basyx.aas.registry</groupId>
+				<groupId>de.dfki.cos.basys.aas.registry</groupId>
 				<artifactId>aas-registry-plugins</artifactId>
 				<executions>
 					<execution>
@@ -78,7 +78,7 @@
 								<serializableModel>true</serializableModel>
 								<oas3>true</oas3>
 								<useSpringController>true</useSpringController>
-								<modelPackage>org.eclipse.basyx.aas.registry.model</modelPackage>
+								<modelPackage>de.dfki.cos.basys.aas.registry.model</modelPackage>
 							</configOptions>
 						</configuration>
 					</execution>
