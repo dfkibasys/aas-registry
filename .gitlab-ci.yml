@@ -1,19 +1,17 @@
-image: maven:3.6.0-jdk-11
+image: maven:3-eclipse-temurin-11-alpine
 
 variables:
   DOCKER_HOST: "tcp://docker:2375" 
   DOCKER_TLS_CERTDIR: ""
-  DOCKER_DRIVER: overlay2
-  MAVEN_TARGET_PLUGINS: ${CI_PROJECT_DIR}/aas-registry-plugins/target
-  MAVEN_TARGET_EVENTS: ${CI_PROJECT_DIR}/aas-registry-events/target
-  MAVEN_TARGET_PATHS: ${CI_PROJECT_DIR}/aas-registry-paths/target
-  MAVEN_TARGET_CLIENT: ${CI_PROJECT_DIR}/aas-registry-client/target
-  MAVEN_TARGET_SERVICE: ${CI_PROJECT_DIR}/aas-registry-service/target
+  DOCKER_DRIVER: overlay2  
+  MAVEN_TARGET_PLUGINS: '${CI_PROJECT_DIR}/aas-registry-plugins/target'
+  MAVEN_TARGET_CLASSES: '${CI_PROJECT_DIR}/**/target/classes'
+  MAVEN_TARGET_JARS: '${CI_PROJECT_DIR}/**/target/*.jar'
+  MAVEN_TARGET_RELEASE_JARS: '${CI_PROJECT_DIR}/aas-registry-service-release-*/target/*.jar'
   CLIENT_OPENAPI_FOLDER: ${CI_PROJECT_DIR}/aas-registry-client/open-api
   CLIENT_OPENAPI_FILE: ${CLIENT_OPENAPI_FOLDER}/Plattform_i40-Registry-and-Discovery.yaml
   MAVEN_OPTS: "-Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository"
   MAVEN_CLI_OPTS: "-s ${CI_PROJECT_DIR}/.m2/settings.xml --batch-mode -Pgitlab"
-  DOCKER_JAR: aas-registry-service.jar  
   TYPESCRIPT_FOLDER: ${CI_PROJECT_DIR}/typescript
   NPM_REPO: ${MAVEN_REPO_URL}/npm-hosted/  # same as for maven but with npm-hosted suffix
 
@@ -24,27 +22,25 @@ cache:
 stages:
   - plugin
   - validate
-  - build-java
-  - build-typescript
+  - build-mvn
+  - build-npm
   - test
   - install
   - deploy
-  - publish
 
-build-plugin:
+mvn-build-plugin:
   stage: plugin
   tags:
     - basys
     - maven
   script:
-    - cd aas-registry-plugins
-    - mvn $MAVEN_CLI_OPTS install 
+    - mvn $MAVEN_CLI_OPTS install -f ./aas-registry-plugins
   artifacts:
     paths:
       - $MAVEN_TARGET_PLUGINS
     expire_in: 3 hour    
     
-validate:
+mvn-validate:
   stage: validate
   tags:
     - basys
@@ -52,52 +48,126 @@ validate:
   script:
     - mvn -V $MAVEN_CLI_OPTS validate
   dependencies:
-    - build-plugin
+    - mvn-build-plugin
     
-compile:
-  stage: build-java
+mvn-compile:
+  stage: build-mvn
   tags:
     - basys
     - maven
   script:
     - mvn $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true
   dependencies:
-    - build-plugin
+    - mvn-build-plugin
   artifacts:
     paths:
-      - $MAVEN_TARGET_EVENTS
-      - $MAVEN_TARGET_PATHS
-      - $MAVEN_TARGET_CLIENT
-      - $MAVEN_TARGET_SERVICE
+      - $MAVEN_TARGET_CLASSES
       - $CLIENT_OPENAPI_FOLDER
     expire_in: 3 hour    
     
-generate-typescript:
-  stage: build-typescript
+npm-build:
+  stage: build-npm
   tags: 
     - basys
     - maven
   dependencies:
-    - compile
+    - mvn-compile
   script:
     - mkdir $TYPESCRIPT_FOLDER
     - cd $TYPESCRIPT_FOLDER
     - mvn dependency:get -Dartifact=io.swagger.codegen.v3:swagger-codegen-cli:3.0.31:jar -Ddest=openapi-generator.jar
-    - java -jar openapi-generator.jar generate -l typescript-fetch -i ../aas-registry-client/open-api/Plattform_i40-Registry-and-Discovery.yaml -o . --additional-properties [ npmName=@basys/aas-registry-client-ts-fetch npmVersion=0.3.0 snapshot=true ]
+    - java -jar openapi-generator.jar generate -l typescript-fetch -i ../aas-registry-client/open-api/Plattform_i40-Registry-and-Discovery.yaml -o . --additional-properties [ npmName=@basys/aas-registry-client-ts-fetch npmVersion=0.4.2 snapshot=true ]
     - rm openapi-generator.jar
     - rm -rf .swagger-codegen
   artifacts:
     paths:
       - $TYPESCRIPT_FOLDER
     expire_in: 3 hour
-  
-deploy-npm:
+
+mvn-test:
+  stage: test 
+  services:
+     - name: docker:20.10.17-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
+  dependencies:
+    - mvn-compile
+
+mvn-docker-install:
+  stage: install
+  image: dfkibasys/docker-temurin11jdk:20.10.17
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.17-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  tags:
+    - basys
+    - maven
+  script:
+    - chmod 775 ./mvnw
+    - ./mvnw $MAVEN_CLI_OPTS install -Ddocker.registry=$DOCKER_REGISTRY -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.test.skip=true -Dmaven.compile.skip=true
+  dependencies:
+    - mvn-compile
+  artifacts:
+    paths:
+      - $MAVEN_TARGET_RELEASE_JARS
+    expire_in: 3 hour
+
+mvn-deploy:
+  stage: deploy
+  tags:
+    - basys
+    - maven
+  script:
+    - cd aas-registry-plugins; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+    - cd aas-registry-client; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+    - cd aas-registry-compatibility; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+    - cd aas-registry-events; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+    - cd aas-registry-paths; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+  dependencies:
+    - mvn-build-plugin
+    - mvn-docker-install
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == 'master'
+  #   - if: $CI_COMMIT_BRANCH == 'develop'
+
+docker-deploy:
+  stage: deploy
+  image: dfkibasys/docker-temurin11jdk:20.10.17
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.17-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  dependencies:
+    - mvn-compile
+  tags:
+    - basys
+    - docker
+  before_script:
+    - docker info
+  script:
+    - chmod 775 ./mvnw
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Ddocker.registry=$DOCKER_REGISTRY -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true 
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == 'master'
+  #   - if: $CI_COMMIT_BRANCH == 'develop'
+
+npm-deploy:
   image: node:14-alpine
   stage: deploy
   tags:
     - basys
   dependencies:
-    - generate-typescript
+    - npm-build
   script:
     - cd $TYPESCRIPT_FOLDER
     - npm config set strict-ssl false
@@ -110,77 +180,6 @@ deploy-npm:
     - npm prune 
     - npm run build  # build with tests
     - npm publish  # deploy
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $CI_COMMIT_BRANCH == 'development'
-
-test:
-  stage: test 
-  services:
-     - name: docker:19.03.15-dind
-       # explicitly disable tls to avoid docker startup interruption
-       command: ["--tls=false"]
-  tags:
-    - basys
-    - maven
-  script:
-    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
-  dependencies:
-     - compile
-  
-install:
-  stage: install
-  tags:
-    - basys
-    - maven
-  script:
-    - mvn $MAVEN_CLI_OPTS install -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
-  dependencies:
-     - compile
-  artifacts:
-    paths:
-      - $MAVEN_TARGET_EVENTS
-      - $MAVEN_TARGET_PATHS
-      - $MAVEN_TARGET_CLIENT
-      - $MAVEN_TARGET_SERVICE
-    expire_in: 3 hour
-  
-deploy:
-  stage: deploy
-  tags:
-    - basys
-    - maven
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    #- if: $CI_COMMIT_BRANCH == 'development'
-  script:
-    - mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
-  dependencies:
-    - compile
-      
-docker:
-  stage: publish
-  image: docker:19.03.15
-  variables:
-    DOCKER_DRIVER: overlay2
-    DOCKER_IMAGE_VERSION: 'dotaas-latest'
-    DOCKER_IMAGE: '$DOCKER_REGISTRY_USER/$CI_PROJECT_NAME:$DOCKER_IMAGE_VERSION'
-  services:
-     - name: docker:19.03.15-dind
-       # explicitly disable tls to avoid docker startup interruption
-       command: ["--tls=false"]
-  dependencies:
-    - install
-  tags:
-    - basys
-    - docker
-  before_script:
-    - docker info      
-  script:
-    - cd aas-registry-service
-    - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
-    - docker build -t "$DOCKER_IMAGE" .
-    - docker push "$DOCKER_IMAGE"
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $CI_COMMIT_BRANCH == 'development'
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == 'master'
+  #   - if: $CI_COMMIT_BRANCH == 'develop'

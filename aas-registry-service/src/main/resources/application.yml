@@ -1,4 +1,6 @@
 ---
+events:
+  sink:
 springfox:
   documentation:
     open-api.v3.path: /api-docs
@@ -6,7 +8,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "health,metrics,beans"
+        include: "health,metrics"
 logging:
   level:
     root: INFO
@@ -14,28 +16,25 @@ server:
   port: 8080
   servlet:
     contextPath: /
+  error:
+    whitelabel:
+      enabled: false
 servlet:
   headers: []
-elasticsearch:
-   url: ${ELASTICSEARCH_HOST_URL}
 spring:
   jackson:
-    date-format: org.eclipse.basyx.aas.registry.RFC3339DateFormat
+    date-format: de.dfki.cos.basys.aas.registry.service.RFC3339DateFormat
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
-    default-property-inclusion: non_null
-  kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
   cloud:
     stream:
       bindings:
         default:
-           key-desewrializer: org.apache.kafka.common.serialization.StringDeserializer
-           value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
         aasRegistryBinding:
           destination: aas-registry
           content-type: application/json
           producer:
             partitionKeyExpression: payload.id
-            partitionCount: 1
-            
+            partitionCount: 1            

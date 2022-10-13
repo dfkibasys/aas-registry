@@ -1,0 +1,29 @@
+---
+components:
+   schemas:
+      AssetAdministrationShellDescriptor:
+         x-java-class-annotations: 
+            - '@org.springframework.data.elasticsearch.annotations.Document(indexName = "shell-descriptors")'  
+         allOf:
+           $LIST_PROCESS_INSTRUCTION$:
+              overlay:
+                 1:
+                   properties:
+                     identification:
+                        x-field-type: 'Keyword'
+                        x-java-field-annotations:
+                           - '@org.springframework.data.annotation.Id'
+                     idShort:
+                        x-field-type: 'Keyword'
+                     submodelDescriptors:
+                        x-field-type: 'Nested'
+      SubmodelDescriptor:
+        properties:
+           identification:
+              x-field-type: 'Keyword'                  
+      AdministrativeInformation:
+        properties:
+           revision:
+              x-field-type: 'Keyword'
+           version:
+              x-field-type: 'Keyword'

@@ -5,6 +5,7 @@ All URIs are relative to */*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**deleteAllAssetLinksById**](RegistryAndDiscoveryInterfaceApi.md#deleteAllAssetLinksById) | **DELETE** /lookup/shells/{aasIdentifier} | Deletes all Asset identifier key-value-pair linked to an Asset Administration Shell to edit discoverable content
+[**deleteAllShellDescriptors**](RegistryAndDiscoveryInterfaceApi.md#deleteAllShellDescriptors) | **DELETE** /registry/shell-descriptors | Deletes all Asset Administration Shell Descriptors
 [**deleteAssetAdministrationShellDescriptorById**](RegistryAndDiscoveryInterfaceApi.md#deleteAssetAdministrationShellDescriptorById) | **DELETE** /registry/shell-descriptors/{aasIdentifier} | Deletes an Asset Administration Shell Descriptor, i.e. de-registers an AAS
 [**deleteSubmodelDescriptorById**](RegistryAndDiscoveryInterfaceApi.md#deleteSubmodelDescriptorById) | **DELETE** /registry/shell-descriptors/{aasIdentifier}/submodel-descriptors/{submodelIdentifier} | Deletes a Submodel Descriptor, i.e. de-registers a submodel
 [**getAllAssetAdministrationShellDescriptors**](RegistryAndDiscoveryInterfaceApi.md#getAllAssetAdministrationShellDescriptors) | **GET** /registry/shell-descriptors | Returns all Asset Administration Shell Descriptors
@@ -29,8 +30,8 @@ Deletes all Asset identifier key-value-pair linked to an Asset Administration Sh
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
@@ -62,6 +63,44 @@ No authorization required
  - **Content-Type**: Not defined
  - **Accept**: Not defined
 
+<a name="deleteAllShellDescriptors"></a>
+# **deleteAllShellDescriptors**
+> deleteAllShellDescriptors()
+
+Deletes all Asset Administration Shell Descriptors
+
+### Example
+```java
+// Import classes:
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+
+
+RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
+try {
+    apiInstance.deleteAllShellDescriptors();
+} catch (ApiException e) {
+    System.err.println("Exception when calling RegistryAndDiscoveryInterfaceApi#deleteAllShellDescriptors");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
 <a name="deleteAssetAdministrationShellDescriptorById"></a>
 # **deleteAssetAdministrationShellDescriptorById**
 > deleteAssetAdministrationShellDescriptorById(aasIdentifier)
@@ -71,8 +110,8 @@ Deletes an Asset Administration Shell Descriptor, i.e. de-registers an AAS
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
@@ -113,8 +152,8 @@ Deletes a Submodel Descriptor, i.e. de-registers a submodel
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
@@ -157,8 +196,8 @@ Returns all Asset Administration Shell Descriptors
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
@@ -196,8 +235,8 @@ Returns a list of Asset Administration Shell ids based on Asset identifier key-v
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
@@ -239,8 +278,8 @@ Returns a list of Asset identifier key-value-pairs based on an Asset Administrat
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
@@ -282,8 +321,8 @@ Returns all Submodel Descriptors
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
@@ -325,8 +364,8 @@ Returns a specific Asset Administration Shell Descriptor
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
@@ -368,8 +407,8 @@ Returns a specific Submodel Descriptor
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
@@ -413,8 +452,8 @@ Creates all Asset identifier key-value-pair linked to an Asset Administration Sh
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
@@ -458,8 +497,8 @@ Creates a new Asset Administration Shell Descriptor, i.e. registers an AAS
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
@@ -501,8 +540,8 @@ Creates a new Submodel Descriptor, i.e. registers a submodel
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
@@ -546,8 +585,8 @@ Updates an existing Asset Administration Shell Descriptor
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
@@ -590,8 +629,8 @@ Updates an existing Submodel Descriptor
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
@@ -636,12 +675,12 @@ No authorization required
 ### Example
 ```java
 // Import classes:
-//import org.eclipse.basyx.aas.registry.client.ApiException;
-//import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+//import de.dfki.cos.basys.aas.registry.client.ApiException;
+//import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 
 RegistryAndDiscoveryInterfaceApi apiInstance = new RegistryAndDiscoveryInterfaceApi();
-ShellDescriptorSearchQuery body = new ShellDescriptorSearchQuery(); // ShellDescriptorSearchQuery | 
+ShellDescriptorSearchRequest body = new ShellDescriptorSearchRequest(); // ShellDescriptorSearchRequest | 
 try {
     ShellDescriptorSearchResponse result = apiInstance.searchShellDescriptors(body);
     System.out.println(result);
@@ -655,7 +694,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**ShellDescriptorSearchQuery**](ShellDescriptorSearchQuery.md)|  |
+ **body** | [**ShellDescriptorSearchRequest**](ShellDescriptorSearchRequest.md)|  |
 
 ### Return type
 
