@@ -5,7 +5,7 @@
 	<groupId>de.dfki.cos.basys.aas.registry</groupId>
 	<artifactId>aas-registry</artifactId>
 	<packaging>pom</packaging>
-	<version>0.4.3-SNAPSHOT</version>
+	<version>0.4.2-SNAPSHOT</version>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
