@@ -3,12 +3,12 @@
 	<parent>
 		<groupId>de.dfki.cos.basys.aas.registry</groupId>
 		<artifactId>aas-registry</artifactId>
-		<version>0.4.3-SNAPSHOT</version>
+		<version>0.4.2-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>aas-registry-plugins</artifactId>
 	<packaging>maven-plugin</packaging>
-	<properties />
+	<properties></properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.yaml</groupId>

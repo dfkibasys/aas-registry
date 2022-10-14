@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.dfki.cos.basys.aas.registry</groupId>
 	<artifactId>aas-registry</artifactId>
 	<packaging>pom</packaging>
-	<version>0.4.3-SNAPSHOT</version>
+	<version>0.4.2-SNAPSHOT</version>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.3</version>
+		<version>2.5.9</version>
 		<relativePath />
 	</parent>
 
@@ -34,10 +36,8 @@
 		<mustache.compiler.version>0.9.4</mustache.compiler.version>
 		<snakeyaml.version>1.30</snakeyaml.version>
 
-		<aas-registry-plugins.version>0.4.3-SNAPSHOT</aas-registry-plugins.version>
-		<gpg-plugin.version>1.6</gpg-plugin.version>
-		<nexus-staging-plugin.version>1.6.13</nexus-staging-plugin.version>
-		<license-plugin.version>2.0.0</license-plugin.version>
+		<aas-registry-plugins.version>${project.version}</aas-registry-plugins.version>
+
 		<docker.maven.plugin.version>0.40.1</docker.maven.plugin.version>
 
 		<docker.image.name>${project.artifactId}</docker.image.name>
@@ -65,10 +65,6 @@
 		<module>aas-registry-service-release-log-es</module>
 	</modules>
 
-	<organization>
-		<name>DFKI GmbH</name>
-		<url>http://www.dfki.de</url>
-	</organization>
 	<developers>
 		<developer>
 			<name>Gerhard Sonnenberg</name>
@@ -80,31 +76,6 @@
 			</roles>
 		</developer>
 	</developers>
-	<scm>
-		<url>https://github.com/dfkibasys</url>
-		<connection>${gitUrl}/aas-registry.git</connection>
-		<developerConnection>${gitUrl}/aas-registry.git</developerConnection>
-	  <tag>HEAD</tag>
-  </scm>
-	<licenses>
-		<license>
-			<name>MIT</name>
-			<url>https://github.com/dfkibasys/aas-registry/blob/master/LICENSE</url>
-			<comments />
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
-	
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -128,52 +99,8 @@
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>${docker.maven.plugin.version}</version>
 				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>license-maven-plugin</artifactId>
-					<version>${license-plugin.version}</version>
-					<executions>
-						<execution>
-							<id>default-cli</id>
-							<configuration>
-								<includeTransitiveDependencies>false</includeTransitiveDependencies>
-								<fileTemplate>/org/codehaus/mojo/license/third-party-file-groupByLicense.ftl</fileTemplate>
-								<outputDirectory>${project.basedir}</outputDirectory>
-								<licenseMerges>
-									<licenseMerge>Apache-2.0|The Apache Software License, Version 2.0</licenseMerge>
-									<licenseMerge>Apache-2.0|Apache License 2.0</licenseMerge>
-									<licenseMerge>Apache-2.0|Apache License, 2.0</licenseMerge>
-									<licenseMerge>Apache-2.0|Apache License, Version 2.0</licenseMerge>
-									<licenseMerge>Apache-2.0|Apache 2.0</licenseMerge>
-									<licenseMerge>EPL-1.0|Eclipse Public License 1.0</licenseMerge>
-									<licenseMerge>EPL-1.0|Eclipse Public License - Version 1.0</licenseMerge>
-									<licenseMerge>EPL-1.0|Eclipse Public License - v 1.0</licenseMerge>
-									<licenseMerge>EPL-1.0|EPL 1.0</licenseMerge>
-									<licenseMerge>EPL-2.0|Eclipse Public License 2.0</licenseMerge>
-									<licenseMerge>EPL-2.0|Eclipse Public License - Version 2.0</licenseMerge>
-									<licenseMerge>EPL-2.0|Eclipse Public License - v 2.0</licenseMerge>
-									<licenseMerge>EPL-2.0|Eclipse Public License v2.0</licenseMerge>
-									<licenseMerge>EPL-2.0|EPL 2.0</licenseMerge>
-									<licenseMerge>MIT|The MIT License</licenseMerge>
-									<licenseMerge>LGPL-3.0|GNU Library or Lesser General Public License (LGPL) Version 3</licenseMerge>
-									<licenseMerge>BSD-3-Clause|Eclipse Distribution License - v 1.0</licenseMerge>
-									<licenseMerge>BSD-3-Clause|New BSD (3-clause) License</licenseMerge>
-								</licenseMerges>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.sonatype.plugins</groupId>
-					<artifactId>nexus-staging-maven-plugin</artifactId>
-					<version>${nexus-staging-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-gpg-plugin</artifactId>
-					<version>${gpg-plugin.version}</version>
-				</plugin>
-			</plugins>			
+			</plugins>
+			
 		</pluginManagement>
 	</build>
 	<dependencyManagement>
@@ -364,141 +291,6 @@
 							</execution>
 						</executions>
 					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>sonatype-oss-release</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<phase>package</phase>
-								<goals>
-									<goal>jar-no-fork</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>attach-test-sources</id>
-								<phase>package</phase>
-								<goals>
-									<goal>test-jar-no-fork</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<!--
-					    <plugin>
-						  <groupId>org.projectlombok</groupId>
-						  <artifactId>lombok-maven-plugin</artifactId>
-						  <version>1.18.20.0</version>
-							<configuration>
-							<addOutputDirectory>false</addOutputDirectory>
-							<sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
-							</configuration>						 
-						 <executions>
-							<execution>
-							  <phase>generate-sources</phase>
-							  <goals>
-								<goal>delombok</goal>
-							  </goals>
-							</execution>
-						  </executions>
-						</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<configuration>
-							<quiet>true</quiet>
-							<additionalJOption>-Xdoclint:none</additionalJOption>
-							<sourcepath>target/generated-sources/delombok</sourcepath>
-							<tags>
-								<tag>
-									<name>generated</name>
-									<placement>a</placement>
-									<head>generated</head>
-								</tag>
-								<tag>
-									<name>model</name>
-									<placement>a</placement>
-									<head>model</head>
-								</tag>
-								<tag>
-									<name>ordered</name>
-									<placement>a</placement>
-									<head>ordered</head>
-								</tag>
-							</tags>
-						</configuration>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					-->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<configuration>
-							<skip>false</skip>
-						</configuration>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<extensions>true</extensions>
-						<executions>
-							<execution>
-								<id>default-deploy</id>
-								<phase>deploy</phase>
-								<goals>
-									<goal>deploy</goal>
-								</goals>
-								<configuration>
-									<serverId>ossrh</serverId>
-									<nexusUrl>https://oss.sonatype.org</nexusUrl>
-									<skipStaging>false</skipStaging>
-								</configuration>
-							</execution>
-						</executions>
-						<!--
-				<executions>
-				  <execution>
-					<id>central-deploy</id>
-					<phase>deploy</phase>
-					<goals>
-					  <goal>deploy</goal>
-					</goals>
-					<configuration>
-					  <detectBuildFailures>true</detectBuildFailures>
-					  <keepStagingRepositoryOnFailure>true</keepStagingRepositoryOnFailure>
-					  <keepStagingRepositoryOnCloseRuleFailure>true</keepStagingRepositoryOnCloseRuleFailure>
-					  <serverId>central</serverId>
-					  <nexusUrl>https://oss.sonatype.org</nexusUrl>
-					  <skipStaging>false</skipStaging>
-					  <skipNexusStagingDeployMojo>${skip.central.release}</skipNexusStagingDeployMojo>
-					</configuration>
-				  </execution>
-				</executions>
-				-->
-		</plugin>
 				</plugins>
 			</build>
 		</profile>
