@@ -5,9 +5,9 @@
 
 	<parent>
 		<groupId>de.dfki.cos.basys.aas.registry</groupId>
-		<artifactId>aas-registry</artifactId>
+		<artifactId>module-parent</artifactId>
 		<version>0.4.2-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<relativePath>../module-parent</relativePath>
 	</parent>
 
 	<artifactId>aas-registry-paths</artifactId>
