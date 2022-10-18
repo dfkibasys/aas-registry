@@ -72,6 +72,8 @@ interface PojoClassVisitor {
 		public boolean isComplex() {
 			return range != null;
 		}
+
+		public static class PojoRelationBuilder {}
 	}
 
 }
