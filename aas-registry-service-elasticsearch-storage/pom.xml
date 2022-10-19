@@ -16,7 +16,7 @@
 
 	<properties>
 		<spring-cloud.version>2020.0.4</spring-cloud.version>
-		<testcontainers.version>1.16.2</testcontainers.version>
+		<testcontainers.version>1.17.4</testcontainers.version>
 		<openapi.folder>${project.basedir}/${openapi.folder.name}</openapi.folder>
 		<openapi.elastics.file.name>elastic-search-annotations.yaml</openapi.elastics.file.name>
 		<openapi.elastics.file>${openapi.folder}/${openapi.elastics.file.name}</openapi.elastics.file>
