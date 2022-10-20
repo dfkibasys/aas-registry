@@ -5,16 +5,11 @@
 	<artifactId>pom</artifactId>
 	<packaging>pom</packaging>
 	<version>0.4.2-SNAPSHOT</version>
-<!-- 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.3</version>
-		<relativePath/>
-	</parent> -->
 	<profiles>
 		<profile>
 			<id>sonatype-oss-release</id>
 			<modules>
+				<module>module-parent</module>
 				<module>aas-registry-plugins</module>
 				<module>aas-registry-client</module>
 				<module>aas-registry-events</module>
@@ -34,6 +29,7 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<modules>
+				<module>module-parent</module>
 				<module>aas-registry-plugins</module>
 				<module>aas-registry-client</module>
 				<module>aas-registry-events</module>
