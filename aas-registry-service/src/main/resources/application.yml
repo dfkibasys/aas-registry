@@ -3,7 +3,7 @@ events:
   sink:
 springfox:
   documentation:
-    open-api.v3.path: /api-docs
+    open-api.v3.path: /api-docs    
 management:
   endpoints:
     web:
@@ -22,6 +22,9 @@ server:
 servlet:
   headers: []
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   jackson:
     date-format: de.dfki.cos.basys.aas.registry.service.RFC3339DateFormat
     serialization:

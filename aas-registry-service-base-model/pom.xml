@@ -46,7 +46,6 @@
 					</execution>
 				</executions>
 				<configuration>
-					<!-- <inputSpec>https://api.swaggerhub.com/apis/Plattform_i40/Registry-and-Discovery/Final-Draft/swagger.yaml?resolved=true</inputSpec> -->
 					<base>${project.basedir}/../${openapi.folder.name}/${openapi.base.name}</base>
 					<overlay>${project.basedir}/../${openapi.folder.name}/${openapi.extensions.name}</overlay>
 					<out>${openapi.result.file}</out>

@@ -48,7 +48,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.dfki.cos.basys.aas.registry</groupId>
-			<artifactId>aas-registry-client</artifactId>			
+			<artifactId>aas-registry-client</artifactId>		
 		</dependency>
 		<dependency>
 			<groupId>de.dfki.cos.basys.aas.registry</groupId>

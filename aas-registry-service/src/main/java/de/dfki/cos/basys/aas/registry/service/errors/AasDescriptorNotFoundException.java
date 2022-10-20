@@ -26,7 +26,6 @@
 package de.dfki.cos.basys.aas.registry.service.errors;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 public class AasDescriptorNotFoundException extends DescriptorNotFoundException {
 
