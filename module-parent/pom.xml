@@ -41,6 +41,31 @@
 		<docker.target.platforms>linux/amd64,linux/arm64</docker.target.platforms>
 		<docker.registry>docker.io</docker.registry>
 	</properties>
+
+	<organization>
+		<name>DFKI GmbH</name>
+		<url>http://www.dfki.de</url>
+	</organization>
+	<developers>
+		<developer>
+			<name>Gerhard Sonnenberg</name>
+			<email>gerhard.sonnenberg@dfki.de</email>
+			<organization>DFKI</organization>
+			<organizationUrl>https://www.dfki.de</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
+	<licenses>
+		<license>
+			<name>MIT</name>
+			<url>https://github.com/dfkibasys/aas-registry/blob/master/LICENSE</url>
+			<comments/>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -396,6 +421,16 @@
 					</plugin>
 				</plugins>
 			</build>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>ossrh</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+				</snapshotRepository>
+				<repository>
+					<id>ossrh</id>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+			</distributionManagement>
 		</profile>
 	</profiles>
 </project>
