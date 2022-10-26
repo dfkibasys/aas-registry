@@ -12,7 +12,6 @@
 	<artifactId>aas-registry-service-release-kafka-mem</artifactId>
 	<name>aas-registry-service-release-kafka-mem</name>
 	<properties>
-		<spring-cloud.version>2020.0.4</spring-cloud.version>
 		<start-class>de.dfki.cos.basys.aas.registry.service.Swagger2SpringBoot</start-class>
 		<docker.image.name>aas-registry-dotaas-part2-kafka-mem</docker.image.name>
 	</properties>
@@ -69,34 +68,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
-			<artifactId>elasticsearch</artifactId>
-			<version>${testcontainers.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.testcontainers</groupId>
 			<artifactId>kafka</artifactId>
 			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>2.6.6</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 </project>

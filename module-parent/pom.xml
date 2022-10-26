@@ -4,14 +4,15 @@
 	<groupId>de.dfki.cos.basys.aas.registry</groupId>
 	<artifactId>module-parent</artifactId>
 	<packaging>pom</packaging>
+	<version>0.4.2-SNAPSHOT</version>
 	<parent>
-		<groupId>de.dfki.cos.basys.aas.registry</groupId>
-		<artifactId>pom</artifactId>
-		<version>0.4.2-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.7.3</version>
+		<relativePath/>
 	</parent>
 	<properties>
-		<testcontainers.version>1.16.2</testcontainers.version>
+		<testcontainers.version>1.17.5</testcontainers.version>
 		<java.version>11</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
@@ -40,6 +41,31 @@
 		<docker.target.platforms>linux/amd64,linux/arm64</docker.target.platforms>
 		<docker.registry>docker.io</docker.registry>
 	</properties>
+
+	<organization>
+		<name>DFKI GmbH</name>
+		<url>http://www.dfki.de</url>
+	</organization>
+	<developers>
+		<developer>
+			<name>Gerhard Sonnenberg</name>
+			<email>gerhard.sonnenberg@dfki.de</email>
+			<organization>DFKI</organization>
+			<organizationUrl>https://www.dfki.de</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
+	<licenses>
+		<license>
+			<name>MIT</name>
+			<url>https://github.com/dfkibasys/aas-registry/blob/master/LICENSE</url>
+			<comments/>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -325,25 +351,6 @@
 							</execution>
 						</executions>
 					</plugin>
-					<!--
-					<plugin>
-						<groupId>org.projectlombok</groupId>
-						<artifactId>lombok-maven-plugin</artifactId>
-						<version>1.18.20.0</version>
-						<configuration>
-							<addOutputDirectory>false</addOutputDirectory>
-							<sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
-						</configuration>
-						<executions>
-							<execution>
-								<phase>generate-sources</phase>
-								<goals>
-									<goal>delombok</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					-->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
@@ -414,6 +421,16 @@
 					</plugin>
 				</plugins>
 			</build>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>ossrh</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+				</snapshotRepository>
+				<repository>
+					<id>ossrh</id>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+			</distributionManagement>
 		</profile>
 	</profiles>
 </project>
