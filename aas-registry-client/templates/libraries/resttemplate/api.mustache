@@ -34,6 +34,10 @@ public class {{classname}} {
     public {{classname}}() {
         this(new ApiClient());
     }
+    
+    public void setApiClientBasePath(String protocol, String host, int port) {
+        getApiClient().setBasePath(protocol + "://" + host + ":" + port + "/api/v3.0");
+    }
 
     @Autowired
     public {{classname}}(ApiClient apiClient) {
@@ -113,7 +117,7 @@ public class {{classname}} {
         uriVariables.put("{{baseName}}", {{{paramName}}}AsBase64EncodedParam);
         {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
         {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-		uriVariables.put("{{baseName}}", {{{paramName}}});
+		uriVariables.put("{{baseName}}", {{{paramName}}}); 
 		{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
         {{/pathParams}}{{/hasPathParams}}
         
@@ -123,8 +127,15 @@ public class {{classname}} {
         final HttpHeaders {{localVariablePrefix}}headerParams = new HttpHeaders();
         final MultiValueMap<String, Object> {{localVariablePrefix}}formParams = new LinkedMultiValueMap<String, Object>();{{#hasQueryParams}}
 
-        {{#queryParams}}{{localVariablePrefix}}queryParams.putAll({{localVariablePrefix}}apiClient.parameterToMultiValueMap({{#collectionFormat}}ApiClient.CollectionFormat.valueOf("{{{collectionFormat}}}".toUpperCase()){{/collectionFormat}}{{^collectionFormat}}null{{/collectionFormat}}, "{{baseName}}", {{paramName}}));{{#hasMore}}
-        {{/hasMore}}{{/queryParams}}{{/hasQueryParams}}{{#hasHeaderParams}}
+		{{#queryParams}}
+	    {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        String {{{paramName}}}AsBase64EncodedQueryParam = {{{paramName}}} == null ? null : new String(java.util.Base64.getUrlEncoder().encode({{paramName}}.getBytes(java.nio.charset.StandardCharsets.UTF_8)), java.nio.charset.StandardCharsets.UTF_8);
+        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+		{{/queryParams}}
+
+        {{#queryParams}}
+        {{localVariablePrefix}}queryParams.putAll({{localVariablePrefix}}apiClient.parameterToMultiValueMap({{#collectionFormat}}ApiClient.CollectionFormat.valueOf("{{{collectionFormat}}}".toUpperCase()){{/collectionFormat}}{{^collectionFormat}}null{{/collectionFormat}}, "{{baseName}}", {{paramName}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}AsBase64EncodedQueryParam{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}));
+		{{#hasMore}}{{/hasMore}}{{/queryParams}}{{/hasQueryParams}}{{#hasHeaderParams}}
 
         {{#headerParams}}if ({{paramName}} != null)
         {{localVariablePrefix}}headerParams.add("{{baseName}}", {{localVariablePrefix}}apiClient.parameterToString({{paramName}}));{{#hasMore}}

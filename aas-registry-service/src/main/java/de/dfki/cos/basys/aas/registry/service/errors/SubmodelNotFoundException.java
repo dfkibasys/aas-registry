@@ -25,13 +25,11 @@
  ******************************************************************************/
 package de.dfki.cos.basys.aas.registry.service.errors;
 
-import org.springframework.http.HttpStatus;
-
 public class SubmodelNotFoundException extends DescriptorNotFoundException {
 
 	private static final long serialVersionUID = 1L;
 
 	public SubmodelNotFoundException(String aasDesriptorId, String submodelId) {
-		super(HttpStatus.NOT_FOUND, "Submodel '" + submodelId + "' is not avaialbe for descriptor '" + aasDesriptorId + "'.");
+		super("Submodel '" + submodelId + "' is not available for descriptor '" + aasDesriptorId + "'.");
 	}
 }

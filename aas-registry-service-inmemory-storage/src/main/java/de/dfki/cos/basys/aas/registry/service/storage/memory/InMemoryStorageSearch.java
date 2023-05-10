@@ -52,7 +52,6 @@ import de.dfki.cos.basys.aas.registry.model.Sorting;
 import de.dfki.cos.basys.aas.registry.model.SortingPath;
 import de.dfki.cos.basys.aas.registry.model.SubmodelDescriptor;
 import de.dfki.cos.basys.aas.registry.service.storage.DescriptorCopies;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

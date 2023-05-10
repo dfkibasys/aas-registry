@@ -1,10 +1,10 @@
 [
 	{
-		"identification": "identification_2",
+		"id": "identification_2",
 		"submodelDescriptors": [
 			{
-				"identification": "identification_2.1",
-				"descriptions": [{
+				"id": "identification_2.1",
+				"description": [{
 					"language": "de_DE",
 					"text": "I am a robot!"
 				}]

@@ -88,7 +88,7 @@ public class PathInfoGenerator {
 					innerRanges.add(relation.getRange());
 				}
 			} else {
-				PrimitiveRangeRelationInfo info = new PrimitiveRangeRelationInfo(relation.getMethodName(), relation.getFieldName(), relation.getType() == PojoRelationType.LIST);
+				PrimitiveRangeRelationInfo info = new PrimitiveRangeRelationInfo(relation.getMethodName(), relation.getFieldName(), relation.getRange(), relation.getType() == PojoRelationType.LIST);
 				mSubject.getPrimitiveRangeRelations().add(info);
 			}
 		}

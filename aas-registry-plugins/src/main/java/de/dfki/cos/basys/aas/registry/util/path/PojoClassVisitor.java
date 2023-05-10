@@ -60,17 +60,14 @@ interface PojoClassVisitor {
 		private final String range;
 		private final PojoRelationType type;
 		private final boolean isRootRelation;
+		private final boolean isPrimitive;
 
 		enum PojoRelationType {
 			FUNCTIONAL, LIST, MAP
 		}
 
-		public boolean isPrimitive() {
-			return range == null;
-		}
-
 		public boolean isComplex() {
-			return range != null;
+			return !isPrimitive;
 		}
 	}
 

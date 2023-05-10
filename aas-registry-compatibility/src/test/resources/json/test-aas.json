@@ -9,7 +9,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/0043_1113_5012_9303"
 		},
@@ -18,7 +18,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/8152_1113_5012_0429"
 			},
@@ -44,7 +44,7 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/1435_3180_6012_0689"
 				},
@@ -70,11 +70,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/6291_5170_6012_9120"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -88,7 +88,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/5323_1113_5012_2226"
 		},
@@ -97,7 +97,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/3332_1113_5012_4899"
 			},
@@ -123,7 +123,7 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/4263_9080_6012_8626"
 				},
@@ -149,11 +149,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/5314_1110_6012_3213"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -167,7 +167,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "baxter_2_aas"
 		},
@@ -176,7 +176,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/8125_0191_1112_1824"
 			},
@@ -208,11 +208,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/6520_7132_1112_3075"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -226,7 +226,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/5453_1113_5012_9841"
 		},
@@ -235,7 +235,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/3572_1113_5012_2487"
 			},
@@ -261,7 +261,7 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/5175_4182_7012_5135"
 				},
@@ -281,7 +281,7 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/9485_2152_8012_0976"
 				},
@@ -307,11 +307,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/7154_5170_6012_5128"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			},
 			{
 				"endpoints": [
@@ -327,7 +327,7 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/7151_3182_7012_7596"
 				},
@@ -345,7 +345,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/7503_1113_5012_5138"
 		},
@@ -354,7 +354,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/0222_1113_5012_4427"
 			},
@@ -386,11 +386,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/9364_0110_6012_2117"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -404,13 +404,13 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "baxter_1_aas"
 		},
 		"idShort": "baxter_1_aas",
 		"asset": {
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/3422_1113_5012_0005"
 			},
@@ -455,11 +455,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/9014_1110_6012_1842"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -473,7 +473,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/9333_1113_5012_7535"
 		},
@@ -482,7 +482,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/8052_1113_5012_1023"
 			},
@@ -508,7 +508,7 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/1435_3180_6012_0689"
 				},
@@ -534,11 +534,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/7024_1110_6012_7746"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -552,7 +552,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/1133_1113_5012_3439"
 		},
@@ -561,7 +561,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/0242_1113_5012_3428"
 			},
@@ -593,11 +593,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/7401_5170_6012_2623"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -611,7 +611,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/9163_1113_5012_6846"
 		},
@@ -620,7 +620,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/8482_1113_5012_4409"
 			},
@@ -652,11 +652,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/2184_5170_6012_8745"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -670,7 +670,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/5553_1113_5012_4929"
 		},
@@ -679,7 +679,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/2082_1113_5012_4886"
 			},
@@ -711,11 +711,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/1274_5170_6012_2788"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -729,7 +729,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/6253_1113_5012_7178"
 		},
@@ -738,7 +738,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/5472_1113_5012_2754"
 			},
@@ -770,11 +770,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/1144_5170_6012_4316"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -788,7 +788,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/8351_4191_1112_7911"
 		},
@@ -797,7 +797,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/9221_4191_1112_4976"
 			},
@@ -823,7 +823,7 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/1435_3180_6012_0689"
 				},
@@ -849,11 +849,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/8165_6132_1112_4319"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -867,7 +867,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/7023_1113_5012_2822"
 		},
@@ -876,7 +876,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/9132_1113_5012_0244"
 			},
@@ -908,11 +908,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/4233_8020_6012_0953"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -926,7 +926,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/8543_1113_5012_7761"
 		},
@@ -935,7 +935,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/9072_1113_5012_4001"
 			},
@@ -967,11 +967,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/2102_5170_6012_2032"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -985,7 +985,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/1203_7132_1112_1385"
 		},
@@ -994,7 +994,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/3142_7132_1112_9303"
 			},
@@ -1026,11 +1026,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/5013_7132_1112_1389"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -1044,13 +1044,13 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/3064_3152_8012_5186"
 		},
 		"idShort": "mrk40_lab_aas",
 		"asset": {
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/4564_3152_8012_5305"
 			},
@@ -1080,7 +1080,7 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/8391_8081_1112_0109"
 				},
@@ -1100,7 +1100,7 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/6301_0120_8012_5974"
 				},
@@ -1118,7 +1118,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/8523_1113_5012_2455"
 		},
@@ -1127,7 +1127,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/0142_1113_5012_2784"
 			},
@@ -1159,11 +1159,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/5414_1110_6012_8530"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -1177,7 +1177,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/6363_1113_5012_8405"
 		},
@@ -1186,7 +1186,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/9582_1113_5012_8716"
 			},
@@ -1218,11 +1218,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/1324_1110_6012_7891"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -1236,7 +1236,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/0153_1113_5012_9422"
 		},
@@ -1245,7 +1245,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/3372_1113_5012_9690"
 			},
@@ -1277,11 +1277,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/7124_1110_6012_4383"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -1295,7 +1295,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/5513_1113_5012_3140"
 		},
@@ -1304,7 +1304,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/9032_1113_5012_5735"
 			},
@@ -1336,11 +1336,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/4213_8020_6012_7967"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -1354,7 +1354,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/1563_1113_5012_2206"
 		},
@@ -1363,7 +1363,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/7092_1113_5012_4194"
 			},
@@ -1395,11 +1395,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/7005_5170_6012_5369"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -1413,7 +1413,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/4233_1113_5012_4654"
 		},
@@ -1422,7 +1422,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/6542_1113_5012_9769"
 			},
@@ -1454,11 +1454,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/4514_1110_6012_0882"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -1472,7 +1472,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/6423_1113_5012_4537"
 		},
@@ -1481,7 +1481,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/3432_1113_5012_7640"
 			},
@@ -1507,7 +1507,7 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/4263_9080_6012_8626"
 				},
@@ -1533,11 +1533,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/4024_8020_6012_8167"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	},
@@ -1551,7 +1551,7 @@
 		"modelType": {
 			"name": "AssetAdministrationShellDescriptor"
 		},
-		"identification": {
+		"id": {
 			"idType": "Custom",
 			"id": "https://test.de/ids/aas/6443_1113_5012_8886"
 		},
@@ -1560,7 +1560,7 @@
 			"modelType": {
 				"name": "Asset"
 			},
-			"identification": {
+			"id": {
 				"idType": "Custom",
 				"id": "https://test.de/ids/asset/0352_1113_5012_8795"
 			},
@@ -1586,7 +1586,7 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/1435_3180_6012_0689"
 				},
@@ -1612,11 +1612,11 @@
 				"modelType": {
 					"name": "SubmodelDescriptor"
 				},
-				"identification": {
+				"id": {
 					"idType": "Custom",
 					"id": "https://test.de/ids/sm/7491_5170_6012_5831"
 				},
-				"idShort": "Identification"
+				"idShort": "id"
 			}
 		]
 	}

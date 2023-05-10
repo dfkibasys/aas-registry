@@ -37,10 +37,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.dfki.cos.basys.aas.registry.service.configuration.ServletHeaderConfiguration.HeaderDefinition;
-import de.dfki.cos.basys.aas.registry.service.configuration.ServletHeaderConfiguration.MappingsHeaderApplier;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import de.dfki.cos.basys.aas.registry.service.configuration.ServletHeaderConfiguration.HeaderDefinition;
+import de.dfki.cos.basys.aas.registry.service.configuration.ServletHeaderConfiguration.MappingsHeaderApplier;
 
 public class FilterTest {
 

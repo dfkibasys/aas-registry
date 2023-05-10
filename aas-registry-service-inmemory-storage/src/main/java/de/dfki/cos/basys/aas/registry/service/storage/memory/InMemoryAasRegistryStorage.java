@@ -25,50 +25,67 @@
  ******************************************************************************/
 package de.dfki.cos.basys.aas.registry.service.storage.memory;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.dfki.cos.basys.aas.registry.model.AssetAdministrationShellDescriptor;
+import de.dfki.cos.basys.aas.registry.model.AssetKind;
 import de.dfki.cos.basys.aas.registry.model.ShellDescriptorSearchRequest;
 import de.dfki.cos.basys.aas.registry.model.ShellDescriptorSearchResponse;
 import de.dfki.cos.basys.aas.registry.model.SubmodelDescriptor;
+import de.dfki.cos.basys.aas.registry.service.errors.AasDescriptorAlreadyExistsException;
 import de.dfki.cos.basys.aas.registry.service.errors.AasDescriptorNotFoundException;
+import de.dfki.cos.basys.aas.registry.service.errors.SubmodelAlreadyExistsException;
 import de.dfki.cos.basys.aas.registry.service.errors.SubmodelNotFoundException;
 import de.dfki.cos.basys.aas.registry.service.storage.AasRegistryStorage;
-
-import lombok.NonNull;
+import de.dfki.cos.basys.aas.registry.service.storage.CursorResult;
+import de.dfki.cos.basys.aas.registry.service.storage.DescriptorFilter;
+import de.dfki.cos.basys.aas.registry.service.storage.PaginationInfo;
+import lombok.RequiredArgsConstructor;
 
 public class InMemoryAasRegistryStorage implements AasRegistryStorage {
 
-	private final Map<String, AssetAdministrationShellDescriptor> aasDescriptorLookupMap = new LinkedHashMap<>();
-	private final Map<String, Map<String, SubmodelDescriptor>> submodelLookupMap = new HashMap<>();
+	private final TreeMap<String, AssetAdministrationShellDescriptor> aasDescriptorLookupMap = new TreeMap<>();
+	private final HashMap<String, TreeMap<String, SubmodelDescriptor>> submodelLookupMap = new HashMap<>();
 
 	@Override
-	public boolean containsSubmodel(@NonNull String aasDescriptorId, @NonNull String submodelId) {
+	public boolean containsSubmodel(String aasDescriptorId, String submodelId) {
 		Map<String, SubmodelDescriptor> submodels = submodelLookupMap.get(aasDescriptorId);
 		return submodels != null && submodels.containsKey(submodelId);
 	}
 
 	@Override
-	public List<AssetAdministrationShellDescriptor> getAllAasDesriptors() {
-		return new ArrayList<>(aasDescriptorLookupMap.values());
+	public CursorResult<List<AssetAdministrationShellDescriptor>> getAllAasDescriptors(PaginationInfo pRequest, DescriptorFilter filter) {
+		PaginationSupport<AssetAdministrationShellDescriptor> paginationSupport = new PaginationSupport<>(aasDescriptorLookupMap);
+
+		DescriptorFilterFunction function = new DescriptorFilterFunction(filter);
+		return paginationSupport.getDescriptorsPagedAndFiltered(pRequest, filter, function::matches);
 	}
 
 	@Override
-	public AssetAdministrationShellDescriptor getAasDescriptor(@NonNull String aasId) {
+	public CursorResult<List<SubmodelDescriptor>> getAllSubmodels(String aasDescriptorId, PaginationInfo pInfo) throws AasDescriptorNotFoundException {
+		TreeMap<String, SubmodelDescriptor> submodels = submodelLookupMap.get(aasDescriptorId);
+		if (submodels == null) {
+			throw new AasDescriptorNotFoundException(aasDescriptorId);
+		}
+		PaginationSupport<SubmodelDescriptor> paginationSupport = new PaginationSupport<>(submodels);
+		return paginationSupport.getDescriptorsPaged(pInfo);
+	}
+
+	@Override
+	public AssetAdministrationShellDescriptor getAasDescriptor(String aasId) {
 		AssetAdministrationShellDescriptor descriptor = aasDescriptorLookupMap.get(aasId);
 		if (descriptor == null) {
 			throw new AasDescriptorNotFoundException(aasId);
@@ -77,38 +94,47 @@ public class InMemoryAasRegistryStorage implements AasRegistryStorage {
 	}
 
 	@Override
-	public void addOrReplaceAasDescriptor(@NonNull AssetAdministrationShellDescriptor descriptor) {
-		Map<String, SubmodelDescriptor> submodelMap = toSubmodelLookupMap(descriptor.getSubmodelDescriptors());
-		String aasDescrId = descriptor.getIdentification();
-		aasDescriptorLookupMap.put(aasDescrId, descriptor);
-		submodelLookupMap.put(aasDescrId, submodelMap);
+	public void replaceAasDescriptor(String aasId, AssetAdministrationShellDescriptor descriptor) {
+		if (!aasDescriptorLookupMap.containsKey(aasId)) {
+			throw new AasDescriptorNotFoundException(aasId);
+		}
+		TreeMap<String, SubmodelDescriptor> newSubmodelMap = toSubmodelLookupMap(descriptor.getSubmodelDescriptors());
+		String newAasDescrId = descriptor.getId();
+		aasDescriptorLookupMap.remove(aasId);
+		aasDescriptorLookupMap.put(newAasDescrId, descriptor);
+		submodelLookupMap.remove(aasId);
+		submodelLookupMap.put(newAasDescrId, newSubmodelMap);
 	}
 
-	private LinkedHashMap<String, SubmodelDescriptor> toSubmodelLookupMap(List<SubmodelDescriptor> submodelDescriptors) {
-		return Optional.ofNullable(submodelDescriptors).orElseGet(List::of).stream().collect(Collectors.toMap(SubmodelDescriptor::getIdentification, Function.identity(), this::mergeSubmodels, LinkedHashMap::new));
+	@Override
+	public void insertAasDescriptor( AssetAdministrationShellDescriptor descr) throws AasDescriptorAlreadyExistsException {
+		String aasId = descr.getId();
+		if (aasDescriptorLookupMap.containsKey(aasId)) {
+			throw new AasDescriptorAlreadyExistsException(aasId);
+		}
+		TreeMap<String, SubmodelDescriptor> newSubmodelMap = toSubmodelLookupMap(descr.getSubmodelDescriptors());
+		aasDescriptorLookupMap.put(aasId, descr);
+		submodelLookupMap.put(aasId, newSubmodelMap);
+	}
+	
+	private TreeMap<String, SubmodelDescriptor> toSubmodelLookupMap(List<SubmodelDescriptor> submodelDescriptors) {
+		return Optional.ofNullable(submodelDescriptors).orElseGet(List::of).stream().collect(Collectors.toMap(SubmodelDescriptor::getId, Function.identity(), this::mergeSubmodels, TreeMap::new));
 	}
 
 	private SubmodelDescriptor mergeSubmodels(SubmodelDescriptor descr1, SubmodelDescriptor descr2) {
-		throw new DuplicateSubmodelIds(descr1.getIdentification());
+		throw new DuplicateSubmodelIds(descr1.getId());
 	}
 
 	@Override
-	public boolean removeAasDescriptor(String aasDescriptorId) {
-		return aasDescriptorLookupMap.remove(aasDescriptorId) != null && submodelLookupMap.remove(aasDescriptorId) != null;
-	}
-
-	@Override
-	public List<SubmodelDescriptor> getAllSubmodels(@NonNull String aasDescriptorId) {
-		AssetAdministrationShellDescriptor descriptor = getAasDescriptor(aasDescriptorId);
-		List<SubmodelDescriptor> submodels = descriptor.getSubmodelDescriptors();
-		if (submodels == null) {
-			return Collections.emptyList();
+	public void removeAasDescriptor(String aasDescriptorId) {
+		boolean success = aasDescriptorLookupMap.remove(aasDescriptorId) != null && submodelLookupMap.remove(aasDescriptorId) != null;
+		if (!success) {
+			throw new AasDescriptorNotFoundException(aasDescriptorId);
 		}
-		return Collections.unmodifiableList(submodels);
 	}
 
 	@Override
-	public SubmodelDescriptor getSubmodel(@NonNull String aasDescriptorId, @NonNull String submodelId) {
+	public SubmodelDescriptor getSubmodel( String aasDescriptorId, String submodelId) {
 		Map<String, SubmodelDescriptor> descriptorModels = submodelLookupMap.get(aasDescriptorId);
 		if (descriptorModels == null) {
 			throw new AasDescriptorNotFoundException(aasDescriptorId);
@@ -121,15 +147,11 @@ public class InMemoryAasRegistryStorage implements AasRegistryStorage {
 	}
 
 	@Override
-	public void appendOrReplaceSubmodel(@NonNull String aasDescriptorId, @NonNull SubmodelDescriptor submodel) {
+	public void insertSubmodel(String aasDescriptorId, SubmodelDescriptor submodel) {
 		AssetAdministrationShellDescriptor aasDescriptor = getAasDescriptor(aasDescriptorId);
-		replaceOrAppendSubmodel(aasDescriptorId, aasDescriptor, submodel);
-	}
-
-	private void replaceOrAppendSubmodel(String aasDescriptorId, AssetAdministrationShellDescriptor aasDescriptor, SubmodelDescriptor submodel) {
-		String submodelId = submodel.getIdentification();
-		if (containsSubmodel(aasDescriptorId, submodelId)) { // replace
-			replaceSubmodelInAasDescriptor(aasDescriptor, submodel, submodelId);
+		String submodelId = submodel.getId();
+		if (containsSubmodel(aasDescriptorId, submodelId)) {
+			throw new SubmodelAlreadyExistsException(aasDescriptorId, submodelId);
 		} else { // just append
 			aasDescriptor.addSubmodelDescriptorsItem(submodel);
 		}
@@ -137,24 +159,45 @@ public class InMemoryAasRegistryStorage implements AasRegistryStorage {
 		submodelLookupMap.get(aasDescriptorId).put(submodelId, submodel);
 	}
 
-	private void replaceSubmodelInAasDescriptor(AssetAdministrationShellDescriptor aasDescriptor, SubmodelDescriptor submodel, String submodelId) {
-		ListIterator<SubmodelDescriptor> submodels = aasDescriptor.getSubmodelDescriptors().listIterator();
+	@Override
+	public void replaceSubmodel(String aasDescriptorId, String submodelId, SubmodelDescriptor submodel) throws AasDescriptorNotFoundException, SubmodelNotFoundException {
+		if (!aasDescriptorLookupMap.containsKey(aasDescriptorId)) {
+			throw new AasDescriptorNotFoundException(submodelId);
+		} else if (!containsSubmodel(aasDescriptorId, submodelId)) {
+			throw new SubmodelNotFoundException(aasDescriptorId, submodelId);
+		} else {
+			replaceSubmodelInAasDescriptor(aasDescriptorId, submodelId, submodel);
+		}
+		TreeMap<String, SubmodelDescriptor> modelMap = submodelLookupMap.get(aasDescriptorId);
+		modelMap.remove(submodelId);
+		// could be a different id
+		modelMap.put(submodel.getId(), submodel);
+
+	}
+
+	private void replaceSubmodelInAasDescriptor(String aasDescriptorId, String submodelId, SubmodelDescriptor submodel) {
+		AssetAdministrationShellDescriptor aasDescriptor = aasDescriptorLookupMap.get(aasDescriptorId);		
+		ListIterator<SubmodelDescriptor> submodels = Optional.ofNullable(aasDescriptor.getSubmodelDescriptors())
+							.orElse(Collections.emptyList()).listIterator();	
 		while (submodels.hasNext()) {
 			SubmodelDescriptor eachItem = submodels.next();
-			if (Objects.equals(eachItem.getIdentification(), submodelId)) {
+			if (Objects.equals(eachItem.getId(), submodelId)) {
 				submodels.set(submodel);
-				break;
+				return;
 			}
 		}
 	}
 
 	@Override
-	public boolean removeSubmodel(String aasDescrId, String submodelId) {
+	public void removeSubmodel(String aasDescrId, String submodelId) {
 		AssetAdministrationShellDescriptor descriptor = aasDescriptorLookupMap.get(aasDescrId);
 		if (descriptor == null) {
-			return false;
+			throw new AasDescriptorNotFoundException(aasDescrId);
 		}
-		return removeStoredSubmodel(aasDescrId, descriptor, submodelId);
+		boolean success = removeStoredSubmodel(aasDescrId, descriptor, submodelId);
+		if (!success) {
+			throw new SubmodelNotFoundException(aasDescrId, submodelId);
+		}
 	}
 
 	private boolean removeStoredSubmodel(String aasDescriptorId, AssetAdministrationShellDescriptor aasDescriptor, String submodelId) {
@@ -170,9 +213,9 @@ public class InMemoryAasRegistryStorage implements AasRegistryStorage {
 		Iterator<SubmodelDescriptor> submodelIter = aasDescriptor.getSubmodelDescriptors().iterator();
 		while (submodelIter.hasNext()) {
 			SubmodelDescriptor eachItem = submodelIter.next();
-			if (Objects.equals(eachItem.getIdentification(), submodelId)) {
+			if (Objects.equals(eachItem.getId(), submodelId)) {
 				submodelIter.remove();
-				return; // we assume that there is always just one submodel with this id
+				break;
 			}
 		}
 	}
@@ -187,12 +230,12 @@ public class InMemoryAasRegistryStorage implements AasRegistryStorage {
 
 	@Override
 	public ShellDescriptorSearchResponse searchAasDescriptors(ShellDescriptorSearchRequest request) {
-		Collection<AssetAdministrationShellDescriptor> descriptors = getAllAasDesriptors();
+		Collection<AssetAdministrationShellDescriptor> descriptors = aasDescriptorLookupMap.values();
 		InMemoryStorageSearch search = new InMemoryStorageSearch(descriptors);
 		return search.performSearch(request);
 	}
 
-	private static final class DuplicateSubmodelIds extends RuntimeException {
+	public static final class DuplicateSubmodelIds extends RuntimeException {
 
 		private static final long serialVersionUID = 1L;
 
@@ -200,4 +243,20 @@ public class InMemoryAasRegistryStorage implements AasRegistryStorage {
 			super("The submodel id '" + id + "' is stored mulitple times in the descriptor");
 		}
 	}
+
+	@RequiredArgsConstructor
+	private static class DescriptorFilterFunction {
+
+		private final DescriptorFilter filter;
+
+		public boolean matches(AssetAdministrationShellDescriptor descr) {
+			AssetKind filterKind = filter.getKind();
+			AssetKind targetKind = descr.getAssetKind();
+			if (Objects.equals(filterKind, targetKind) || filterKind == AssetKind.NOTAPPLICABLE && targetKind == null) {
+				return Objects.equals(filter.getAssetType(), descr.getAssetType());
+			}
+			return false;
+		}
+	}
+
 }
