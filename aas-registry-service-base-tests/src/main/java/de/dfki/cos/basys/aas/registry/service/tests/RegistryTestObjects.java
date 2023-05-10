@@ -25,10 +25,15 @@
  ******************************************************************************/
 package de.dfki.cos.basys.aas.registry.service.tests;
 
-import de.dfki.cos.basys.aas.registry.model.AssetAdministrationShellDescriptor;
-import de.dfki.cos.basys.aas.registry.model.LangString;
-import de.dfki.cos.basys.aas.registry.model.SubmodelDescriptor;
+import java.net.ProtocolException;
 
+import org.apache.tomcat.util.net.SSLUtil.ProtocolInfo;
+
+import de.dfki.cos.basys.aas.registry.model.AssetAdministrationShellDescriptor;
+import de.dfki.cos.basys.aas.registry.model.Endpoint;
+import de.dfki.cos.basys.aas.registry.model.LangStringTextType;
+import de.dfki.cos.basys.aas.registry.model.ProtocolInformation;
+import de.dfki.cos.basys.aas.registry.model.SubmodelDescriptor;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -36,7 +41,7 @@ public class RegistryTestObjects {
 
 	public AssetAdministrationShellDescriptor newAssetAdministrationShellDescriptor(String id) {
 		AssetAdministrationShellDescriptor descriptor = new AssetAdministrationShellDescriptor();
-		descriptor.setIdentification(id);
+		descriptor.setId(id);
 		return descriptor;
 	}
 
@@ -46,35 +51,42 @@ public class RegistryTestObjects {
 
 	public SubmodelDescriptor newSubmodelDescriptorWithDescription(String id, String description) {
 		SubmodelDescriptor descriptor = new SubmodelDescriptor();
-		descriptor.setIdentification(id);
+		descriptor.setId(id);
 		addDescription(descriptor, description);
 		return descriptor;
 	}
 
 	private void addDescription(SubmodelDescriptor descriptor, String description) {
 		if (description != null) {
-			LangString lString = newDescription(description);
-			descriptor.addDescriptionsItem(lString);
+			LangStringTextType lString = newDescription(description);
+			descriptor.addDescriptionItem(lString);
 		}
 	}
 
-	private LangString newDescription(String sDescr) {
-		LangString descr = new LangString();
+	private LangStringTextType newDescription(String sDescr) {
+		LangStringTextType descr = new LangStringTextType();
 		descr.setLanguage("de-DE");
 		descr.setText(sDescr);
 		return descr;
 	}
 
-	public AssetAdministrationShellDescriptor newDescriptor(String id) {
-		AssetAdministrationShellDescriptor descriptor = new AssetAdministrationShellDescriptor();
-		descriptor.setIdentification(id);
+	public SubmodelDescriptor newSubmodelDescriptorWithIdShort(String id, String idShort) {
+		SubmodelDescriptor descriptor = new SubmodelDescriptor();
+		descriptor.setId(id);
+		descriptor.setIdShort(idShort);
+		
 		return descriptor;
 	}
 
-	public SubmodelDescriptor newSubmodelDescriptorWithIdShort(String id, String idShort) {
-		SubmodelDescriptor descriptor = new SubmodelDescriptor();
-		descriptor.setIdentification(id);
-		descriptor.setIdShort(idShort);
-		return descriptor;
+	public void addDefaultEndpoint(SubmodelDescriptor descriptor) {
+		Endpoint endpoint = new Endpoint();
+		endpoint.setInterface("https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003");
+		ProtocolInformation protocolInfo = new ProtocolInformation();
+		protocolInfo.setHref("http://127.0.0.1:8099/submodel");
+		protocolInfo.setEndpointProtocol("HTTP");
+		protocolInfo.setSubprotocol("AAS");
+		endpoint.setProtocolInformation(protocolInfo);
+		descriptor.addEndpointsItem(endpoint);
+		
 	}
 }

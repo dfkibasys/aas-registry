@@ -25,8 +25,6 @@
  ******************************************************************************/
 package de.dfki.cos.basys.aas.registry.service.events;
 
-import de.dfki.cos.basys.aas.registry.events.RegistryEvent;
-import de.dfki.cos.basys.aas.registry.events.RegistryEventSink;
 import org.slf4j.Marker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -36,6 +34,8 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.dfki.cos.basys.aas.registry.events.RegistryEvent;
+import de.dfki.cos.basys.aas.registry.events.RegistryEventSink;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2

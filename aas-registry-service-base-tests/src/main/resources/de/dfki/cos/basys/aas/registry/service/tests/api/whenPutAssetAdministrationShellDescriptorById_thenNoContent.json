@@ -1,8 +1,8 @@
 {
-	"identification": "identification_3",
+	"id": "identification_3",
 	"submodelDescriptors": [
 		{
-			"identification": "identification_3.1"
+			"id": "identification_3.1"
 		}
 	]
 }

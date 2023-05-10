@@ -28,12 +28,19 @@ package de.dfki.cos.basys.aas.registry.service.storage.memory;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.Valid;
+
 import de.dfki.cos.basys.aas.registry.model.AssetAdministrationShellDescriptor;
 import de.dfki.cos.basys.aas.registry.model.ShellDescriptorSearchRequest;
 import de.dfki.cos.basys.aas.registry.model.ShellDescriptorSearchResponse;
 import de.dfki.cos.basys.aas.registry.model.SubmodelDescriptor;
+import de.dfki.cos.basys.aas.registry.service.errors.AasDescriptorAlreadyExistsException;
+import de.dfki.cos.basys.aas.registry.service.errors.AasDescriptorNotFoundException;
+import de.dfki.cos.basys.aas.registry.service.errors.SubmodelNotFoundException;
 import de.dfki.cos.basys.aas.registry.service.storage.AasRegistryStorage;
-
+import de.dfki.cos.basys.aas.registry.service.storage.CursorResult;
+import de.dfki.cos.basys.aas.registry.service.storage.DescriptorFilter;
+import de.dfki.cos.basys.aas.registry.service.storage.PaginationInfo;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -50,28 +57,23 @@ public class ThreadSafeAasRegistryStorageDecorator implements AasRegistryStorage
 	}
 
 	@Override
-	public List<AssetAdministrationShellDescriptor> getAllAasDesriptors() {
-		return access.read(storage::getAllAasDesriptors);
+	public CursorResult<List<AssetAdministrationShellDescriptor>> getAllAasDescriptors(@NonNull PaginationInfo pRequest, @NonNull DescriptorFilter filter) {	
+		return access.read(storage::getAllAasDescriptors, pRequest, filter);
 	}
 
 	@Override
-	public AssetAdministrationShellDescriptor getAasDescriptor(@NonNull String aasId) {
-		return access.read(storage::getAasDescriptor, aasId);
+	public void removeAasDescriptor(@NonNull String aasDescriptorId) {
+		access.write(storage::removeAasDescriptor, aasDescriptorId);
 	}
 
 	@Override
-	public void addOrReplaceAasDescriptor(@NonNull AssetAdministrationShellDescriptor descriptor) {
-		access.write(storage::addOrReplaceAasDescriptor, descriptor);
+	public AssetAdministrationShellDescriptor getAasDescriptor(@NonNull String aasDescriptorId) throws AasDescriptorNotFoundException {
+		return access.read(storage::getAasDescriptor, aasDescriptorId);
 	}
-
+	
 	@Override
-	public boolean removeAasDescriptor(@NonNull String aasDescriptorId) {
-		return access.write(storage::removeAasDescriptor, aasDescriptorId);
-	}
-
-	@Override
-	public List<SubmodelDescriptor> getAllSubmodels(@NonNull String aasDescriptorId) {
-		return access.read(storage::getAllSubmodels, aasDescriptorId);
+	public CursorResult<List<SubmodelDescriptor>> getAllSubmodels(@NonNull String aasDescriptorId, @NonNull PaginationInfo pRequest) throws AasDescriptorNotFoundException {	
+		return access.read(storage::getAllSubmodels, aasDescriptorId, pRequest);
 	}
 
 	@Override
@@ -80,13 +82,13 @@ public class ThreadSafeAasRegistryStorageDecorator implements AasRegistryStorage
 	}
 
 	@Override
-	public void appendOrReplaceSubmodel(@NonNull String aasDescriptorId, @NonNull SubmodelDescriptor submodel) {
-		access.write(storage::appendOrReplaceSubmodel, aasDescriptorId, submodel);
+	public void insertSubmodel(@NonNull String aasDescriptorId, @NonNull SubmodelDescriptor submodel) {
+		access.write(storage::insertSubmodel, aasDescriptorId, submodel);
 	}
 
 	@Override
-	public boolean removeSubmodel(@NonNull String aasDescrId, @NonNull String submodelId) {
-		return access.write(storage::removeSubmodel, aasDescrId, submodelId);
+	public void removeSubmodel(@NonNull String aasDescrId, @NonNull String submodelId) {
+		 access.write(storage::removeSubmodel, aasDescrId, submodelId);
 	}
 
 	@Override
@@ -97,5 +99,20 @@ public class ThreadSafeAasRegistryStorageDecorator implements AasRegistryStorage
 	@Override
 	public ShellDescriptorSearchResponse searchAasDescriptors(ShellDescriptorSearchRequest request) {
 		return access.read(storage::searchAasDescriptors, request);
+	}
+
+	@Override
+	public void insertAasDescriptor(@Valid AssetAdministrationShellDescriptor descr) throws AasDescriptorAlreadyExistsException {
+		access.write(storage::insertAasDescriptor, descr);
+	}
+
+	@Override
+	public void replaceAasDescriptor(@NonNull String aasDescritorId, @NonNull AssetAdministrationShellDescriptor descriptor) throws AasDescriptorNotFoundException {
+		access.write(storage::replaceAasDescriptor, aasDescritorId, descriptor);
+	}
+
+	@Override
+	public void replaceSubmodel(@NonNull String aasDescriptorId, @NonNull String submodelId, @NonNull SubmodelDescriptor submodel) throws AasDescriptorNotFoundException, SubmodelNotFoundException {
+		access.write(storage::replaceSubmodel, aasDescriptorId, submodelId, submodel);
 	}
 }

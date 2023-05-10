@@ -115,7 +115,7 @@ public class SimplePathGenerator extends AbstractMojo {
 		}
 	}
 
-	void generateClasses(ClassLoader loader) throws IOException, ClassNotFoundException {
+	public void generateClasses(ClassLoader loader) throws IOException, ClassNotFoundException {
 		Class<?> inputCls = loader.loadClass(className);
 
 		PathInfoGenerator generator = new PathInfoGenerator(inputCls);

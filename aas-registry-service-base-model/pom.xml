@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>de.dfki.cos.basys.aas.registry</groupId>
 		<artifactId>aas-registry</artifactId>
-		<version>0.4.2-SNAPSHOT</version>
+		<version>0.5.0-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 
@@ -75,6 +75,7 @@
 								<java8>true</java8>
 								<dateLibrary>java8</dateLibrary>
 								<sourceFolder>java</sourceFolder>
+								<booleanGetterPrefix>true</booleanGetterPrefix>
 								<serializableModel>true</serializableModel>
 								<oas3>true</oas3>
 								<useSpringController>true</useSpringController>

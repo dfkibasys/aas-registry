@@ -1,8 +1,8 @@
 {
-	"identification": "identification_2",
+	"id": "identification_2",
 	"submodelDescriptors": [
 		{
-			"identification": "robot_2",
+			"id": "robot_2",
 			"idShort": "ROBOT_12_1_24"
 		}
 	]

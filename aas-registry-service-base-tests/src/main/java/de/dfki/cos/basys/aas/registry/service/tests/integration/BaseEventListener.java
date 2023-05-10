@@ -28,11 +28,12 @@ package de.dfki.cos.basys.aas.registry.service.tests.integration;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import de.dfki.cos.basys.aas.registry.events.RegistryEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import de.dfki.cos.basys.aas.registry.events.RegistryEvent;
 
 public abstract class BaseEventListener {
 

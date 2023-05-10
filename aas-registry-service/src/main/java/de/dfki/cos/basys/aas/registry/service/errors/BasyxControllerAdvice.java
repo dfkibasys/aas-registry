@@ -25,9 +25,10 @@
  ******************************************************************************/
 package de.dfki.cos.basys.aas.registry.service.errors;
 
-import de.dfki.cos.basys.aas.registry.model.Message;
-import de.dfki.cos.basys.aas.registry.model.Message.MessageTypeEnum;
-import de.dfki.cos.basys.aas.registry.model.Result;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
@@ -36,18 +37,23 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
 
+import de.dfki.cos.basys.aas.registry.model.Message;
+import de.dfki.cos.basys.aas.registry.model.Message.MessageTypeEnum;
+import de.dfki.cos.basys.aas.registry.model.Result;
+
 @ControllerAdvice
 public class BasyxControllerAdvice {
 
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Result> handleValidationException(MethodArgumentNotValidException ex) {
-		Result result = new Result().success(false);
-		String timestamp = "" + System.currentTimeMillis();
+		Result result = new Result();
+		OffsetDateTime timestamp = OffsetDateTime.now();
+		String reason = HttpStatus.BAD_REQUEST.getReasonPhrase();
 		for (ObjectError error : ex.getAllErrors()) {
-			result.addMessagesItem(new Message().messageType(MessageTypeEnum.EXCEPTION).text(error.toString()).timestamp(timestamp));
+			result.addMessagesItem(new Message().code(reason).messageType(MessageTypeEnum.EXCEPTION).text(error.toString()).timestamp(timestamp));
 		}
-		return new ResponseEntity<Result>(result, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(ResponseStatusException.class)
@@ -61,19 +67,19 @@ public class BasyxControllerAdvice {
 	}
 
 	private ResponseEntity<Result> newResultEntity(Exception ex, HttpStatus status) {
-		Result result = new Result().success(Boolean.FALSE);
+		Result result = new Result();
 		Message message = newExceptionMessage(ex.getMessage(), status);
 		result.addMessagesItem(message);
-		return new ResponseEntity<Result>(result, status);
+		return new ResponseEntity<>(result, status);
 	}
-	
 
 	private Message newExceptionMessage(String msg, HttpStatus status) {
 		Message message = new Message();
 		message.setCode("" + status.value());
 		message.setMessageType(MessageTypeEnum.EXCEPTION);
-		message.setTimestamp("" + System.currentTimeMillis());
+		message.setTimestamp(OffsetDateTime.now());
 		message.setText(msg);
 		return message;
 	}
+	
 }

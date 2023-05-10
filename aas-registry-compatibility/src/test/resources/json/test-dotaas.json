@@ -19,7 +19,7 @@
 			]
 		},
 		"idShort": "mir100_2_aas",
-		"identification": "https://test.de/ids/aas/0043_1113_5012_9303",
+		"id": "https://test.de/ids/aas/0043_1113_5012_9303",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -32,7 +32,7 @@
 					}
 				],
 				"idShort": "Capabilities",
-				"identification": "https://test.de/ids/sm/1435_3180_6012_0689",
+				"id": "https://test.de/ids/sm/1435_3180_6012_0689",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -49,8 +49,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/6291_5170_6012_9120",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/6291_5170_6012_9120",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -83,7 +83,7 @@
 			]
 		},
 		"idShort": "drone_1_aas",
-		"identification": "https://test.de/ids/aas/5323_1113_5012_2226",
+		"id": "https://test.de/ids/aas/5323_1113_5012_2226",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -96,7 +96,7 @@
 					}
 				],
 				"idShort": "Capabilities",
-				"identification": "https://test.de/ids/sm/4263_9080_6012_8626",
+				"id": "https://test.de/ids/sm/4263_9080_6012_8626",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -113,8 +113,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/5314_1110_6012_3213",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/5314_1110_6012_3213",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -147,7 +147,7 @@
 			]
 		},
 		"idShort": "baxter_2_aas",
-		"identification": "baxter_2_aas",
+		"id": "baxter_2_aas",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -159,8 +159,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/6520_7132_1112_3075",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/6520_7132_1112_3075",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -193,7 +193,7 @@
 			]
 		},
 		"idShort": "ur10_1_aas",
-		"identification": "https://test.de/ids/aas/5453_1113_5012_9841",
+		"id": "https://test.de/ids/aas/5453_1113_5012_9841",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -206,7 +206,7 @@
 					}
 				],
 				"idShort": "Capabilities",
-				"identification": "https://test.de/ids/sm/5175_4182_7012_5135",
+				"id": "https://test.de/ids/sm/5175_4182_7012_5135",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -224,7 +224,7 @@
 					}
 				],
 				"idShort": "ControlComponentInstance",
-				"identification": "https://test.de/ids/sm/9485_2152_8012_0976",
+				"id": "https://test.de/ids/sm/9485_2152_8012_0976",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -241,8 +241,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/7154_5170_6012_5128",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/7154_5170_6012_5128",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -264,7 +264,7 @@
 					}
 				],
 				"idShort": "Signals",
-				"identification": "https://test.de/ids/sm/7151_3182_7012_7596",
+				"id": "https://test.de/ids/sm/7151_3182_7012_7596",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -293,7 +293,7 @@
 			]
 		},
 		"idShort": "aio_1_aas",
-		"identification": "https://test.de/ids/aas/7503_1113_5012_5138",
+		"id": "https://test.de/ids/aas/7503_1113_5012_5138",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -305,8 +305,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/9364_0110_6012_2117",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/9364_0110_6012_2117",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -339,7 +339,7 @@
 			]
 		},
 		"idShort": "baxter_1_aas",
-		"identification": "baxter_1_aas",
+		"id": "baxter_1_aas",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -351,8 +351,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/9014_1110_6012_1842",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/9014_1110_6012_1842",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -385,7 +385,7 @@
 			]
 		},
 		"idShort": "mir100_1_aas",
-		"identification": "https://test.de/ids/aas/9333_1113_5012_7535",
+		"id": "https://test.de/ids/aas/9333_1113_5012_7535",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -398,7 +398,7 @@
 					}
 				],
 				"idShort": "Capabilities",
-				"identification": "https://test.de/ids/sm/1435_3180_6012_0689",
+				"id": "https://test.de/ids/sm/1435_3180_6012_0689",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -415,8 +415,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/7024_1110_6012_7746",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/7024_1110_6012_7746",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -449,7 +449,7 @@
 			]
 		},
 		"idShort": "panda_2_aas",
-		"identification": "https://test.de/ids/aas/1133_1113_5012_3439",
+		"id": "https://test.de/ids/aas/1133_1113_5012_3439",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -461,8 +461,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/7401_5170_6012_2623",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/7401_5170_6012_2623",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -495,7 +495,7 @@
 			]
 		},
 		"idShort": "ur10e_1_aas",
-		"identification": "https://test.de/ids/aas/9163_1113_5012_6846",
+		"id": "https://test.de/ids/aas/9163_1113_5012_6846",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -507,8 +507,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/2184_5170_6012_8745",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/2184_5170_6012_8745",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -541,7 +541,7 @@
 			]
 		},
 		"idShort": "ur10_2_aas",
-		"identification": "https://test.de/ids/aas/5553_1113_5012_4929",
+		"id": "https://test.de/ids/aas/5553_1113_5012_4929",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -553,8 +553,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/1274_5170_6012_2788",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/1274_5170_6012_2788",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -587,7 +587,7 @@
 			]
 		},
 		"idShort": "ur5_1_aas",
-		"identification": "https://test.de/ids/aas/6253_1113_5012_7178",
+		"id": "https://test.de/ids/aas/6253_1113_5012_7178",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -599,8 +599,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/1144_5170_6012_4316",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/1144_5170_6012_4316",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -633,7 +633,7 @@
 			]
 		},
 		"idShort": "mir100_4_aas",
-		"identification": "https://test.de/ids/aas/8351_4191_1112_7911",
+		"id": "https://test.de/ids/aas/8351_4191_1112_7911",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -646,7 +646,7 @@
 					}
 				],
 				"idShort": "Capabilities",
-				"identification": "https://test.de/ids/sm/1435_3180_6012_0689",
+				"id": "https://test.de/ids/sm/1435_3180_6012_0689",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -663,8 +663,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/8165_6132_1112_4319",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/8165_6132_1112_4319",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -697,7 +697,7 @@
 			]
 		},
 		"idShort": "bmb_2_aas",
-		"identification": "https://test.de/ids/aas/7023_1113_5012_2822",
+		"id": "https://test.de/ids/aas/7023_1113_5012_2822",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -709,8 +709,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/4233_8020_6012_0953",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/4233_8020_6012_0953",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -743,7 +743,7 @@
 			]
 		},
 		"idShort": "sawyer_1_aas",
-		"identification": "https://test.de/ids/aas/8543_1113_5012_7761",
+		"id": "https://test.de/ids/aas/8543_1113_5012_7761",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -755,8 +755,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/2102_5170_6012_2032",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/2102_5170_6012_2032",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -789,7 +789,7 @@
 			]
 		},
 		"idShort": "hololens2_1_aas",
-		"identification": "https://test.de/ids/aas/1203_7132_1112_1385",
+		"id": "https://test.de/ids/aas/1203_7132_1112_1385",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -801,8 +801,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/5013_7132_1112_1389",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/5013_7132_1112_1389",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -835,7 +835,7 @@
 			]
 		},
 		"idShort": "mrk40_lab_aas",
-		"identification": "https://test.de/ids/aas/3064_3152_8012_5186",
+		"id": "https://test.de/ids/aas/3064_3152_8012_5186",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -848,7 +848,7 @@
 					}
 				],
 				"idShort": "Layout_I40",
-				"identification": "https://test.de/ids/sm/8391_8081_1112_0109",
+				"id": "https://test.de/ids/sm/8391_8081_1112_0109",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -866,7 +866,7 @@
 					}
 				],
 				"idShort": "Topology_I40",
-				"identification": "https://test.de/ids/sm/6301_0120_8012_5974",
+				"id": "https://test.de/ids/sm/6301_0120_8012_5974",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -895,7 +895,7 @@
 			]
 		},
 		"idShort": "panda_1_aas",
-		"identification": "https://test.de/ids/aas/8523_1113_5012_2455",
+		"id": "https://test.de/ids/aas/8523_1113_5012_2455",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -907,8 +907,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/5414_1110_6012_8530",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/5414_1110_6012_8530",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -941,7 +941,7 @@
 			]
 		},
 		"idShort": "yumi_1_aas",
-		"identification": "https://test.de/ids/aas/6363_1113_5012_8405",
+		"id": "https://test.de/ids/aas/6363_1113_5012_8405",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -953,8 +953,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/1324_1110_6012_7891",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/1324_1110_6012_7891",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -987,7 +987,7 @@
 			]
 		},
 		"idShort": "ur3_1_aas",
-		"identification": "https://test.de/ids/aas/0153_1113_5012_9422",
+		"id": "https://test.de/ids/aas/0153_1113_5012_9422",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -999,8 +999,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/7124_1110_6012_4383",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/7124_1110_6012_4383",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -1033,7 +1033,7 @@
 			]
 		},
 		"idShort": "bmb_1_aas",
-		"identification": "https://test.de/ids/aas/5513_1113_5012_3140",
+		"id": "https://test.de/ids/aas/5513_1113_5012_3140",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -1045,8 +1045,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/4213_8020_6012_7967",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/4213_8020_6012_7967",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -1079,7 +1079,7 @@
 			]
 		},
 		"idShort": "yumi_2_aas",
-		"identification": "https://test.de/ids/aas/1563_1113_5012_2206",
+		"id": "https://test.de/ids/aas/1563_1113_5012_2206",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -1091,8 +1091,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/7005_5170_6012_5369",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/7005_5170_6012_5369",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -1125,7 +1125,7 @@
 			]
 		},
 		"idShort": "lap_1_aas",
-		"identification": "https://test.de/ids/aas/4233_1113_5012_4654",
+		"id": "https://test.de/ids/aas/4233_1113_5012_4654",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -1137,8 +1137,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/4514_1110_6012_0882",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/4514_1110_6012_0882",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -1171,7 +1171,7 @@
 			]
 		},
 		"idShort": "drone_2_aas",
-		"identification": "https://test.de/ids/aas/6423_1113_5012_4537",
+		"id": "https://test.de/ids/aas/6423_1113_5012_4537",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -1184,7 +1184,7 @@
 					}
 				],
 				"idShort": "Capabilities",
-				"identification": "https://test.de/ids/sm/4263_9080_6012_8626",
+				"id": "https://test.de/ids/sm/4263_9080_6012_8626",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -1201,8 +1201,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/4024_8020_6012_8167",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/4024_8020_6012_8167",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -1235,7 +1235,7 @@
 			]
 		},
 		"idShort": "mir100_3_aas",
-		"identification": "https://test.de/ids/aas/6443_1113_5012_8886",
+		"id": "https://test.de/ids/aas/6443_1113_5012_8886",
 		"submodelDescriptors": [
 			{
 				"endpoints": [
@@ -1248,7 +1248,7 @@
 					}
 				],
 				"idShort": "Capabilities",
-				"identification": "https://test.de/ids/sm/1435_3180_6012_0689",
+				"id": "https://test.de/ids/sm/1435_3180_6012_0689",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [
@@ -1265,8 +1265,8 @@
 						}
 					}
 				],
-				"idShort": "Identification",
-				"identification": "https://test.de/ids/sm/7491_5170_6012_5831",
+				"idShort": "id",
+				"id": "https://test.de/ids/sm/7491_5170_6012_5831",
 				"semanticId": {
 					"type": "ModelReference",
 					"keys": [

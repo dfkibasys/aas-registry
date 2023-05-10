@@ -30,19 +30,21 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import de.dfki.cos.basys.aas.registry.util.path.PojoClassVisitor.PojoRelation;
-import de.dfki.cos.basys.aas.registry.util.path.PojoClassVisitor.PojoRelation.PojoRelationBuilder;
-import de.dfki.cos.basys.aas.registry.util.path.PojoClassVisitor.PojoRelation.PojoRelationType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
+import de.dfki.cos.basys.aas.registry.util.path.PojoClassVisitor.PojoRelation;
+import de.dfki.cos.basys.aas.registry.util.path.PojoClassVisitor.PojoRelation.PojoRelationBuilder;
+import de.dfki.cos.basys.aas.registry.util.path.PojoClassVisitor.PojoRelation.PojoRelationType;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -77,7 +79,8 @@ class PojoClassWalker {
 		String newPath = generateNewPath(path, fieldName);
 		Class<?> type = getFieldTypeAndAssignRange(field, builder);
 
-		if (type.isPrimitive() || type.equals(String.class) || Enum.class.isAssignableFrom(type)) {
+		if (type.isPrimitive() || type.equals(String.class) || type.equals(Boolean.class) || Number.class.isAssignableFrom(type) || Enum.class.isAssignableFrom(type)) {
+			builder = builder.range(type.getSimpleName()).isPrimitive(true);
 			walkPrimitiveRelation(builder);
 		} else {
 			walkComplexRelation(type, newPath, builder);
@@ -124,14 +127,24 @@ class PojoClassWalker {
 
 	private static List<Field> getFields(Class<?> cls) {
 		List<Field> fields = new LinkedList<>();
-		getFields(cls, fields);
+		Set<String> duplicateFieldNameFilter = new HashSet<>();
+		getFields(cls, fields, duplicateFieldNameFilter);
+//		System.out.println(duplicateFieldNameFilter);
 		return fields;
 	}
 
-	private static void getFields(Class<?> cls, List<Field> fields) {
+	private static void getFields(Class<?> cls, List<Field> fields, Set<String> duplicateFieldNameFilter) {
 		if (cls != null) {
-			fields.addAll(List.of(cls.getDeclaredFields()));
-			getFields(cls.getSuperclass(), fields);
+			for (Field eachField: cls.getDeclaredFields()) {
+				//System.out.println(eachField.getName());
+				if (duplicateFieldNameFilter.add(eachField.getName())) {
+					fields.add(eachField);
+				}
+				if (eachField.getName().equals("extensions")){
+					System.out.println(" " + eachField.getName() + "-" + eachField.getType() + "-" + eachField.getClass());
+				}
+			}
+			getFields(cls.getSuperclass(), fields, duplicateFieldNameFilter);
 		}
 	}
 
