@@ -1,4 +1,5 @@
 ---
+debug: true
 events:
   sink:
 description:
@@ -25,7 +26,7 @@ servlet:
   headers: []
 spring:
   jackson:
-    date-format: de.dfki.cos.basys.aas.registry.service.RFC3339DateFormat
+    date-format: org.eclipse.digitaltwin.basyx.aasregistry.service.RFC3339DateFormat
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
   cloud:

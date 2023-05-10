@@ -79,7 +79,7 @@
 								<serializableModel>true</serializableModel>
 								<oas3>true</oas3>
 								<useSpringController>true</useSpringController>
-								<modelPackage>de.dfki.cos.basys.aas.registry.model</modelPackage>
+								<modelPackage>org.eclipse.digitaltwin.basyx.aasregistry.model</modelPackage>
 							</configOptions>
 						</configuration>
 					</execution>
