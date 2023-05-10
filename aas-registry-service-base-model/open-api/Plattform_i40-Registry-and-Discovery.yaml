@@ -1072,7 +1072,7 @@ components:
       in: query
       description: The Asset's type (UTF8-BASE64-URL-encoded)
       required: false
-      schema: {maxLength: 2000, minLength: 1, pattern: '^[\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\U00010000-\U0010FFFF]*$',
+      schema: {maxLength: 2000, minLength: 1, pattern: '^[\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u10000-\u10FFFF]*$',
         type: string}
     AssetAdministrationShellIdentifier:
       name: aasIdentifier

@@ -51,9 +51,9 @@
 				<configuration>
 					<pathsTargetClassName>AasRegistryPaths</pathsTargetClassName>
 					<processorTargetClassName>AasRegistryPathProcessor</processorTargetClassName>
-					<className>de.dfki.cos.basys.aas.registry.model.AssetAdministrationShellDescriptor</className>
+					<className>org.eclipse.digitaltwin.basyx.aasregistry.model.AssetAdministrationShellDescriptor</className>
 					<targetSourceFolder>${project.basedir}/src/generated/java</targetSourceFolder>
-					<targetPackageName>de.dfki.cos.basys.aas.registry.client.api</targetPackageName>
+					<targetPackageName>dorg.eclipse.digitaltwin.basyx.aasregistry.client.api</targetPackageName>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -73,9 +73,9 @@
 							<library>resttemplate</library>
 							<inputSpec>${openapi.result.file}</inputSpec>
 							<output>${project.basedir}/${generated.folder}</output>
-							<apiPackage>de.dfki.cos.basys.aas.registry.client.api</apiPackage>
-							<invokerPackage>de.dfki.cos.basys.aas.registry.client</invokerPackage>
-							<modelPackage>de.dfki.cos.basys.aas.registry.model</modelPackage>
+							<apiPackage>org.eclipse.digitaltwin.basyx.aasregistry.client.api</apiPackage>
+							<invokerPackage>org.eclipse.digitaltwin.basyx.aasregistry.client</invokerPackage>
+							<modelPackage>org.eclipse.digitaltwin.basyx.aasregistry.model</modelPackage>
 							<generateModels>true</generateModels>
 							<generateApis>true</generateApis>
 							<generateApiTests>false</generateApiTests>
