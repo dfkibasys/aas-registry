@@ -80,19 +80,19 @@ public class {{processorTarget.className}} {
 			{{#complexRangeRelations}}
 			case {{info.pathsTarget.className}}.SEGMENT_{{attributeNameUpper}}:
 				{{#isListRange}}
-				return visitObjectList(toVisit.{{getterPrefix}}{{attributeNameUpperFirst}}(), this::visit{{modelName}});
+				return visitObjectList(toVisit.get{{attributeNameUpperFirst}}(), this::visit{{modelName}});
 				{{/isListRange}}
 				{{^isListRange}}
-				return visitObject(toVisit.{{getterPrefix}}{{attributeNameUpperFirst}}(), this::visit{{modelName}});
+				return visitObject(toVisit.get{{attributeNameUpperFirst}}(), this::visit{{modelName}});
 				{{/isListRange}}
 			{{/complexRangeRelations}}
 			{{#primitiveRangeRelations}}
 			case {{info.pathsTarget.className}}.SEGMENT_{{attributeNameUpper}}:
 				{{#isListRange}}
-				return visitPrimitiveValueList(toVisit.{{getterPrefix}}{{attributeNameUpperFirst}}());
+				return visitPrimitiveValueList(toVisit.get{{attributeNameUpperFirst}}());
 				{{/isListRange}}
 				{{^isListRange}}
-				return visitPrimitiveValue(toVisit.{{getterPrefix}}{{attributeNameUpperFirst}}());
+				return visitPrimitiveValue(toVisit.get{{attributeNameUpperFirst}}());
 				{{/isListRange}}
 			{{/primitiveRangeRelations}}
 			default:

@@ -6,7 +6,7 @@ components:
          x-java-class-annotations: 
             - '@org.springframework.data.elasticsearch.annotations.Document(indexName = "shell-descriptors")'  
          properties:
-            id:
+            identification:
                # Only the shell descriptor should have the ID annotation not the submodel so we need a new String type
                # as it is modeled like that
                $ref: '#/components/schemas/DocumentIdentifier'

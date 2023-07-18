@@ -28,19 +28,16 @@ package de.dfki.cos.basys.aas.registry.service.tests;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.rules.TestName;
-import org.junit.runner.Description;
-
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 
 import de.dfki.cos.basys.aas.registry.events.RegistryEvent;
 import de.dfki.cos.basys.aas.registry.model.AssetAdministrationShellDescriptor;
 import de.dfki.cos.basys.aas.registry.model.SubmodelDescriptor;
+import org.junit.rules.TestName;
+import org.junit.runner.Description;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 
 public class TestResourcesLoader extends TestName {
 
@@ -67,7 +64,7 @@ public class TestResourcesLoader extends TestName {
 
 	public List<AssetAdministrationShellDescriptor> loadRepositoryDefinition() throws IOException {
 		String path = getTestRepositoryPath();
-		return loadValue(path, readerSupport.getShellDescriptorListReader());
+		return load(path, readerSupport.getShellDescriptorListReader());
 	}
 
 	public List<AssetAdministrationShellDescriptor> loadShellDescriptorList() throws IOException {
@@ -94,10 +91,9 @@ public class TestResourcesLoader extends TestName {
 		return load(readerSupport.getShellDescriptorReader(), "");
 	}
 
-	public List<RegistryEvent> loadEvents() throws IOException {
-		String eventPath = getMethodName() + "_events" + JSON_FILE_ENDING;
-		MappingIterator<RegistryEvent> iter = loadValues(eventPath, readerSupport.getRegistryEventReader());
-		return iter.readAll(new ArrayList<>());
+	public RegistryEvent loadEvent() throws IOException {
+		String eventPath = getMethodName() + "_event" + JSON_FILE_ENDING;
+		return load(eventPath, readerSupport.getRegistryEventReader());
 	}
 
 	private String getTestRepositoryPath() {
@@ -115,20 +111,14 @@ public class TestResourcesLoader extends TestName {
 
 	private <T> T load(ObjectReader reader, String suffix) throws IOException {
 		String expectedPath = getMethodName() + suffix + JSON_FILE_ENDING;
-		return loadValue(expectedPath, reader);
+		return load(expectedPath, reader);
 	}
 
-	private <T> T loadValue(String path, ObjectReader reader) throws IOException {
+	private <T> T load(String path, ObjectReader reader) throws IOException {
 		path = basedOnPackageName(path);
 		try (InputStream in = getClass().getResourceAsStream(path); BufferedInputStream bIn = new BufferedInputStream(in)) {
 			return reader.readValue(bIn);
 		}
 	}
-	
-	private <T> MappingIterator<T> loadValues(String path, ObjectReader reader) throws IOException {
-		path = basedOnPackageName(path);
-		try (InputStream in = getClass().getResourceAsStream(path); BufferedInputStream bIn = new BufferedInputStream(in)) {
-			return reader.readValues(bIn);
-		}
-	}
+
 }

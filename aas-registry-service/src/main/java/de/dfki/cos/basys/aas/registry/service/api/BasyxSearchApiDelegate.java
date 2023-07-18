@@ -25,14 +25,13 @@
  ******************************************************************************/
 package de.dfki.cos.basys.aas.registry.service.api;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-
 import de.dfki.cos.basys.aas.registry.events.RegistryEventSink;
 import de.dfki.cos.basys.aas.registry.model.ShellDescriptorSearchRequest;
 import de.dfki.cos.basys.aas.registry.model.ShellDescriptorSearchResponse;
 import de.dfki.cos.basys.aas.registry.service.storage.AasRegistryStorage;
 import de.dfki.cos.basys.aas.registry.service.storage.RegistrationEventSendingAasRegistryStorage;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
 @Component
 public class BasyxSearchApiDelegate implements SearchApiDelegate {

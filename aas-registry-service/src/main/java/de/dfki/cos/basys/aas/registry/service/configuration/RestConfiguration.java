@@ -32,7 +32,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 @Configuration
 public class RestConfiguration {
@@ -45,8 +44,6 @@ public class RestConfiguration {
 	@Bean
 	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
 		Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder().serializationInclusion(JsonInclude.Include.NON_NULL);
-		builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-		
 		return new MappingJackson2HttpMessageConverter(builder.build());
 	}
 

@@ -1,11 +1,11 @@
 [
 	{
 		"idShort": "identification_2",
-		"id": "identification_2",
+		"identification": "identification_2",
 		"administration": {
-			"revision": "2.22221"
+			"revision": "2.22221" 
 		},
-		"description": [
+		"descriptions": [
 			{
 				"language": "de-DE",
 				"text": "identification_2"
@@ -14,13 +14,11 @@
 	},
 	{
 		"idShort": "identification_5",
-		"id": "identification_5",
-		"assetType": "tp",
-		"assetKind": "Type",
+		"identification": "identification_5",
 		"administration": {
-			"revision": "identification_1.1"
+			"revision": "identification_1.1" 
 		},
-		"description": [
+		"descriptions": [
 			{
 				"language": "de-DE",
 				"text": "identification_5"
@@ -29,93 +27,53 @@
 		"submodelDescriptors": [
 			{
 				"idShort": "submodel_0",
-				"id": "submodel_0",
-				"description": [
+				"identification": "submodel_0",
+				"descriptions": [
 					{
 						"language": "de-DE",
 						"text": "G1"
-					}
-				],
-				"endpoints": [
-					{
-						"protocolInformation": {
-							"href": "http://127.0.0.1:8099/submodel",
-							"endpointProtocol": "HTTP",
-							"subprotocol": "AAS"
-						},
-						"interface": "https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003"
 					}
 				]
 			},
 			{
 				"idShort": "submodel_1",
-				"id": "submodel1",
-				"description": [
+				"identification": "submodel1",
+				"descriptions": [
 					{
 						"language": "de-DE",
 						"text": "G2"
-					}
-				],
-				"endpoints": [
-					{
-						"protocolInformation": {
-							"href": "http://127.0.0.1:8099/submodel",
-							"endpointProtocol": "HTTP",
-							"subprotocol": "AAS"
-						},
-						"interface": "https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003"
 					}
 				]
 			},
 			{
 				"idShort": "sm2",
-				"id": "submodel2",
-				"description": [
+				"identification": "submodel2",
+				"descriptions": [
 					{
 						"language": "de-DE",
 						"text": "G1"
-					}
-				],
-				"endpoints": [
-					{
-						"protocolInformation": {
-							"href": "http://127.0.0.1:8099/submodel",
-							"endpointProtocol": "HTTP",
-							"subprotocol": "AAS"
-						},
-						"interface": "https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003"
 					}
 				]
 			},
 			{
 				"idShort": "sm3",
-				"id": "submodel3",
-				"description": [
+				"identification": "submodel3",
+				"descriptions": [
 					{
 						"language": "de-DE",
 						"text": "G2"
 					}
-				],
-				"endpoints": [
-					{
-						"protocolInformation": {
-							"href": "http://127.0.0.1:8099/submodel",
-							"endpointProtocol": "HTTP",
-							"subprotocol": "AAS"
-						},
-						"interface": "https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003"
-					}
 				]
 			}
 		]
-	},
+	},	
 	{
 		"idShort": "identification_7",
-		"id": "identification_6",
+		"identification": "identification_6",
 		"administration": {
-			"revision": "identification_2.1"
+			"revision": "identification_2.1" 
 		},
-		"description": [
+		"descriptions": [
 			{
 				"language": "de-DE",
 				"text": "identification_7"
@@ -124,13 +82,11 @@
 	},
 	{
 		"idShort": "identification_7",
-		"id": "identification_7",
-		"assetType": "tp",
-		"assetKind": "Type",
+		"identification": "identification_7",
 		"administration": {
-			"revision": "identification_2.2"
+			"revision": "identification_2.2" 
 		},
-		"description": [
+		"descriptions": [
 			{
 				"language": "de-DE",
 				"text": "identification_7"

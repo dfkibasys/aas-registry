@@ -28,48 +28,37 @@ package de.dfki.cos.basys.aas.registry.service.storage;
 import java.util.List;
 import java.util.Set;
 
-import javax.validation.Valid;
-
 import de.dfki.cos.basys.aas.registry.model.AssetAdministrationShellDescriptor;
 import de.dfki.cos.basys.aas.registry.model.ShellDescriptorSearchRequest;
 import de.dfki.cos.basys.aas.registry.model.ShellDescriptorSearchResponse;
 import de.dfki.cos.basys.aas.registry.model.SubmodelDescriptor;
-import de.dfki.cos.basys.aas.registry.service.errors.AasDescriptorAlreadyExistsException;
 import de.dfki.cos.basys.aas.registry.service.errors.AasDescriptorNotFoundException;
-import de.dfki.cos.basys.aas.registry.service.errors.SubmodelAlreadyExistsException;
 import de.dfki.cos.basys.aas.registry.service.errors.SubmodelNotFoundException;
+
 import lombok.NonNull;
 
 public interface AasRegistryStorage {
 
 	boolean containsSubmodel(@NonNull String aasDescriptorId, String submodelId);
-	
-	CursorResult<List<AssetAdministrationShellDescriptor>> getAllAasDescriptors(@NonNull PaginationInfo pRequest, @NonNull DescriptorFilter filter);
+
+	List<AssetAdministrationShellDescriptor> getAllAasDesriptors();
 
 	AssetAdministrationShellDescriptor getAasDescriptor(@NonNull String aasDescriptorId) throws AasDescriptorNotFoundException;
 
-	void insertAasDescriptor(@Valid AssetAdministrationShellDescriptor descr) throws AasDescriptorAlreadyExistsException;
-	
-	void replaceAasDescriptor(@NonNull String aasDescritorId, @NonNull AssetAdministrationShellDescriptor descriptor) throws AasDescriptorNotFoundException;
+	void addOrReplaceAasDescriptor(@NonNull AssetAdministrationShellDescriptor descriptor);
 
-	void removeAasDescriptor(@NonNull String aasDescriptorId) throws AasDescriptorNotFoundException;
+	boolean removeAasDescriptor(@NonNull String aasDescriptorId);
 
-	CursorResult<List<SubmodelDescriptor>> getAllSubmodels(@NonNull String aasDescriptorId,@NonNull PaginationInfo pRequest) throws AasDescriptorNotFoundException;
+	List<SubmodelDescriptor> getAllSubmodels(@NonNull String aasDescriptorId) throws AasDescriptorNotFoundException;
 
 	SubmodelDescriptor getSubmodel(@NonNull String aasDescriptorId, @NonNull String submodelId) throws AasDescriptorNotFoundException, SubmodelNotFoundException;
 
-	void insertSubmodel(@NonNull String aasDescriptorId, @NonNull SubmodelDescriptor submodel) throws AasDescriptorNotFoundException, SubmodelAlreadyExistsException;
+	void appendOrReplaceSubmodel(@NonNull String aasDescriptorId, @NonNull SubmodelDescriptor submodel) throws AasDescriptorNotFoundException;
 
-	void replaceSubmodel(@NonNull String aasDescriptorId, @NonNull String submodelId, @NonNull SubmodelDescriptor submodel) throws AasDescriptorNotFoundException, SubmodelNotFoundException;
-	
-	void removeSubmodel(@NonNull String aasDescriptorId, @NonNull String submodelId) throws AasDescriptorNotFoundException, SubmodelNotFoundException;
+	boolean removeSubmodel(@NonNull String aasDescriptorId, @NonNull String submodelId);
 
 	Set<String> clear();
 
 	ShellDescriptorSearchResponse searchAasDescriptors(@NonNull ShellDescriptorSearchRequest request);
 
-
-	
-	
-	
 }

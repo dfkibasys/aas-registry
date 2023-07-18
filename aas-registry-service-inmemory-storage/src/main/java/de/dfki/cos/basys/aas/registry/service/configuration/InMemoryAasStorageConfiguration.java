@@ -25,14 +25,12 @@
  ******************************************************************************/
 package de.dfki.cos.basys.aas.registry.service.configuration;
 
+import de.dfki.cos.basys.aas.registry.service.storage.AasRegistryStorage;
+import de.dfki.cos.basys.aas.registry.service.storage.memory.InMemoryAasRegistryStorage;
+import de.dfki.cos.basys.aas.registry.service.storage.memory.ThreadSafeAasRegistryStorageDecorator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import de.dfki.cos.basys.aas.registry.service.storage.AasRegistryStorage;
-import de.dfki.cos.basys.aas.registry.service.storage.CursorEncodingRegistryStorageDecorator;
-import de.dfki.cos.basys.aas.registry.service.storage.memory.InMemoryAasRegistryStorage;
-import de.dfki.cos.basys.aas.registry.service.storage.memory.ThreadSafeAasRegistryStorageDecorator;
 
 @Configuration
 public class InMemoryAasStorageConfiguration {
@@ -40,7 +38,7 @@ public class InMemoryAasStorageConfiguration {
 	@Bean
 	@ConditionalOnProperty(prefix = "registry", name = "type", havingValue = "inMemory")
 	public AasRegistryStorage storage() {
-		return new ThreadSafeAasRegistryStorageDecorator(new CursorEncodingRegistryStorageDecorator(new InMemoryAasRegistryStorage()));
+		return new ThreadSafeAasRegistryStorageDecorator(new InMemoryAasRegistryStorage());
 	}
 
 }

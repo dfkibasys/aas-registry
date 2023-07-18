@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>de.dfki.cos.basys.aas.registry</groupId>
 		<artifactId>aas-registry</artifactId>
-		<version>0.5.0-SNAPSHOT</version>
+		<version>0.4.2-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 
@@ -52,7 +52,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<!-- <inputSpec>https://app.swaggerhub.com/apis/Plattform_i40/AssetAdministrationShellRegistryServiceSpecification/V3.0_SSP-001</inputSpec> -->
+					<!-- <inputSpec>https://api.swaggerhub.com/apis/Plattform_i40/Registry-and-Discovery/Final-Draft/swagger.yaml?resolved=true</inputSpec> -->
 					<base>${project.basedir}/../${openapi.folder.name}/${openapi.base.name}</base>
 					<overlay>${project.basedir}/../${openapi.folder.name}/${openapi.extensions.name}</overlay>
 					<out>${openapi.result.file}</out>

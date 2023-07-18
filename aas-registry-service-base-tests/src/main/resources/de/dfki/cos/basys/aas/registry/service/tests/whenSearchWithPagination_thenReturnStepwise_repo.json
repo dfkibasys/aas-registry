@@ -1,45 +1,45 @@
 [
 	{
-		"id": "identification_2",
+		"identification": "identification_2",
 		"submodelDescriptors": [
 			{
-				"id": "identification_2.1",
-				"description" : [{
+				"identification": "identification_2.1",
+				"descriptions" : [{
 					"language" : "de_DE",
 					"text" : "I am a robot!"
 				}]
 			},
 			{
-				"id": "identification_2.2"
+				"identification": "identification_2.2"
 				
 			}
 		]
 	},
 	{
-		"id": "identification_1"
+		"identification": "identification_1"
 	},
 	{
-		"id": "identification_3",
+		"identification": "identification_3",
 		"submodelDescriptors": [
 			{
-				"id": "identification_3.1",
-				"description" : [{
+				"identification": "identification_3.1",
+				"descriptions" : [{
 					"language" : "de_DE",
 					"text" : "A green Robot."
 				}]
 			},
 			{
-				"id": "identification_3.2"
+				"identification": "identification_3.2"
 				
 			}
 		]
 	},
 	{
-		"id": "identification_4",
+		"identification": "identification_4",
 		"submodelDescriptors": [
 			{
-				"id": "identification_4.1",
-				"description" : [{
+				"identification": "identification_4.1",
+				"descriptions" : [{
 					"language" : "de_DE",
 					"text" : "A yellow drone."
 				}]
@@ -47,11 +47,11 @@
 		]
 	},
 	{
-		"id": "identification_5",
+		"identification": "identification_5",
 		"submodelDescriptors": [
 			{
-				"id": "identification_5.1",
-				"description" : [{
+				"identification": "identification_5.1",
+				"descriptions" : [{
 					"language" : "de_DE",
 					"text" : "A blue roboter."
 				}]

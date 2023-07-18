@@ -7,7 +7,7 @@
 	<groupId>de.dfki.cos.basys.aas.registry</groupId>
 	<artifactId>aas-registry</artifactId>
 	<packaging>pom</packaging>
-	<version>0.5.0-SNAPSHOT</version>
+	<version>0.4.2-SNAPSHOT</version>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -17,18 +17,18 @@
 	</parent>
 
 	<properties>
-		<testcontainers.version>1.18.0</testcontainers.version>
+		<testcontainers.version>1.16.2</testcontainers.version>
 		<java.version>11</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<generated.folder>src/generated</generated.folder>
 		<springfox-version>3.0.0</springfox-version>
-		<swagger.codegen.version>3.0.42</swagger.codegen.version>
+		<swagger.codegen.version>3.0.35</swagger.codegen.version>
 		<spring.fox.version>3.0.0</spring.fox.version>
 		<openapi.folder.name>open-api</openapi.folder.name>
-		<openapi.base.name>Plattform_i40-AssetAdministrationShellRegistryServiceSpecification-V3.0_SSP-001-resolved-altered.yaml</openapi.base.name>
-		<openapi.extensions.name>Plattform_i40-AssetAdministrationShellRegistryServiceSpecification-V3.0_SSP-001-Extensions.yaml</openapi.extensions.name>
+		<openapi.base.name>Plattform_i40-Registry-and-Discovery-V1.0RC03-resolved.yaml</openapi.base.name>
+		<openapi.extensions.name>Plattform_i40-Registry-and-Discovery-Extensions.yaml</openapi.extensions.name>
 		<openapi.name>Plattform_i40-Registry-and-Discovery.yaml</openapi.name>
 		<guava.version>31.0.1-jre</guava.version>
 		<maven-plugin.version>3.6.0</maven-plugin.version>
@@ -52,17 +52,17 @@
 		<module>aas-registry-client</module>
 		<module>aas-registry-events</module>
 		<module>aas-registry-paths</module>
+		<module>aas-registry-compatibility</module>
 		<module>aas-registry-service-base-model</module>
 		<module>aas-registry-service</module>
 		<module>aas-registry-service-base-tests</module>
 		<module>aas-registry-service-kafka-events</module>
+		<module>aas-registry-service-elasticsearch-storage</module>
 		<module>aas-registry-service-inmemory-storage</module>
-		<module>aas-registry-service-release-log-mem</module>
+		<module>aas-registry-service-release-kafka-es</module>
 		<module>aas-registry-service-release-kafka-mem</module>
-		<!-- <module>aas-registry-compatibility</module> 
-		<module>aas-registry-service-elasticsearch-storage</module> 
-		<module>aas-registry-service-release-kafka-es</module> 
-		<module>aas-registry-service-release-log-es</module> -->
+		<module>aas-registry-service-release-log-mem</module>
+		<module>aas-registry-service-release-log-es</module>
 	</modules>
 
 	<developers>
@@ -100,7 +100,7 @@
 					<version>${docker.maven.plugin.version}</version>
 				</plugin>
 			</plugins>
-
+			
 		</pluginManagement>
 	</build>
 	<dependencyManagement>
@@ -203,8 +203,7 @@
 		<profile>
 			<id>dockerbuild</id>
 			<activation>
-				<!-- This profile is always active if there is a Dockerfile and a user 
-					name is given -->
+				<!-- This profile is always active if there is a Dockerfile and a user name is given -->
 				<file>
 					<exists>src/main/docker/Dockerfile</exists>
 				</file>

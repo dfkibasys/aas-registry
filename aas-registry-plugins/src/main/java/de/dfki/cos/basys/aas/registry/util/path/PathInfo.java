@@ -107,8 +107,6 @@ public class PathInfo {
 			this.attributeNameUpper = ConstantGenerator.generateConstant(attributeName);
 		}
 
-		public abstract String getGetterPrefix() ;
-
 		private String toUpperFirst(String name) {
 			if (name.length() < 1) {
 				return name;
@@ -121,19 +119,8 @@ public class PathInfo {
 	@EqualsAndHashCode(callSuper = true)
 	public static class PrimitiveRangeRelationInfo extends RelationInfo {
 
-		private String typeName;
-		
-		public PrimitiveRangeRelationInfo(String methodName, String attributeName, String typeName, boolean isListRange) {
+		public PrimitiveRangeRelationInfo(String methodName, String attributeName, boolean isListRange) {
 			super(methodName, attributeName, isListRange);
-			this.typeName = typeName;
-		}
-		
-		@Override
-		public String getGetterPrefix() {
-			if ("Boolean".equals(typeName)) {
-				return "is";
-			} 
-			return "get";
 		}
 	}
 
@@ -147,11 +134,6 @@ public class PathInfo {
 		public ComplexRangeRelationInfo(String methodName, String attributeName, String rangeName, boolean isListRange) {
 			super(methodName, attributeName, isListRange);
 			this.modelName = rangeName;
-		}
-		
-		@Override
-		public String getGetterPrefix() {
-			return "get";
 		}
 
 	}
@@ -178,7 +160,7 @@ public class PathInfo {
 
 		private List<ComplexRangeRelationInfo> complexRangeRelations = new LinkedList<>();
 
-		private PathInfo info; // backpointer for global access in templates		
+		private PathInfo info; // backpointer for global access in templates
 
 		public ModelInfo(String name) {
 			this.name = name;

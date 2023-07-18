@@ -32,7 +32,7 @@ public abstract class DescriptorNotFoundException extends ResponseStatusExceptio
 
 	private static final long serialVersionUID = 1L;
 
-	protected DescriptorNotFoundException(String reason) {
-		super(HttpStatus.NOT_FOUND, reason);
+	public DescriptorNotFoundException(HttpStatus status, String reason) {
+		super(status, reason);
 	}
 }

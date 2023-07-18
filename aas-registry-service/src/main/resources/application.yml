@@ -1,8 +1,6 @@
 ---
 events:
   sink:
-description:
-  profiles: RegistryServiceSpecification/V3.0
 springfox:
   documentation:
     open-api.v3.path: /api-docs
@@ -17,7 +15,7 @@ logging:
 server:
   port: 8080
   servlet:
-    contextPath: /api/v3.0
+    contextPath: /
   error:
     whitelabel:
       enabled: false

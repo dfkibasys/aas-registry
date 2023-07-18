@@ -145,7 +145,7 @@ public class ElasticSearchAasRegistryStorage implements AasRegistryStorage {
 	}
 
 	@Override
-	public void replaceAasDescriptor(@NonNull AssetAdministrationShellDescriptor descriptor) {
+	public void addOrReplaceAasDescriptor(@NonNull AssetAdministrationShellDescriptor descriptor) {
 		aasDescriptorRepository.save(descriptor);
 	}
 
@@ -174,7 +174,7 @@ public class ElasticSearchAasRegistryStorage implements AasRegistryStorage {
 	}
 
 	@Override
-	public void insertSubmodel(@NonNull String aasDescriptorId, SubmodelDescriptor submodel) {
+	public void appendOrReplaceSubmodel(@NonNull String aasDescriptorId, SubmodelDescriptor submodel) {
 		Objects.requireNonNull(submodel.getIdentification(), SUBMODEL_ID_IS_NULL);
 		Result result = atomicRepoAccess.storeAssetAdministrationSubmodel(aasDescriptorId, submodel);
 		if (result == Result.NOT_FOUND) {

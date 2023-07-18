@@ -25,14 +25,14 @@
  ******************************************************************************/
 package de.dfki.cos.basys.aas.registry.service.tests;
 
+import de.dfki.cos.basys.aas.registry.events.RegistryEvent;
+import de.dfki.cos.basys.aas.registry.model.AssetAdministrationShellDescriptor;
+import de.dfki.cos.basys.aas.registry.model.SubmodelDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 
-import de.dfki.cos.basys.aas.registry.events.RegistryEvent;
-import de.dfki.cos.basys.aas.registry.model.AssetAdministrationShellDescriptor;
-import de.dfki.cos.basys.aas.registry.model.SubmodelDescriptor;
 import lombok.Getter;
 import lombok.Setter;
 

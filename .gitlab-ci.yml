@@ -123,20 +123,20 @@ mvn-docker-install:
 mvn-deploy:
   stage: deploy
   tags:
-  - basys
-  - maven
+    - basys
+    - maven
   script:
-  - cd aas-registry-plugins; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-  - cd aas-registry-client; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-  - cd aas-registry-compatibility; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-  - cd aas-registry-events; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
-  - cd aas-registry-paths; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+    - cd aas-registry-plugins; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+    - cd aas-registry-client; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+    - cd aas-registry-compatibility; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+    - cd aas-registry-events; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
+    - cd aas-registry-paths; mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true; cd ..
   dependencies:
-  - mvn-build-plugin
-  - mvn-docker-install
-  rules:
-  - if: $CI_COMMIT_BRANCH == 'master'
-  - if: $CI_COMMIT_BRANCH == 'develop'
+    - mvn-build-plugin
+    - mvn-docker-install
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == 'master'
+  #   - if: $CI_COMMIT_BRANCH == 'develop'
 
 docker-deploy:
   stage: deploy
@@ -144,42 +144,42 @@ docker-deploy:
   variables:
     DOCKER_DRIVER: overlay2
   services:
-  - name: docker:20.10.17-dind
-    # explicitly disable tls to avoid docker startup interruption
-    command: ["--tls=false"]
+     - name: docker:20.10.17-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
   dependencies:
-  - mvn-compile
+    - mvn-compile
   tags:
-  - basys
-  - docker
+    - basys
+    - docker
   before_script:
     - docker info
   script:
     - chmod 775 ./mvnw
     - ./mvnw $MAVEN_CLI_OPTS deploy -Ddocker.registry=$DOCKER_REGISTRY -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true 
-  rules:
-  - if: $CI_COMMIT_BRANCH == 'master'
-  - if: $CI_COMMIT_BRANCH == 'develop'
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == 'master'
+  #   - if: $CI_COMMIT_BRANCH == 'develop'
 
-#npm-deploy:
-#  image: node:14-alpine
-#  stage: deploy
-#  tags:
-#    - basys
-#  dependencies:
-#    - npm-build
-#  script:
-#    - cd $TYPESCRIPT_FOLDER
-#    - npm config set strict-ssl false
-#    - npm config set @basys:registry $NPM_REPO
-#    - npm config set email basys-support@dfki.de
-#    - TOKEN=$(echo -n ${MAVEN_REPO_USER}:${MAVEN_REPO_PASS} | base64)
-#    - npm config set _auth ${TOKEN}    
-#    - npm config set always-auth true
-#    - npm install  # check dependencies could be installed
-#    - npm prune 
-#    - npm run build  # build with tests
-#    - npm publish  # deploy
-#   rules:
-#     - if: $CI_COMMIT_BRANCH == 'master'
-#     - if: $CI_COMMIT_BRANCH == 'develop'
+npm-deploy:
+  image: node:14-alpine
+  stage: deploy
+  tags:
+    - basys
+  dependencies:
+    - npm-build
+  script:
+    - cd $TYPESCRIPT_FOLDER
+    - npm config set strict-ssl false
+    - npm config set @basys:registry $NPM_REPO
+    - npm config set email basys-support@dfki.de
+    - TOKEN=$(echo -n ${MAVEN_REPO_USER}:${MAVEN_REPO_PASS} | base64)
+    - npm config set _auth ${TOKEN}    
+    - npm config set always-auth true
+    - npm install  # check dependencies could be installed
+    - npm prune 
+    - npm run build  # build with tests
+    - npm publish  # deploy
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == 'master'
+  #   - if: $CI_COMMIT_BRANCH == 'develop'

@@ -1,19 +1,19 @@
 [
 	{
-		"id": "identification_1"
+		"identification": "identification_1"
 	},
 	{
-		"id": "identification_2",
+		"identification": "identification_2",
 		"submodelDescriptors": [
 			{
-				"id": "identification_2.1"
+				"identification": "identification_2.1"
 			},
 			{
-				"id": "identification_2.2"
+				"identification": "identification_2.2"
 			}
 		]
 	},
 	{
-		"id": "identification_3"
+		"identification": "identification_3"
 	}
 ]
