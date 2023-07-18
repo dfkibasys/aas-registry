@@ -76,6 +76,7 @@ npm-build:
     - mkdir $TYPESCRIPT_FOLDER
     - cd $TYPESCRIPT_FOLDER
     - mvn dependency:get -Dartifact=io.swagger.codegen.v3:swagger-codegen-cli:3.0.31:jar -Ddest=openapi-generator.jar
+    - ls -la
     - java -jar openapi-generator.jar generate -l typescript-fetch -i ../aas-registry-client/open-api/Plattform_i40-Registry-and-Discovery.yaml -o . --additional-properties [ npmName=@basys/aas-registry-client-ts-fetch npmVersion=0.3.0 snapshot=true ]
     - rm openapi-generator.jar
     - rm -rf .swagger-codegen
