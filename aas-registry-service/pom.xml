@@ -103,10 +103,10 @@
 								<serializableModel>true</serializableModel>
 								<oas3>true</oas3>
 								<useSpringController>true</useSpringController>
-								<configPackage>org.eclipse.digitaltwin.basyx.aasregistry.service.configuration</configPackage>
-								<apiPackage>org.eclipse.digitaltwin.basyx.aasregistry.service.api</apiPackage>
-								<invokerPackage>org.eclipse.digitaltwin.basyx.aasregistry.service</invokerPackage>
-								<modelPackage>org.eclipse.digitaltwin.basyx.aasregistry.model</modelPackage>
+								<configPackage>de.dfki.cos.basys.aas.registry.service.configuration</configPackage>
+								<apiPackage>de.dfki.cos.basys.aas.registry.service.api</apiPackage>
+								<invokerPackage>de.dfki.cos.basys.aas.registry.service</invokerPackage>
+								<modelPackage>de.dfki.cos.basys.aas.registry.model</modelPackage>
 								<delegatePattern>true</delegatePattern>
 							</configOptions>
 						</configuration>
