@@ -10,14 +10,14 @@ To use the compatibility layer the following two dependencies in your POM file w
     
     <!-- Import generated Java client for DotAAS registry -->
     <dependency>
-        <groupId>de.dfki.cos.basys.aas.registry</groupId>
+        <groupId>org.eclipse.basyx.aas.registry</groupId>
         <artifactId>aas-registry-client</artifactId>
         <version>0.1.0-SNAPSHOT</version>
     </dependency>
     
     <!-- Import basyx compatibility layer for DotAAS registry -->
     <dependency>
-        <groupId>de.dfki.cos.basys.aas.registry</groupId>
+        <groupId>org.eclipse.basyx.aas.registry</groupId>
         <artifactId>aas-registry-compatibility</artifactId>
         <version>0.1.0-SNAPSHOT</version>
     </dependency>
@@ -29,7 +29,7 @@ You can then create an instance like so:
 
 ```java
 import org.eclipse.basyx.aas.registration.api.IAASRegistry;
-import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 
 public class BaSyxCompatibilityExample {
 

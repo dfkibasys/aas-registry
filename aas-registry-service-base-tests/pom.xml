@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>de.dfki.cos.basys.aas.registry</groupId>
+		<groupId>org.eclipse.basyx.aas.registry</groupId>
 		<artifactId>aas-registry</artifactId>
 		<version>0.4.2-SNAPSHOT</version>
 		<relativePath>..</relativePath>
@@ -16,7 +16,7 @@
 
 	<properties>
 		<spring-cloud.version>2020.0.4</spring-cloud.version>
-		<start-class>de.dfki.cos.basys.aas.registry.service.Swagger2SpringBoot</start-class>
+		<start-class>org.eclipse.basyx.aas.registry.service.Swagger2SpringBoot</start-class>
 	</properties>
 
 	<build>
@@ -33,11 +33,11 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>de.dfki.cos.basys.aas.registry</groupId>
+			<groupId>org.eclipse.basyx.aas.registry</groupId>
 			<artifactId>aas-registry-events</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.dfki.cos.basys.aas.registry</groupId>
+			<groupId>org.eclipse.basyx.aas.registry</groupId>
 			<artifactId>aas-registry-paths</artifactId>
 		</dependency>
 		<dependency>
@@ -47,11 +47,11 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>de.dfki.cos.basys.aas.registry</groupId>
+			<groupId>org.eclipse.basyx.aas.registry</groupId>
 			<artifactId>aas-registry-client</artifactId>			
 		</dependency>
 		<dependency>
-			<groupId>de.dfki.cos.basys.aas.registry</groupId>
+			<groupId>org.eclipse.basyx.aas.registry</groupId>
 			<artifactId>aas-registry-service</artifactId>
 		</dependency>
 		<dependency>

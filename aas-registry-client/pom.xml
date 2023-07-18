@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>de.dfki.cos.basys.aas.registry</groupId>
+		<groupId>org.eclipse.basyx.aas.registry</groupId>
 		<artifactId>aas-registry</artifactId>
 		<version>0.4.2-SNAPSHOT</version>
 		<relativePath>..</relativePath>
@@ -42,7 +42,7 @@
 			</plugin>
 
 			<plugin>
-				<groupId>de.dfki.cos.basys.aas.registry</groupId>
+				<groupId>org.eclipse.basyx.aas.registry</groupId>
 				<artifactId>aas-registry-plugins</artifactId>
 				<executions>
 					<execution>
@@ -73,9 +73,9 @@
 							<library>resttemplate</library>
 							<inputSpec>${openapi.result.file}</inputSpec>
 							<output>${project.basedir}/${generated.folder}</output>
-							<apiPackage>de.dfki.cos.basys.aas.registry.client.api</apiPackage>
-							<invokerPackage>de.dfki.cos.basys.aas.registry.client</invokerPackage>
-							<modelPackage>de.dfki.cos.basys.aas.registry.model</modelPackage>
+							<apiPackage>org.eclipse.basyx.aas.registry.client.api</apiPackage>
+							<invokerPackage>org.eclipse.basyx.aas.registry.client</invokerPackage>
+							<modelPackage>org.eclipse.basyx.aas.registry.model</modelPackage>
 							<generateModels>true</generateModels>
 							<generateApis>true</generateApis>
 							<generateApiTests>false</generateApiTests>

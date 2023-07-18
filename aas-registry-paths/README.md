@@ -6,7 +6,7 @@ To use the path builder class, specify this dependency in your POM file with an 
 
 ```xml
 <dependency>
-	<groupId>de.dfki.cos.basys.aas.registry</groupId>
+	<groupId>org.eclipse.basyx.aas.registry</groupId>
 	<artifactId>aas-registry-paths</artifactId>
 </dependency>
 ```

@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.dfki.cos.basys.aas.registry</groupId>
+	<groupId>org.eclipse.basyx.aas.registry</groupId>
 	<artifactId>aas-registry</artifactId>
 	<packaging>pom</packaging>
 	<version>0.4.2-SNAPSHOT</version>
@@ -48,11 +48,11 @@
 	</properties>
 
 	<modules>
-		<module>aas-registry-plugins</module>
 		<module>aas-registry-client</module>
 		<module>aas-registry-events</module>
 		<module>aas-registry-paths</module>
 		<module>aas-registry-compatibility</module>
+		<module>aas-registry-plugins</module>
 		<module>aas-registry-service-base-model</module>
 		<module>aas-registry-service</module>
 		<module>aas-registry-service-base-tests</module>
@@ -85,7 +85,7 @@
 					<version>${maven-plugin.version}</version>
 				</plugin>
 				<plugin>
-					<groupId>de.dfki.cos.basys.aas.registry</groupId>
+					<groupId>org.eclipse.basyx.aas.registry</groupId>
 					<artifactId>aas-registry-plugins</artifactId>
 					<version>${aas-registry-plugins.version}</version>
 				</plugin>
@@ -162,7 +162,7 @@
 				<version>${guava.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.dfki.cos.basys.aas.registry</groupId>
+				<groupId>org.eclipse.basyx.aas.registry</groupId>
 				<artifactId>aas-registry-util</artifactId>
 				<version>${project.version}</version>
 			</dependency>
