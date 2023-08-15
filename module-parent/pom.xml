@@ -4,12 +4,12 @@
 	<groupId>de.dfki.cos.basys.aas.registry</groupId>
 	<artifactId>module-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.4.2-SNAPSHOT</version>
+	<version>0.4.2</version>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.7.3</version>
-		<relativePath/>
+		<relativePath />
 	</parent>
 	<properties>
 		<testcontainers.version>1.17.5</testcontainers.version>
@@ -30,7 +30,7 @@
 		<maven-project.version>3.0-alpha-2</maven-project.version>
 		<mustache.compiler.version>0.9.4</mustache.compiler.version>
 		<snakeyaml.version>1.30</snakeyaml.version>
-		<aas-registry-plugins.version>0.4.2-SNAPSHOT</aas-registry-plugins.version>
+		<aas-registry-plugins.version>0.4.2</aas-registry-plugins.version>
 		<gpg-plugin.version>1.6</gpg-plugin.version>
 		<nexus-staging-plugin.version>1.6.13</nexus-staging-plugin.version>
 		<license-plugin.version>2.0.0</license-plugin.version>
@@ -61,7 +61,7 @@
 		<license>
 			<name>MIT</name>
 			<url>https://github.com/dfkibasys/aas-registry/blob/master/LICENSE</url>
-			<comments/>
+			<comments />
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
@@ -433,4 +433,8 @@
 			</distributionManagement>
 		</profile>
 	</profiles>
+
+  <scm>
+    <tag>v0.4.2</tag>
+  </scm>
 </project>
