@@ -43,12 +43,12 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.utility.DockerImageName;
 
 
-@TestPropertySource(properties = { "registry.type=elasticsearch", "events.sink=kafka" })
+@TestPropertySource(properties = { "registry.type=elasticsearch", "events.sink=kafka", "spring.mvc.pathmatch.matching-strategy=ant_path_matcher" })
 public class KafkaEventsElasticsearchStorageIntegrationTest extends BaseIntegrationTest {	
 
 	private static final DockerImageName KAFKA_TEST_IMAGE = DockerImageName.parse("confluentinc/cp-kafka:6.2.1");
 
-	private static final DockerImageName ELASTICSEARCH_TEST_IMAGE = DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2");
+	private static final DockerImageName ELASTICSEARCH_TEST_IMAGE = DockerImageName.parse("docker.io/library/elasticsearch:7.17.6").asCompatibleSubstituteFor("docker.elastic.co/elasticsearch/elasticsearch");
 	
 	public static KafkaContainer KAFKA = new KafkaContainer(KAFKA_TEST_IMAGE);
 

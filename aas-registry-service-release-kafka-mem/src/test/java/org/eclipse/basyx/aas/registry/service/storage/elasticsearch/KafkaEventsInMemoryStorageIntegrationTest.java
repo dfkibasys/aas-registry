@@ -37,7 +37,7 @@ import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
 
-@TestPropertySource(properties = { "registry.type=inMemory", "events.sink=kafka" })
+@TestPropertySource(properties = { "registry.type=inMemory", "events.sink=kafka", "spring.mvc.pathmatch.matching-strategy=ant_path_matcher" })
 public class KafkaEventsInMemoryStorageIntegrationTest extends BaseIntegrationTest {	
 
 	private static final DockerImageName KAFKA_TEST_IMAGE = DockerImageName.parse("confluentinc/cp-kafka:6.2.1");

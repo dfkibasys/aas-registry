@@ -22,6 +22,9 @@ server:
 servlet:
   headers: []
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   jackson:
     date-format: org.eclipse.basyx.aas.registry.service.RFC3339DateFormat
     serialization:

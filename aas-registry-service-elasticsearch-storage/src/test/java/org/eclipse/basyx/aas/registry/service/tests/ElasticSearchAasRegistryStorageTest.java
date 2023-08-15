@@ -38,7 +38,8 @@ import org.testcontainers.utility.DockerImageName;
 @ContextConfiguration(classes = { ElasticSearchConfiguration.class })
 public class ElasticSearchAasRegistryStorageTest extends AasRegistryStorageTest {
 
-	private static final DockerImageName ELASTICSEARCH_TEST_IMAGE = DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2");
+	private static final DockerImageName ELASTICSEARCH_TEST_IMAGE =
+			DockerImageName.parse("docker.io/library/elasticsearch:7.17.6").asCompatibleSubstituteFor("docker.elastic.co/elasticsearch/elasticsearch");
 
 	@ClassRule
 	public static ElasticsearchContainer ELASTICSEARCH_CONTAINER = new ElasticsearchContainer(ELASTICSEARCH_TEST_IMAGE);

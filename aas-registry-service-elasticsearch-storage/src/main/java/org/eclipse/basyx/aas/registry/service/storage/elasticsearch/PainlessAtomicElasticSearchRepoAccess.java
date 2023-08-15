@@ -39,6 +39,7 @@ import org.elasticsearch.index.query.MatchAllQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
 import org.springframework.dao.UncategorizedDataAccessException;
+import org.springframework.data.elasticsearch.RestStatusException;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.RefreshPolicy;
 import org.springframework.data.elasticsearch.core.ScriptType;
@@ -90,6 +91,8 @@ public class PainlessAtomicElasticSearchRepoAccess implements AtomicElasticSearc
 			return response.getResult();
 		} catch (UncategorizedDataAccessException ex) {
 			return assertNotFound(ex);
+		} catch (RestStatusException ex) {
+			return assertNotFount(ex);
 		}
 	}
 
@@ -112,6 +115,13 @@ public class PainlessAtomicElasticSearchRepoAccess implements AtomicElasticSearc
 			if (stEx.status() == RestStatus.NOT_FOUND) {
 				return Result.NOT_FOUND;
 			}
+		}
+		throw ex;
+	}
+
+	private Result assertNotFount(RestStatusException ex) {
+		if (ex.getStatus() == RestStatus.NOT_FOUND.getStatus()) {
+			return Result.NOT_FOUND;
 		}
 		throw ex;
 	}
