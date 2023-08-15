@@ -4,7 +4,7 @@
 	<groupId>de.dfki.cos.basys.aas.registry</groupId>
 	<artifactId>pom</artifactId>
 	<packaging>pom</packaging>
-	<version>0.4.2</version>
+	<version>0.5.0-SNAPSHOT</version>
 	<properties>
 		<maven.deploy.skip>true</maven.deploy.skip>
 	</properties>
@@ -55,6 +55,6 @@
 		<url>https://github.com/dfkibasys</url>
 		<connection>${gitUrl}/aas-registry.git</connection>
 		<developerConnection>${gitUrl}/aas-registry.git</developerConnection>
-		<tag>v0.4.2</tag>
+		<tag>HEAD</tag>
 	</scm>
 </project>
