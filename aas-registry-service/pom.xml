@@ -4,10 +4,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.eclipse.basyx.aas.registry</groupId>
-		<artifactId>aas-registry</artifactId>
+		<groupId>de.dfki.cos.basys.aas.registry</groupId>
+		<artifactId>module-parent</artifactId>
 		<version>0.4.2-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<relativePath>../module-parent</relativePath>
 	</parent>
 
 	<artifactId>aas-registry-service</artifactId>
@@ -48,7 +48,7 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.eclipse.basyx.aas.registry</groupId>
+				<groupId>de.dfki.cos.basys.aas.registry</groupId>
 				<artifactId>aas-registry-plugins</artifactId>
 				<executions>
 					<execution>
@@ -171,12 +171,12 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.basyx.aas.registry</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>aas-registry-paths</artifactId>
 		</dependency>
 		<!-- Test configuration -->
 		<dependency>
-			<groupId>org.eclipse.basyx.aas.registry</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>aas-registry-client</artifactId>
 			<scope>test</scope>
 		</dependency>

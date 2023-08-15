@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.eclipse.basyx.aas.registry</groupId>
-		<artifactId>aas-registry</artifactId>
+		<groupId>de.dfki.cos.basys.aas.registry</groupId>
+		<artifactId>module-parent</artifactId>
 		<version>0.4.2-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<relativePath>../module-parent</relativePath>
 	</parent>
 
 	<artifactId>aas-registry-compatibility</artifactId>
